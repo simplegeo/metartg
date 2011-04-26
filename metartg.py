@@ -31,8 +31,10 @@ RRD_GRAPH_DEFS = {
     'network': [
         'DEF:net_in=%(rrdpath)s/bytes_in.rrd:sum:AVERAGE',
         'DEF:net_out=%(rrdpath)s/bytes_out.rrd:sum:AVERAGE',
-        'LINE:net_in#006699:Network in\\l',
-        'LINE:net_out#996600:Network out\\l',
+        'CDEF:net_bits_in=net_in,8,*',
+        'CDEF:net_bits_out=net_out,8,*',
+        'LINE:net_bits_in#006699:Network in\\l',
+        'LINE:net_bits_out#996600:Network out\\l',
     ],
     'cpu': [
         'DEF:cpu_user=%(rrdpath)s/cpu_user.rrd:sum:AVERAGE',
@@ -53,7 +55,7 @@ RRD_GRAPH_OPTIONS = {
 }
 
 RRD_GRAPH_TITLE = {
-    'network': '%(host)s | bytes in/out',
+    'network': '%(host)s | bits in/out',
     'cpu': '%(host)s | cpu %%',
     'memory': '%(host)s | memory utilization',
 }
@@ -106,9 +108,10 @@ def get_clusto_name(dnsname):
         server = clusto.get(ip)
         hostname = server[0].attr_value(key='system', subkey='hostname')
         cache.set(key, hostname)
+        return hostname
     except:
         cache.set(key, ip)
-    return cache.get(dnsname)
+        return ip
 
 def dumps(obj):
     callback = bottle.request.params.get('callback', None)
@@ -185,6 +188,12 @@ def get_graph(cluster, host, graphtype):
     bottle.response.content_type = 'image/png'
     return stdout
 
+@bottle.get('/host/:host')
+def get_host_graphs(host):
+    template = env.get_template('host.html')
+    bottle.response.content_type = 'text/html'
+    return template.render(host=host, graphtypes=RRD_GRAPH_DEFS.keys())
+
 @bottle.get('/cluster/:cluster/:graphtype')
 def get_cluster_graphs(cluster, graphtype):
     if not graphtype in RRD_GRAPH_DEFS:
@@ -201,6 +210,10 @@ def get_cluster_graphs(cluster, graphtype):
 @bottle.get('/static/:filename')
 def server_static(filename):
     return bottle.static_file(filename, root='./static')
+
+@bottle.get('/')
+def index():
+    bottle.redirect('/cluster/all/cpu')
 
 if __name__ == '__main__':
     bottle.run()

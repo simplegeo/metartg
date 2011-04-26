@@ -7,7 +7,7 @@
 <ul class="hosts">
 {% for host in hosts %}
 	<li class="host">
-		<img alt="{{ host }} {{ graphtype }}" src="/graph/{{ cluster }}/{{ host }}/{{ graphtype }}?size=small" />
+		<a href="/host/{{ host }}?size=large"><img alt="{{ host }} {{ graphtype }}" src="/graph/{{ cluster }}/{{ host }}/{{ graphtype }}?size=small" /></a>
 	</li>
 {% endfor %}
 </ul>
