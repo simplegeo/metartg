@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ cluster }} :: {{ graphtype }}{% endblock %}
+
+{% block content %}
+<h1>{{ cluster }}</h1>
+<ul class="hosts">
+{% for host in hosts %}
+	<li class="host">
+		<img alt="{{ host }} {{ graphtype }}" src="/graph/{{ cluster }}/{{ host }}/{{ graphtype }}?size=small" />
+	</li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -1,6 +1,4 @@
 body {
-	margin: 0;
-	padding: 0;
 	color: #FFF;
 	background-color: #000;
 	font-size: 8pt;
@@ -13,20 +11,12 @@ ul {
 	padding: 0;
 }
 
-.cluster {
-	width: 100%;
-}
-
-.cluster .name {
-	font-size: 14pt;
-	margin: 10px;
+img {
+	border: 0;
+	padding: 0;
+	margin: 0;
 }
 
 .host {
-	width: 100%;
-	clear: both;
-}
-
-.host img {
 	float: left;
 }
