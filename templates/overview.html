@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul id="clusters">
+{% for cluster in clusters %}
+	<li class="cluster">
+		<div class="name">{{ cluster.name }}</div>
+		<ul class="hosts">
+			{% for host in cluster.hosts %}
+			<li class="host">
+				<div class="name">{{ host }}</div>
+				<img src="/graph/{{ cluster.name }}/{{ host }}/cpu" />
+				<img src="/graph/{{ cluster.name }}/{{ host }}/memory" />
+				<img src="/graph/{{ cluster.name }}/{{ host }}/network" />
+			</li>
+			{% endfor %}
+		</ul>
+	</li>
+{% endfor %}
+</ul>
+{% endblock %}
