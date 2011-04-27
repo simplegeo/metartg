@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block page_title %}Search{% endblock %}
+
+{% block content %}
+<form action="/search">
+<fieldset>
+	<label for="pools"><input type="text" name="pools" value="{{ pools }}" />
+	<input type="submit" value="Search" />
+</fieldset>
+</form>
+
+<ul>
+{% for server in servers if server.dnsname %}
+	<li class="server">
+		<div class="info">
+			<div class="label">Name:</div>
+			<div class="value">{{ server.name }}</div>
+
+			<div class="label">IP:</div>
+			<div class="value">{{ server.ip|join(', ') }}</div>
+
+			<div class="label">DNS name:</div>
+			<div class="value">{{ server.dnsname|join(', ') }}&nbsp;</div>
+
+			{% if server.parents %}
+			<div class="label">Parents:</div>
+			<div class="value">{{ server.parents|join(', ') }}</div>
+			{% endif %}
+
+			{% if server.contents %}
+			<div class="label">Contents:</div>
+			<div class="value">{{ server.contents|join(', ') }}</div>
+			{% endif %}
+		</div>
+
+		{% if server.dnsname %}
+		<ul class="graphs">
+			<li><a href="/host/{{ server.dnsname.0 }}"><img src="/graph/all/{{ server.dnsname.0 }}/cpu?size=small" alt="{{ server.name }} cpu" /></a></li>
+			<li><a href="/host/{{ server.dnsname.0 }}"><img src="/graph/all/{{ server.dnsname.0 }}/memory?size=small" alt="{{ server.name }} memory" /></a></li>
+			<li><a href="/host/{{ server.dnsname.0 }}"><img src="/graph/all/{{ server.dnsname.0 }}/network?size=small" alt="{{ server.name }} network" /></a></li>
+		</ul>
+		{% endif %}
+	</li>
+{% endfor %}
+</ul>
+{% endblock %}

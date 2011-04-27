@@ -5,6 +5,7 @@ import socket
 
 import simplejson as json
 import clustohttp
+import eventlet
 import memcache
 import bottle
 import jinja2
@@ -13,6 +14,7 @@ bottle.debug(True)
 application = bottle.default_app()
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
 cache = memcache.Client(['127.0.0.1:11211'])
+gpool = eventlet.GreenPool(200)
 clusto = clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
 
 RRD_GRAPH_DEFS = {
@@ -210,6 +212,50 @@ def get_cluster_graphs(cluster, graphtype):
 @bottle.get('/static/:filename')
 def server_static(filename):
     return bottle.static_file(filename, root='./static')
+
+@bottle.get('/search')
+def search():
+    template = env.get_template('search.html')
+    bottle.response.content_type = 'text/html'
+
+    p = bottle.request.params
+    pools = p.get('pools', None)
+    if not pools:
+        return template.render(servers=[])
+    pools = pools.replace(',', ' ').split(' ')
+    pools.sort()
+
+    cachekey = 'search/%s' % ','.join(pools)
+    result = cache.get(cachekey)
+    if result:
+        return template.render(servers=json.loads(result))
+
+    def get_contents(name):
+        obj = clusto.get_by_name(name)
+        return set(obj.contents())
+
+    pools = list(gpool.imap(get_contents, pools))
+    first = pools[0]
+    pools = pools[1:]
+
+    result = []
+    servers = gpool.imap(lambda x: (x, x.attrs()), first.intersection(*pools))
+
+    def get_server_info(server):
+        return {
+            'name': server.name,
+            'parents': [x.name for x in server.parents()],
+            'contents': [x.name for x in server.contents()],
+            'ip': server.attr_values(key='ip', subkey='ipstring'),
+            'dnsname': server.attr_values(key='ec2', subkey='public-dns'),
+        }
+
+    servers = list(gpool.imap(get_server_info, first.intersection(*pools)))
+    cache.set(cachekey, json.dumps(servers))
+
+    template = env.get_template('search.html')
+    bottle.response.content_type = 'text/html'
+    return template.render(servers=servers)
 
 @bottle.get('/')
 def index():

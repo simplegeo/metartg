@@ -17,7 +17,7 @@ handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
 
 log = logging.getLogger('clustohttp')
 log.addHandler(handler)
-#log.setLevel(logging.DEBUG)
+log.setLevel(logging.DEBUG)
 
 try:
     AUTH_BASIC = file('%s/.infra' % os.environ['HOME'], 'r').read()
