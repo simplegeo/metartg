@@ -184,7 +184,7 @@ def get_graph(cluster, host, graphtype):
         })
     #print ' '.join(cmd)
 
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, env={'TZ': 'PST8PDT'})
     stdout, stderr = proc.communicate()
 
     bottle.response.content_type = 'image/png'
@@ -213,22 +213,34 @@ def get_cluster_graphs(cluster, graphtype):
 def server_static(filename):
     return bottle.static_file(filename, root='./static')
 
+@bottle.get('/search/:timerange/:graphtype')
+@bottle.get('/search/:timerange')
 @bottle.get('/search')
-def search():
+def search(timerange=1, graphtype=None):
     template = env.get_template('search.html')
     bottle.response.content_type = 'text/html'
 
     p = bottle.request.params
-    pools = p.get('pools', None)
-    if not pools:
+    query = p.get('pools', None)
+    if not query:
         return template.render(servers=[])
-    pools = pools.replace(',', ' ').split(' ')
+    pools = query.replace(',', ' ').split(' ')
     pools.sort()
+
+    now = int(time())
+    start = str(now - (int(timerange) * 3600))
+    end = str(now)
+
+    if graphtype is None:
+        graphtypes = ['cpu', 'memory', 'network']
+    else:
+        graphtypes = [graphtype]
+
 
     cachekey = 'search/%s' % ','.join(pools)
     result = cache.get(cachekey)
     if result:
-        return template.render(servers=json.loads(result))
+        return template.render(servers=json.loads(result), query=query, start=start, end=end, graphtypes=graphtypes)
 
     def get_contents(name):
         obj = clusto.get_by_name(name)
@@ -255,7 +267,7 @@ def search():
 
     template = env.get_template('search.html')
     bottle.response.content_type = 'text/html'
-    return template.render(servers=servers)
+    return template.render(servers=servers, query=query, start=start, end=end, graphtypes=graphtypes)
 
 @bottle.get('/')
 def index():

@@ -5,8 +5,10 @@
 {% block content %}
 <form action="/search">
 <fieldset>
-	<label for="pools"><input type="text" name="pools" value="{{ pools }}" />
+	<label for="pools"><input type="text" name="pools" value="{{ query }}" />
 	<input type="submit" value="Search" />
+
+	<div class="timerange"><a href="/search/1?pools={{ query }}">1 hour</a> <a href="/search/6?pools={{ query }}">6 hours</a> <a href="/search/12?pools={{ query }}">12 hours</a> <a href="/search/24?pools={{ query }}">1 day</a> <a href="/search/168?pools={{ query }}">1 week</a></div>
 </fieldset>
 </form>
 
@@ -36,9 +38,9 @@
 
 		{% if server.dnsname %}
 		<ul class="graphs">
-			<li><a href="/host/{{ server.dnsname.0 }}"><img src="/graph/all/{{ server.dnsname.0 }}/cpu?size=small" alt="{{ server.name }} cpu" /></a></li>
-			<li><a href="/host/{{ server.dnsname.0 }}"><img src="/graph/all/{{ server.dnsname.0 }}/memory?size=small" alt="{{ server.name }} memory" /></a></li>
-			<li><a href="/host/{{ server.dnsname.0 }}"><img src="/graph/all/{{ server.dnsname.0 }}/network?size=small" alt="{{ server.name }} network" /></a></li>
+			{% for graphtype in graphtypes %}
+			<li><a href="/host/{{ server.dnsname.0 }}"><img src="/graph/all/{{ server.dnsname.0 }}/{{ graphtype }}?size=small&start={{ start }}&end={{ end }}" alt="{{ server.name }} {{ graphtype }}" /></a></li>
+			{% endfor %}
 		</ul>
 		{% endif %}
 	</li>
