@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_title %}Search{% endblock %}
+{% block page_title %}metartg{% endblock %}
 
 {% block content %}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
@@ -27,6 +27,8 @@ function toggle_graphtype(evt) {
 
 function update_graphs() {
 	var query = $('[name=pools]').val();
+	query = query.replace(/ $/g, '');
+	query = query.replace(/^ /g, '');
 	query = query.replace(/ /g, '+');
 
 	var timerange = $('.timerange .selected').attr('name');
@@ -71,7 +73,7 @@ function update_graphs() {
 					html += '<ul class="graphs">';
 					for(var x = 0; x < graphtypes.length; x++) {
 						var graphtype = graphtypes[x];
-						html += '<li><img src="/graph/all/' + dnsname + '/' + graphtype + '?size=small&start=' + ts_start + '&end=' + ts_end + '" alt="' + server.name + ' ' + graphtype + '" /></li>';
+						html += '<li><a href="/graph/all/' + dnsname + '/' + graphtype + '?start=' + ts_start + '&end=' + ts_end + '"><img src="/graph/all/' + dnsname + '/' + graphtype + '?size=small&start=' + ts_start + '&end=' + ts_end + '" alt="' + server.name + ' ' + graphtype + '" /></a></li>';
 					}
 					html += '</ul>';
 				}
@@ -132,6 +134,7 @@ $(document).ready(function() {
 		<li class="selected" name="memory">Memory</li>
 		<li name="cpu">CPU</li>
 		<li name="network">Network</li>
+		<li name="io">Disk I/O</li>
 	</ul>
 </fieldset>
 

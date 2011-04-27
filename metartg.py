@@ -42,24 +42,26 @@ RRD_GRAPH_DEFS = {
         'DEF:cpu_user=%(rrdpath)s/cpu_user.rrd:sum:AVERAGE',
         'DEF:cpu_system=%(rrdpath)s/cpu_system.rrd:sum:AVERAGE',
         'DEF:cpu_nice=%(rrdpath)s/cpu_nice.rrd:sum:AVERAGE',
-        'DEF:cpu_wio=%(rrdpath)s/cpu_wio.rrd:sum:AVERAGE',
         'AREA:cpu_system#FF6600:CPU system\\l:STACK',
-        'AREA:cpu_wio#EA8F00:CPU iowait\\l:STACK',
         'AREA:cpu_nice#FFCC00:CPU nice\\l:STACK',
         'AREA:cpu_user#FFFF66:CPU user\\l:STACK',
-    ]
+    ],
+    'io': [
+        'DEF:cpu_wio=%(rrdpath)s/cpu_wio.rrd:sum:AVERAGE',
+        'LINE:cpu_wio#EA8F00:CPU iowait\\l',
+    ],
 }
 
 RRD_GRAPH_OPTIONS = {
-    'cpu': [
-        '--upper-limit', '100.0',
-    ]
+    'cpu': ['--upper-limit', '100.0'],
+    'io': ['--upper-limit', '100.0']
 }
 
 RRD_GRAPH_TITLE = {
     'network': '%(host)s | bits in/out',
     'cpu': '%(host)s | cpu %%',
     'memory': '%(host)s | memory utilization',
+    'io': '%(host)s | disk i/o',
 }
 
 def get_metrics_xml(host='localhost', port=8651):
