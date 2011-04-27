@@ -213,34 +213,20 @@ def get_cluster_graphs(cluster, graphtype):
 def server_static(filename):
     return bottle.static_file(filename, root='./static')
 
-@bottle.get('/search/:timerange/:graphtype')
-@bottle.get('/search/:timerange')
 @bottle.get('/search')
-def search(timerange=1, graphtype=None):
-    template = env.get_template('search.html')
-    bottle.response.content_type = 'text/html'
-
+def search():
     p = bottle.request.params
-    query = p.get('pools', None)
+    query = p.get('q', None)
     if not query:
-        return template.render(servers=[])
-    pools = query.replace(',', ' ').split(' ')
+        bottle.abort(400, 'Parameter "q" is required')
+
+    pools = query.replace('+', ' ').replace(',', ' ').split(' ')
     pools.sort()
-
-    now = int(time())
-    start = str(now - (int(timerange) * 3600))
-    end = str(now)
-
-    if graphtype is None:
-        graphtypes = ['cpu', 'memory', 'network']
-    else:
-        graphtypes = [graphtype]
-
 
     cachekey = 'search/%s' % ','.join(pools)
     result = cache.get(cachekey)
     if result:
-        return template.render(servers=json.loads(result), query=query, start=start, end=end, graphtypes=graphtypes)
+        return dumps(json.loads(result))
 
     def get_contents(name):
         obj = clusto.get_by_name(name)
@@ -265,13 +251,12 @@ def search(timerange=1, graphtype=None):
     servers = list(gpool.imap(get_server_info, first.intersection(*pools)))
     cache.set(cachekey, json.dumps(servers))
 
-    template = env.get_template('search.html')
-    bottle.response.content_type = 'text/html'
-    return template.render(servers=servers, query=query, start=start, end=end, graphtypes=graphtypes)
+    return dumps(servers)
 
 @bottle.get('/')
 def index():
-    bottle.redirect('/cluster/all/cpu')
+    template = env.get_template('search.html')
+    return template.render()
 
 if __name__ == '__main__':
     bottle.run()

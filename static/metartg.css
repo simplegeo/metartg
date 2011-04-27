@@ -21,15 +21,15 @@ img {
 	float: left;
 }
 
-li.server {
-	margin: 10px;
-	padding: 10px;
-	border-bottom: 1px solid white;
+.server {
+	width: 50%;
+	float: left;
+	margin-bottom: 10px;
 }
 
 li .label {
 	float: left;
-	width: 200px;
+	width: 100px;
 	clear: left;
 }
 
@@ -37,7 +37,12 @@ li .value {
 }
 
 .server .info {
-	margin: 10px;
+	padding: 5px;
+}
+
+.server .value {
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .graphs li {
@@ -46,4 +51,57 @@ li .value {
 
 .graphs {
 	clear: right;
+}
+
+#sidebar {
+	float: left;
+	width: 15%;
+	background-color: #333;
+	padding: 5px;
+}
+
+.servers {
+	float: left;
+	width: 82%;
+	margin-left: 10px;
+}
+
+fieldset.search {
+	border: 0;
+	margin: 0;
+}
+
+.search .pools {
+	width: 100%;
+	font-size: 10pt;
+}
+
+.submit {
+	width: 100%;
+	text-align: center;
+	margin-top: 10px;
+}
+
+.timerange {
+	margin-bottom: 20px;
+}
+
+.timerange li, .graphtypes li {
+	margin-top: 5px;
+	background-color: #555;
+	color: #DDD;
+	text-align: center;
+	width: 100%;
+	line-height: 30px;
+	cursor: pointer;
+}
+
+.timerange .selected {
+	background-color: #157419;
+	font-weight: bold;
+}
+
+.graphtypes .selected {
+	background-color: #741519;
+	font-weight: bold;
 }
