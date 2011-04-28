@@ -52,9 +52,7 @@ RRD_GRAPH_DEFS = {
     ],
     'redis-memory': [
         'DEF:memory=%(rrdpath)s/redis_used_memory.rrd:sum:AVERAGE',
-        'DEF:memory_rss=%(rrdpath)s/redis_used_memory_rss.rrd:sum:AVERAGE',
         'LINE:memory#EA8F00:Redis memory\\l',
-        'LINE:memory_rss#008FEA:Stack memory\\l',
     ],
 }
 
