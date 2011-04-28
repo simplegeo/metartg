@@ -50,6 +50,12 @@ RRD_GRAPH_DEFS = {
         'DEF:cpu_wio=%(rrdpath)s/cpu_wio.rrd:sum:AVERAGE',
         'LINE:cpu_wio#EA8F00:CPU iowait\\l',
     ],
+    'redis-memory': [
+        'DEF:memory=%(rrdpath)s/redis_used_memory.rrd:sum:AVERAGE',
+        'DEF:memory_rss=%(rrdpath)s/redis_used_memory_rss.rrd:sum:AVERAGE',
+        'LINE:memory#EA8F00:Redis memory\\l',
+        'LINE:memory_rss#008FEA:Stack memory\\l',
+    ],
 }
 
 RRD_GRAPH_OPTIONS = {
@@ -62,7 +68,16 @@ RRD_GRAPH_TITLE = {
     'cpu': '%(host)s | cpu %%',
     'memory': '%(host)s | memory utilization',
     'io': '%(host)s | disk i/o',
+    'redis-memory': '%(host)s | redis memory',
 }
+
+RRD_GRAPH_TYPES = [
+    ('cpu', 'CPU'),
+    ('memory', 'Memory'),
+    ('network', 'Network'),
+    ('io', 'Disk I/O'),
+    ('redis-memory', 'Redis memory'),
+]
 
 def get_metrics_xml(host='localhost', port=8651):
     sock = socket.socket()
@@ -258,7 +273,7 @@ def search():
 @bottle.get('/')
 def index():
     template = env.get_template('search.html')
-    return template.render()
+    return template.render(graphtypes=RRD_GRAPH_TYPES)
 
 if __name__ == '__main__':
     bottle.run()

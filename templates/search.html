@@ -131,10 +131,9 @@ $(document).ready(function() {
 	</ul>
 
 	<ul class="graphtypes">
-		<li class="selected" name="memory">Memory</li>
-		<li name="cpu">CPU</li>
-		<li name="network">Network</li>
-		<li name="io">Disk I/O</li>
+		{% for graphtype in graphtypes %}
+		<li name="{{ graphtype.0 }}">{{ graphtype.1 }}</li>
+		{% endfor %}
 	</ul>
 </fieldset>
 
