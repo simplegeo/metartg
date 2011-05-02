@@ -6,4 +6,13 @@ setup(name='metartg',
       author='Jeremy Grosser',
       packages=['metartg'],
       scripts=glob('checks/*'),
+      install_requires=[
+        'eventlet',
+        'python-memcached',
+        'simplejson',
+        'gunicorn',
+        'bottle',
+        'jinja2',
+        'pyrrd',
+      ]
 )
