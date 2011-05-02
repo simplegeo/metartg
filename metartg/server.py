@@ -2,7 +2,10 @@ from xml.etree import ElementTree
 from time import time
 import subprocess
 import socket
+import os.path
+import os
 
+from pyrrd.rrd import RRD, RRA, DS
 import simplejson as json
 import clustohttp
 import eventlet
@@ -10,12 +13,16 @@ import memcache
 import bottle
 import jinja2
 
+STATIC_PATH = '/usr/share/metartg/static'
+TEMPLATE_PATH = '/usr/share/metartg/templates'
+
 bottle.debug(True)
 application = bottle.default_app()
-env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
 cache = memcache.Client(['127.0.0.1:11211'])
 gpool = eventlet.GreenPool(200)
 clusto = clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
+RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
     'memory': [
@@ -77,43 +84,6 @@ RRD_GRAPH_TYPES = [
     ('redis-memory', 'Redis memory'),
 ]
 
-def get_metrics_xml(host='localhost', port=8651):
-    sock = socket.socket()
-    sock.connect((host, port))
-    buf = ''
-    while True:
-        data = sock.recv(4096)
-        if data == '':
-            break
-        buf += data
-    return buf
-
-def get_metrics_list(root):
-    result = {}
-    for cluster in root.findall('GRID/CLUSTER'):
-        clustername = cluster.get('NAME')
-        if not clustername in result:
-            result[clustername] = {}
-
-        for host in cluster.findall('HOST'):
-            name = host.get('NAME')
-            ip = host.get('IP')
-            #pprint([x.items() for x in host.findall('METRIC')])
-            result[clustername][name] = []
-            for metric in host.findall('METRIC'):
-                d = {
-                    'name': metric.get('NAME'),
-                    'graph': '/graph/%s/%s/%s' % (
-                        clustername,
-                        name,
-                        metric.get('NAME'),
-                    ),
-                }
-                for extra in metric.findall('EXTRA_DATA/EXTRA_ELEMENT'):
-                    d[extra.get('NAME').lower()] = extra.get('VAL')
-                result[clustername][name].append(d)
-    return result
-
 def get_clusto_name(dnsname):
     key = 'clusto/hostname/%s' % dnsname
     c = cache.get(key)
@@ -141,11 +111,41 @@ def dumps(obj):
         bottle.response.content_type = 'application/json'
     return result
 
-@bottle.get('/metrics')
-def get_metrics():
-    root = ElementTree.fromstring(get_metrics_xml())
-    metrics = get_metrics_list(root)
-    return dumps(metrics)
+def create_rrd(filename, metric, data):
+    os.makedirs(os.path.dirname(filename))
+
+    ds = [
+        DS(dsName='sum', dsType=data['type'], heartbeat=600),
+    ]
+    rra = [
+        RRA(cf='AVERAGE', xff=0.5, steps=1, rows=240),
+        RRA(cf='AVERAGE', xff=0.5, steps=24, rows=240),
+        RRA(cf='AVERAGE', xff=0.5, steps=168, rows=240),
+        RRA(cf='AVERAGE', xff=0.5, steps=672, rows=240),
+        RRA(cf='AVERAGE', xff=0.5, steps=5760, rows=240),
+    ]
+    rrd = RRD(filename, ds=ds, rra=rra, start=(data['ts'] - 1))
+    rrd.create()
+
+def update_rrd(filename, metric, data):
+    rrd = RRD(filename)
+    rrd.bufferValue(str(data['ts']), data['value'])
+    rrd.update()
+
+@bottle.post('/rrd/:host/:service')
+def post_rrd_update(host, service):
+    metrics = json.loads(bottle.request.body.read())
+    for metric in metrics:
+        rrdfile = RRDPATH % {
+            'host': host,
+            'service': service,
+            'metric': metric,
+        }
+        if not os.path.exists(rrdfile):
+            create_rrd(rrdfile, metric, metrics[metric])
+            bottle.response.status = 201
+        update_rrd(rrdfile, metric, metrics[metric])
+    return
 
 @bottle.get('/graph/:cluster/:host/:graphtype')
 def get_graph(cluster, host, graphtype):
@@ -205,28 +205,9 @@ def get_graph(cluster, host, graphtype):
     bottle.response.content_type = 'image/png'
     return stdout
 
-@bottle.get('/host/:host')
-def get_host_graphs(host):
-    template = env.get_template('host.html')
-    bottle.response.content_type = 'text/html'
-    return template.render(host=host, graphtypes=RRD_GRAPH_DEFS.keys())
-
-@bottle.get('/cluster/:cluster/:graphtype')
-def get_cluster_graphs(cluster, graphtype):
-    if not graphtype in RRD_GRAPH_DEFS:
-        bottle.abort(404, 'Graph type %s not found' % graphtype)
-
-    root = ElementTree.fromstring(get_metrics_xml())
-    metrics = get_metrics_list(root)
-    hosts = metrics[cluster].keys()
-
-    template = env.get_template('cluster.html')
-    bottle.response.content_type = 'text/html'
-    return template.render(cluster=cluster, hosts=hosts, graphtype=graphtype)
-
 @bottle.get('/static/:filename')
 def server_static(filename):
-    return bottle.static_file(filename, root='./static')
+    return bottle.static_file(filename, root=STATIC_PATH)
 
 @bottle.get('/search')
 def search():
