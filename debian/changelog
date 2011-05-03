@@ -1,3 +1,12 @@
+metartg (0.1-1sg6) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Don't pprint metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 22:44:11 +0000
+
 metartg (0.1-1sg5) lucid; urgency=low
 
   [ Jeremy Grosser ]
