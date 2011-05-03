@@ -1,11 +1,32 @@
 from base64 import b64encode
+from pprint import pprint
 import simplejson as json
+import logging
 import urllib2
+import os.path
+import sys
+import os
 
 
 def conf(key):
     config = json.load(file('/etc/metartg.conf', 'r'))
     return config.get(key, None)
+
+
+def run_checks(checks):
+    metartg = Metartg()
+    for filename in checks:
+        try:
+            check = __import__('metartg.checks.%s' % filename, {}, {}, ['run_check'], 0)
+        except:
+            logging.error('Unable to import check %s: %s' % (filename, sys.exc_info()[1]))
+            return
+
+        try:
+            check.run_check(metartg.update)
+        except:
+            logging.error('Exception from %s.run_check: %s' % (filename, sys.exc_info()[1]))
+            return
 
 
 class Request(urllib2.Request):
@@ -39,6 +60,8 @@ class Metartg(object):
             'ActiveCount': {'type': 'GAUGE', 'ts': 1304443700, 'value': 20},
         }
         '''
+
+        pprint((service, metrics))
 
         headers = {'Content-type': 'application/json'}
         if self.auth:

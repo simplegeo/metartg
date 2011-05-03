@@ -5,7 +5,9 @@ setup(name='metartg',
       version='0.1',
       author='Jeremy Grosser',
       packages=['metartg'],
-      scripts=glob('checks/*'),
+      scripts=[
+        'scripts/metartg_check'
+      ],
       install_requires=[
         'eventlet',
         'python-memcached',
