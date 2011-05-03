@@ -1,3 +1,71 @@
+metartg (0.1-1sg7) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Don't print system metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 22:48:05 +0000
+
+metartg (0.1-1sg6) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Don't pprint metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 22:44:11 +0000
+
+metartg (0.1-1sg5) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add system checks
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 22:40:50 +0000
+
+metartg (0.1-1sg4) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add metartg.checks package
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 21:42:10 +0000
+
+metartg (0.1-1sg3) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Magical check loading
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 21:24:49 +0000
+
+metartg (0.1-1sg2) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Fix static assets paths
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 18:56:24 +0000
+
+metartg (0.1-1sg1) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Update dependencies
+  * Add init file
+  * Initial stab at redis check
+  * rename redis check, add authentication support
+  * Bugfixes, redis check works
+  * Re-enable caching, add new graphing endpoint
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 18:53:47 +0000
+
 metartg (0.1-1sg0) unstable; urgency=low
 
   * Initial release
