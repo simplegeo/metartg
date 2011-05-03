@@ -1,17 +1,21 @@
+from base64 import b64encode
 import simplejson as json
 import urllib2
+
 
 def conf(key):
     config = json.load(file('/etc/metartg.conf', 'r'))
     return config.get(key, None)
 
+
 class Request(urllib2.Request):
     def __init__(self, method, url, headers={}, data=None):
-        urllib2.Request(self, url, data, headers)
+        urllib2.Request.__init__(self, url, data, headers)
         self.method = method
 
     def get_method(self):
         return self.method
+
 
 class Metartg(object):
     def __init__(self, url=None, hostname=None):
@@ -35,12 +39,13 @@ class Metartg(object):
             'ActiveCount': {'type': 'GAUGE', 'ts': 1304443700, 'value': 20},
         }
         '''
-        req = Request('POST', '%s/rrd/%s/%s' % (self.url, self.hostname, service),
-            data=json.dumps(metrics[service]),
-            headers={
-                'Content-type': 'application/json',
-            })
+
+        headers = {'Content-type': 'application/json'}
         if self.auth:
-            req.add_header('Authorization', ('%(username)s:%(password)s' % self.auth).encode('base64'))
+            headers['Authorization'] = 'Basic ' + b64encode('%(username)s:%(password)s' % self.auth)
+
+        req = Request('POST', '%s/rrd/%s/%s' %
+            (self.url, self.hostname, service),
+            data=json.dumps(metrics), headers=headers)
         resp = urllib2.urlopen(req)
         return (resp.info().status, resp.read())

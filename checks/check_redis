@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from metartg import Metartg
+from pprint import pprint
 from socket import socket
 from time import time
 import sys
@@ -19,13 +20,14 @@ def readlines(sock):
     buf = ''
     while True:
         data = sock.recv(1024)
+        if not data:
+            return
         buf += data
         while buf.find('\r\n') != -1:
             line, buf = buf.split('\r\n', 1)
+            if line == '':
+                return
             yield line
-        if data == '':
-            break
-    return
 
 
 def redis_metrics():
@@ -36,15 +38,20 @@ def redis_metrics():
     metrics = {}
     now = int(time())
     for line in readlines(sock):
-        if not line:
+        if not line or line.startswith('$'):
             continue
+
         field, value = line.split(':', 1)
+        if not field in REDIS_METRICS:
+            continue
+
         for field, rrdtype in REDIS_METRICS.iteritems():
             metrics[field] = {
                 'type': rrdtype,
                 'ts': now,
                 'value': int(value),
             }
+
     sock.sendall('quit\r\n')
     sock.close()
     return metrics
@@ -52,8 +59,9 @@ def redis_metrics():
 
 def main():
     metartg = Metartg()
-    metartg.update('redis', redis_metrics())
-
+    metrics = redis_metrics()
+    pprint(metrics)
+    metartg.update('redis', metrics)
 
 if __name__ == '__main__':
     sys.exit(main())
