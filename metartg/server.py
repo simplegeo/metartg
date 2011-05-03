@@ -13,8 +13,8 @@ import memcache
 import bottle
 import jinja2
 
-STATIC_PATH = '/home/synack/src/metartg/static'
-TEMPLATE_PATH = '/home/synack/src/metartg/templates'
+STATIC_PATH = '/usr/share/metartg/static'
+TEMPLATE_PATH = '/usr/share/metartg/templates'
 
 bottle.debug(True)
 application = bottle.default_app()
