@@ -58,7 +58,7 @@ RRD_GRAPH_DEFS = {
         'LINE:cpu_wio#EA8F00:CPU iowait\\l',
     ],
     'redis-memory': [
-        'DEF:memory=%(rrdpath)s/redis_used_memory.rrd:sum:AVERAGE',
+        'DEF:memory=%(rrdpath)s/redis/used_memory.rrd:sum:AVERAGE',
         'LINE:memory#EA8F00:Redis memory\\l',
     ],
 }
@@ -86,8 +86,7 @@ RRD_GRAPH_TYPES = [
 
 def get_clusto_name(dnsname):
     key = 'clusto/hostname/%s' % dnsname
-    #c = cache.get(key)
-    c = None
+    c = cache.get(key)
     if c:
         return c
 
@@ -113,7 +112,10 @@ def dumps(obj):
     return result
 
 def create_rrd(filename, metric, data):
-    os.makedirs(os.path.dirname(filename))
+    try:
+        os.makedirs(os.path.dirname(filename))
+    except:
+        pass
 
     ds = [
         DS(dsName='sum', dsType=data['type'], heartbeat=600),
@@ -130,7 +132,7 @@ def create_rrd(filename, metric, data):
 
 def update_rrd(filename, metric, data):
     rrd = RRD(filename)
-    rrd.bufferValue(str(data['ts']), data['value'])
+    rrd.bufferValue(str(data['ts']), str(data['value']))
     rrd.update()
 
 @bottle.post('/rrd/:host/:service')
@@ -147,6 +149,61 @@ def post_rrd_update(host, service):
             bottle.response.status = 201
         update_rrd(rrdfile, metric, metrics[metric])
     return
+
+@bottle.get('/graph/:host/:graphtype')
+def get_rrd_graph(host, graphtype):
+    now = int(time())
+    params = bottle.request.params
+    start = params.get('start', (now - 3600))
+    end = params.get('end', now)
+    size = params.get('size', 'large')
+
+    cmd = ['/usr/bin/rrdtool', 'graph',
+        '-',
+        '--font', 'DEFAULT:7:monospace',
+        '--font-render-mode', 'normal',
+        '--color', 'MGRID#880000',
+        '--color', 'GRID#777777',
+        '--color', 'CANVAS#000000',
+        '--color', 'FONT#ffffff',
+        '--color', 'BACK#444444',
+        '--color', 'SHADEA#000000',
+        '--color', 'SHADEB#000000',
+        '--color', 'FRAME#444444',
+        '--color', 'ARROW#FFFFFF',
+        '--imgformat', 'PNG',
+        '--tabwidth', '75',
+        '--start', str(start),
+        '--end', str(end),
+    ]
+
+    cmd += RRD_GRAPH_OPTIONS.get(graphtype, [])
+    cmd += ['--title', RRD_GRAPH_TITLE.get(graphtype, host) % {'host': host}]
+
+    if size == 'small':
+        cmd += [
+            '--no-legend',
+            '--width', '375',
+            '--height', '100'
+        ]
+    else:
+        cmd += [
+            '--width', '600',
+            '--height', '200',
+            '--watermark', 'simplegeo'
+        ]
+
+    for gdef in RRD_GRAPH_DEFS.get(graphtype, []):
+        cmd.append(gdef % {
+            'rrdpath': '/var/lib/metartg/rrds/%s' % host,
+        })
+    print '\n'.join(cmd)
+
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, env={'TZ': 'PST8PDT'})
+    stdout, stderr = proc.communicate()
+
+    bottle.response.content_type = 'image/png'
+    return stdout
 
 @bottle.get('/graph/:cluster/:host/:graphtype')
 def get_graph(cluster, host, graphtype):
@@ -221,8 +278,7 @@ def search():
     pools.sort()
 
     cachekey = 'search/%s' % ','.join(pools)
-    #result = cache.get(cachekey)
-    result = None
+    result = cache.get(cachekey)
     if result:
         return dumps(json.loads(result))
 
