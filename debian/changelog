@@ -1,3 +1,12 @@
+metartg (0.1-1sg4) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add metartg.checks package
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 21:42:10 +0000
+
 metartg (0.1-1sg3) lucid; urgency=low
 
   [ Jeremy Grosser ]
