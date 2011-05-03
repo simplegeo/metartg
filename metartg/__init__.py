@@ -61,7 +61,7 @@ class Metartg(object):
         }
         '''
 
-        pprint((service, metrics))
+        #pprint((service, metrics))
 
         headers = {'Content-type': 'application/json'}
         if self.auth:
