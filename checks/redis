@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+from metartg import Metartg
+from socket import socket
+from time import time
+import sys
+
+
+REDIS_METRICS = {
+    'used_memory': 'GAUGE',
+    'connected_clients': 'GAUGE',
+    'connected_slaves': 'GAUGE',
+    'blocked_clients': 'GAUGE',
+    'total_connections_received': 'COUNTER',
+    'total_commands_processed': 'COUNTER',
+}
+
+
+def readlines(sock):
+    buf = ''
+    while True:
+        data = sock.recv(1024)
+        buf += data
+        while buf.find('\r\n') != -1:
+            line, buf = buf.split('\r\n', 1)
+            yield line
+        if data == '':
+            break
+    return
+
+
+def redis_metrics():
+    sock = socket()
+    sock.connect(('127.0.0.1', 6379))
+    sock.sendall('info\r\n')
+
+    metrics = {}
+    now = int(time())
+    for line in readlines(sock):
+        if not line:
+            continue
+        field, value = line.split(':', 1)
+        if field, rrdtype in REDIS_METRICS.iteritems():
+            metrics[field] = {
+                'type': rrdtype,
+                'ts': now,
+                'value': int(value),
+            }
+    sock.sendall('quit\r\n')
+    sock.close()
+    return metrics
+
+
+def main():
+    metartg = Metartg()
+    metartg.update('redis', get_redis_stats())
+
+
+if __name__ == '__main__':
+    sys.exit(main())
