@@ -1,3 +1,12 @@
+metartg (0.1-1sg2) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Fix static assets paths
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 18:56:24 +0000
+
 metartg (0.1-1sg1) lucid; urgency=low
 
   [ Jeremy Grosser ]
