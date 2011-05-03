@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+import metartg
+import sys
+
+metartg.run_checks(sys.argv[1:])

@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from metartg import Metartg
-from pprint import pprint
 from socket import socket
 from time import time
 import sys
@@ -57,11 +55,6 @@ def redis_metrics():
     return metrics
 
 
-def main():
-    metartg = Metartg()
+def run_check(callback):
     metrics = redis_metrics()
-    pprint(metrics)
-    metartg.update('redis', metrics)
-
-if __name__ == '__main__':
-    sys.exit(main())
+    callback('redis', metrics)
