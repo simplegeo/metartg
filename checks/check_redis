@@ -39,7 +39,7 @@ def redis_metrics():
         if not line:
             continue
         field, value = line.split(':', 1)
-        if field, rrdtype in REDIS_METRICS.iteritems():
+        for field, rrdtype in REDIS_METRICS.iteritems():
             metrics[field] = {
                 'type': rrdtype,
                 'ts': now,
@@ -52,7 +52,7 @@ def redis_metrics():
 
 def main():
     metartg = Metartg()
-    metartg.update('redis', get_redis_stats())
+    metartg.update('redis', redis_metrics())
 
 
 if __name__ == '__main__':

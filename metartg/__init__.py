@@ -3,7 +3,7 @@ import urllib2
 
 def conf(key):
     config = json.load(file('/etc/metartg.conf', 'r'))
-    return config[key]
+    return config.get(key, None)
 
 class Request(urllib2.Request):
     def __init__(self, method, url, headers={}, data=None):
@@ -25,6 +25,7 @@ class Metartg(object):
             hostname = conf('hostname')
         self.url = url
         self.hostname = hostname
+        self.auth = conf('auth')
 
     def update(self, service, metrics):
         '''
@@ -39,5 +40,7 @@ class Metartg(object):
             headers={
                 'Content-type': 'application/json',
             })
+        if self.auth:
+            req.add_header('Authorization', ('%(username)s:%(password)s' % self.auth).encode('base64'))
         resp = urllib2.urlopen(req)
         return (resp.info().status, resp.read())
