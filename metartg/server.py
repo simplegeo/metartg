@@ -26,9 +26,9 @@ RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
     'memory': [
-        'DEF:mem_free=%(rrdpath)s/mem_free.rrd:sum:AVERAGE',
-        'DEF:mem_total=%(rrdpath)s/mem_total.rrd:sum:AVERAGE',
-        'DEF:mem_buffers=%(rrdpath)s/mem_buffers.rrd:sum:AVERAGE',
+        'DEF:mem_free=%(rrdpath)s/memory/free_memory.rrd:sum:AVERAGE',
+        'DEF:mem_total=%(rrdpath)s/memory/total_memory.rrd:sum:AVERAGE',
+        'DEF:mem_buffers=%(rrdpath)s/memory/buffer_memory.rrd:sum:AVERAGE',
         'CDEF:gb_mem_free=mem_free,1024,*',
         'CDEF:gb_mem_total=mem_total,1024,*',
         'CDEF:gb_mem_buffers=mem_buffers,1024,*',
@@ -46,15 +46,15 @@ RRD_GRAPH_DEFS = {
         'LINE:net_bits_out#996600:Network out\\l',
     ],
     'cpu': [
-        'DEF:cpu_user=%(rrdpath)s/cpu_user.rrd:sum:AVERAGE',
-        'DEF:cpu_system=%(rrdpath)s/cpu_system.rrd:sum:AVERAGE',
-        'DEF:cpu_nice=%(rrdpath)s/cpu_nice.rrd:sum:AVERAGE',
+        'DEF:cpu_user=%(rrdpath)s/cpu/user.rrd:sum:AVERAGE',
+        'DEF:cpu_system=%(rrdpath)s/cpu/sys.rrd:sum:AVERAGE',
+        'DEF:cpu_nice=%(rrdpath)s/cpu/nice.rrd:sum:AVERAGE',
         'AREA:cpu_system#FF6600:CPU system\\l:STACK',
         'AREA:cpu_nice#FFCC00:CPU nice\\l:STACK',
         'AREA:cpu_user#FFFF66:CPU user\\l:STACK',
     ],
     'io': [
-        'DEF:cpu_wio=%(rrdpath)s/cpu_wio.rrd:sum:AVERAGE',
+        'DEF:cpu_wio=%(rrdpath)s/cpu/iowait.rrd:sum:AVERAGE',
         'LINE:cpu_wio#EA8F00:CPU iowait\\l',
     ],
     'redis-memory': [
@@ -79,9 +79,9 @@ RRD_GRAPH_TITLE = {
 RRD_GRAPH_TYPES = [
     ('cpu', 'CPU'),
     ('memory', 'Memory'),
-    ('network', 'Network'),
-    ('io', 'Disk I/O'),
-    ('redis-memory', 'Redis memory'),
+#    ('network', 'Network'),
+#    ('io', 'Disk I/O'),
+#    ('redis-memory', 'Redis memory'),
 ]
 
 def get_clusto_name(dnsname):
@@ -197,7 +197,7 @@ def get_rrd_graph(host, graphtype):
         cmd.append(gdef % {
             'rrdpath': '/var/lib/metartg/rrds/%s' % host,
         })
-    print '\n'.join(cmd)
+    #print '\n'.join(cmd)
 
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, env={'TZ': 'PST8PDT'})
     stdout, stderr = proc.communicate()

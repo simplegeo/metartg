@@ -68,12 +68,12 @@ function update_graphs() {
 						'<div class="value">' + server.contents.join(' ') + '&nbsp;</div>';
 				}
 				html += '</div>';
-				if(server.dnsname) {
-					var dnsname = server.dnsname[0];
+				if(server.name) {
+					var instance = server.name[0];
 					html += '<ul class="graphs">';
 					for(var x = 0; x < graphtypes.length; x++) {
 						var graphtype = graphtypes[x];
-						html += '<li><a href="/graph/all/' + dnsname + '/' + graphtype + '?start=' + ts_start + '&end=' + ts_end + '"><img src="/graph/all/' + dnsname + '/' + graphtype + '?size=small&start=' + ts_start + '&end=' + ts_end + '" alt="' + server.name + ' ' + graphtype + '" /></a></li>';
+						html += '<li><a href="/graph/' + instance + '/' + graphtype + '?start=' + ts_start + '&end=' + ts_end + '"><img src="/graph/' + instance + '/' + graphtype + '?size=small&start=' + ts_start + '&end=' + ts_end + '" alt="' + server.name + ' ' + graphtype + '" /></a></li>';
 					}
 					html += '</ul>';
 				}
