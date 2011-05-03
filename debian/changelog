@@ -1,3 +1,17 @@
+metartg (0.1-1sg1) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Update dependencies
+  * Add init file
+  * Initial stab at redis check
+  * rename redis check, add authentication support
+  * Bugfixes, redis check works
+  * Re-enable caching, add new graphing endpoint
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 03 May 2011 18:53:47 +0000
+
 metartg (0.1-1sg0) unstable; urgency=low
 
   * Initial release
