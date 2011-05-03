@@ -11,7 +11,6 @@ def cpu_metrics():
     stdout, stderr = p.communicate()
     stdout = stdout.split('\n')[-2]
     stdout = [x for x in stdout.split(' ')[1:] if x]
-    print repr(stdout)
     stdout = [int(float(x)) for x in stdout[1:]]
     for i, name in enumerate(('user', 'nice', 'sys', 'iowait', 'irq', 'soft', 'steal', 'guest', 'idle')):
         metrics[name] = {
