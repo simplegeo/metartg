@@ -2,4 +2,8 @@
 import metartg
 import sys
 
+logfile = file('/var/log/metartg.log', 'a')
+sys.stdout = logfile
+sys.stderr = logfile
+
 metartg.run_checks(sys.argv[1:])
