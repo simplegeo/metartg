@@ -140,12 +140,12 @@ $(document).ready(function() {
 	</ul>
 
 	<div class="graphtypes">
-	{% for group in groups %}
+	{% for group, graphs in groups %}
 	<div class="group">
 		<h3>{{ group }}</h3>
 		<ul class="category" name="{{ group }}">
-			{% for graph in groups[group]  %}
-			<li class="graphtype group-{{ group }}" name="{{ group }}-{{ graph }}">{{ groups[group][graph] }}</li>
+			{% for graph in graphs %}
+			<li class="graphtype group-{{ group }}" name="{{ group }}-{{ graph.0 }}">{{ graph.1 }}</li>
 			{% endfor %}
 		</ul>
 	</div>

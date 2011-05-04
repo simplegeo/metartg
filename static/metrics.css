@@ -90,6 +90,11 @@ img {
 	cursor: pointer;
 }
 
+.graphtype {
+	text-align: left;
+	padding-left: 5px;
+}
+
 .graphtypes {
 }
 
@@ -114,10 +119,8 @@ img {
 
 .timerange .selected {
 	background-color: #157419;
-	font-weight: bold;
 }
 
 .graphtype.selected {
 	background-color: #741519;
-	font-weight: bold;
 }

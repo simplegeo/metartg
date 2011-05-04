@@ -1,5 +1,6 @@
 from xml.etree import ElementTree
 from time import time
+from glob import glob
 import subprocess
 import socket
 import os.path
@@ -37,14 +38,14 @@ RRD_GRAPH_DEFS = {
         'LINE:gb_mem_total#FFFFFF:Total memory\\l',
         'AREA:gb_mem_used#006699:Used memory\\l',
     ],
-    'network': [
-        'DEF:net_in=%(rrdpath)s/bytes_in.rrd:sum:AVERAGE',
-        'DEF:net_out=%(rrdpath)s/bytes_out.rrd:sum:AVERAGE',
-        'CDEF:net_bits_in=net_in,8,*',
-        'CDEF:net_bits_out=net_out,8,*',
-        'LINE:net_bits_in#006699:Network in\\l',
-        'LINE:net_bits_out#996600:Network out\\l',
-    ],
+    #'network': [
+    #    'DEF:net_in=%(rrdpath)s/bytes_in.rrd:sum:AVERAGE',
+    #    'DEF:net_out=%(rrdpath)s/bytes_out.rrd:sum:AVERAGE',
+    #    'CDEF:net_bits_in=net_in,8,*',
+    #    'CDEF:net_bits_out=net_out,8,*',
+    #    'LINE:net_bits_in#006699:Network in\\l',
+    #    'LINE:net_bits_out#996600:Network out\\l',
+    #],
     'system-cpu': [
         'DEF:cpu_user=%(rrdpath)s/cpu/user.rrd:sum:AVERAGE',
         'DEF:cpu_system=%(rrdpath)s/cpu/sys.rrd:sum:AVERAGE',
@@ -53,19 +54,27 @@ RRD_GRAPH_DEFS = {
         'AREA:cpu_nice#FFCC00:CPU nice\\l:STACK',
         'AREA:cpu_user#FFFF66:CPU user\\l:STACK',
     ],
-    'io': [
-        'DEF:cpu_wio=%(rrdpath)s/cpu/iowait.rrd:sum:AVERAGE',
-        'LINE:cpu_wio#EA8F00:CPU iowait\\l',
-    ],
+    #'io': [
+    #    'DEF:cpu_wio=%(rrdpath)s/cpu/iowait.rrd:sum:AVERAGE',
+    #    'LINE:cpu_wio#EA8F00:CPU iowait\\l',
+    #],
     'redis-memory': [
         'DEF:memory=%(rrdpath)s/redis/used_memory.rrd:sum:AVERAGE',
         'LINE:memory#EA8F00:Redis memory\\l',
+    ],
+    'redis-connections': [
+        'DEF:connected_clients=%(rrdpath)s/redis/connected_clients.rrd:sum:AVERAGE',
+        'DEF:connected_slaves=%(rrdpath)s/redis/connected_slaves.rrd:sum:AVERAGE',
+        'DEF:blocked_clients=%(rrdpath)s/redis/blocked_clients.rrd:sum:AVERAGE',
+        'LINE:connected_clients#35962B:Connected clients\\l',
+        'LINE:connected_slaves#0000FF:Connected slaves\\l',
+        'LINE:blocked_clients#FF0000:Blocked clients\\l',
     ],
 }
 
 RRD_GRAPH_OPTIONS = {
     'system-cpu': ['--upper-limit', '100.0'],
-    'io': ['--upper-limit', '100.0']
+    #'io': ['--upper-limit', '100.0']
 }
 
 RRD_GRAPH_TITLE = {
@@ -74,11 +83,14 @@ RRD_GRAPH_TITLE = {
     'system-memory': '%(host)s | memory utilization',
     'io': '%(host)s | disk i/o',
     'redis-memory': '%(host)s | redis memory',
+    'redis-connections': '%(host)s | redis connections',
 }
 
 RRD_GRAPH_TYPES = [
     ('system-cpu', 'CPU'),
     ('system-memory', 'Memory'),
+    ('redis-memory', 'Memory'),
+    ('redis-connections', 'Connections'),
 #    ('network', 'Network'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
@@ -107,31 +119,70 @@ tpstats_list = [
 ]
 
 for tpstats in tpstats_list:
-    RRD_GRAPH_DEFS['cassandra-' + tpstats] = [
+    RRD_GRAPH_DEFS['cassandra-tpstats-' + tpstats] = [
         'DEF:pending=%%(rrdpath)s/cassandra_tpstats/%s_PendingTasks.rrd:sum:AVERAGE' % tpstats,
         'DEF:active=%%(rrdpath)s/cassandra_tpstats/%s_ActiveCount.rrd:sum:AVERAGE' % tpstats,
         'LINE:pending#FF6600:%s pending\\l' % tpstats,
         'LINE:active#66FF00:%s active\\l' % tpstats,
     ]
-    RRD_GRAPH_TITLE['cassandra-' + tpstats] = '%%(host)s | cassandra %s' % tpstats
-    RRD_GRAPH_TYPES.append(('cassandra-' + tpstats, tpstats))
+    RRD_GRAPH_TITLE['cassandra-tpstats-' + tpstats] = '%%(host)s | cassandra %s' % tpstats
+    RRD_GRAPH_TYPES.append(('cassandra-tpstats-' + tpstats, tpstats))
+
+sstables_list = {}
+path = RRDPATH % {
+    'host': '*',
+    'service': 'cassandra_sstables',
+    'metric': '*',
+}
+for filename in glob(path):
+    filename = os.path.basename(filename)
+    k = filename.split('.', 3)[:2]
+    sstables_list[tuple(k)] = None
+sstables_list = sstables_list.keys()
+
+# ks = keyspace
+# cf = columnfamily
+for ks, cf in sstables_list:
+    RRD_GRAPH_DEFS['cassandra-sstables-%s-%s-minmaxavg' % (ks, cf)] = [
+        'DEF:min=%%(rrdpath)s/cassandra_sstables/%s.%s.min.rrd:sum:AVERAGE' % (ks, cf),
+        'DEF:max=%%(rrdpath)s/cassandra_sstables/%s.%s.max.rrd:sum:AVERAGE' % (ks, cf),
+        'DEF:avg=%%(rrdpath)s/cassandra_sstables/%s.%s.avg.rrd:sum:AVERAGE' % (ks, cf),
+        'LINE:min#66FFFF:sstable size (min)\\l',
+        'LINE:max#FF6600:sstable size (max)\\l',
+        'LINE:avg#66FF00:sstable size (avg)\\l',
+    ]
+    RRD_GRAPH_DEFS['cassandra-sstables-%s-%s-total' % (ks, cf)] = [
+        'DEF:total=%%(rrdpath)s/cassandra_sstables/%s.%s.total.rrd:sum:AVERAGE' % (ks, cf),
+        'LINE:total#EA8F00:sstable size (total)\\l',
+    ]
+    RRD_GRAPH_DEFS['cassandra-sstables-%s-%s-count' % (ks, cf)] = [
+        'DEF:count=%%(rrdpath)s/cassandra_sstables/%s.%s.count.rrd:sum:AVERAGE' % (ks, cf),
+        'LINE:count#00FF00:sstable count\\l',
+    ]
+
+    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-minmaxavg' % (ks, cf)] = '%%(host)s | %s %s sstable size (min/max/avg)' % (ks, cf)
+    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-total' % (ks, cf)] = '%%(host)s | %s %s sstable size (total)' % (ks, cf)
+    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-count' % (ks, cf)] = '%%(host)s | %s %s sstable count' % (ks, cf)
+
+    RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-minmaxavg' % (ks, cf), '%s %s min/max/avg' % (ks, cf)))
+    RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-total' % (ks, cf), '%s %s total' % (ks, cf)))
+    RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-count' % (ks, cf), '%s %s count' % (ks, cf)))
 
 
-def get_clusto_name(dnsname):
-    key = 'clusto/hostname/%s' % dnsname
+def get_clusto_name(instanceid):
+    key = 'clusto/hostname/%s' % instanceid
     c = cache.get(key)
     if c:
         return c
 
-    ip = socket.gethostbyname(dnsname)
     try:
-        server = clusto.get(ip)
+        server = clusto.get(instanceid)
         hostname = server[0].attr_value(key='system', subkey='hostname')
         cache.set(key, hostname)
         return hostname
     except:
-        cache.set(key, ip)
-        return ip
+        cache.set(key, instanceid)
+        return instanceid
 
 def dumps(obj):
     callback = bottle.request.params.get('callback', None)
@@ -154,11 +205,9 @@ def create_rrd(filename, metric, data):
         DS(dsName='sum', dsType=data['type'], heartbeat=600),
     ]
     rra = [
-        RRA(cf='AVERAGE', xff=0.5, steps=1, rows=240),
-        RRA(cf='AVERAGE', xff=0.5, steps=24, rows=240),
-        RRA(cf='AVERAGE', xff=0.5, steps=168, rows=240),
-        RRA(cf='AVERAGE', xff=0.5, steps=672, rows=240),
-        RRA(cf='AVERAGE', xff=0.5, steps=5760, rows=240),
+        RRA(cf='AVERAGE', xff=0.5, steps=1, rows=1500),
+        RRA(cf='AVERAGE', xff=0.5, steps=5, rows=2304),
+        RRA(cf='AVERAGE', xff=0.5, steps=30, rows=4320),
     ]
     rrd = RRD(filename, ds=ds, rra=rra, start=(data['ts'] - 1), step=60)
     rrd.create()
@@ -211,7 +260,9 @@ def get_rrd_graph(host, graphtype):
     ]
 
     cmd += RRD_GRAPH_OPTIONS.get(graphtype, [])
-    cmd += ['--title', RRD_GRAPH_TITLE.get(graphtype, host) % {'host': host}]
+    cmd += ['--title', RRD_GRAPH_TITLE.get(graphtype, host) % {
+        'host': get_clusto_name(host),
+    }]
 
     if size == 'small':
         cmd += [
@@ -291,7 +342,15 @@ def index():
         if not group in groups:
             groups[group] = {}
         groups[group][metric] = human_name
-    return template.render(groups=groups)
+
+    result = []
+    for group in groups:
+        graphs = groups[group]
+        graphs = graphs.items()
+        graphs.sort()
+        result.append((group, graphs))
+    result.sort()
+    return template.render(groups=result)
 
 if __name__ == '__main__':
     bottle.run()
