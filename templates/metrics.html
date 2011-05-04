@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block css %}metrics.css{% endblock %}
+
+{% block page_title %}metartg{% endblock %}
+
+{% block content %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script type="text/javascript">
+function query_keypress(evt) {
+	if(evt.charCode != 13) {
+		return;
+	}else{
+		update_graphs();
+	}
+}
+
+function select_timerange(evt) {
+	var t = $(evt.target);
+	t.siblings().removeClass('selected');
+	t.addClass('selected');
+	update_graphs();
+}
+
+function toggle_graphtype(evt) {
+	$(evt.target).toggleClass('selected');
+	update_graphs();
+}
+
+function toggle_group(evt) {
+	$('.category[name="' + evt.target.innerHTML + '"]').toggle();
+}
+
+function update_graphs() {
+	var query = $('[name=pools]').val();
+	query = query.replace(/ $/g, '');
+	query = query.replace(/^ /g, '');
+	query = query.replace(/ /g, '+');
+
+	var timerange = $('.timerange .selected').attr('name');
+
+	var ts_end = parseInt(new Date().getTime() / 1000);
+	var ts_start = ts_end - (timerange * 3600);
+
+	var graphtypes = []
+	$('.graphtype.selected').each(function(i, elem) {
+		graphtypes.push(elem.attributes.name.value);
+	});
+	console.log(graphtypes);
+	document.location.hash = query + '/' + timerange + '/' + graphtypes.join('+');
+
+	$('.server').remove()
+	$.ajax({
+		url: '/search',
+		dataType: 'json',
+		data: {'q': query},
+		success: function(data) {
+			for(var i = 0; i < data.length; i++) {
+				var server = data[i];
+				var html = '<li class="server">' +
+					'<div class="info">' +
+						'<div class="label">Name:</div>' +
+						'<div class="value">' + server.name + '</div>' +
+						'<div class="label">IP:</div>' +
+						'<div class="value">' + server.ip.join(' ') + '</div>' +
+						'<div class="label">DNS name:</div>' +
+						'<div class="value">' + server.dnsname + '&nbsp;</div>';
+
+				if(server.parents) {
+					html += '<div class="label">Parents:</div>' +
+						'<div class="value">' + server.parents.join(' ') + '&nbsp;</div>';
+				}
+				if(server.contents) {
+					html += '<div class="label">Contents:</div>' +
+						'<div class="value">' + server.contents.join(' ') + '&nbsp;</div>';
+				}
+				html += '</div>';
+				if(server.name) {
+					var instance = server.name;
+					html += '<ul class="graphs">';
+					for(var x = 0; x < graphtypes.length; x++) {
+						var graphtype = graphtypes[x];
+						html += '<li><a href="/graph/' + instance + '/' + graphtype + '?start=' + ts_start + '&end=' + ts_end + '"><img src="/graph/' + instance + '/' + graphtype + '?size=small&start=' + ts_start + '&end=' + ts_end + '" alt="' + server.name + ' ' + graphtype + '" /></a></li>';
+					}
+					html += '</ul>';
+				}
+
+				$('.servers').append(html);
+			}
+		}
+	});
+}
+
+$(document).ready(function() {
+	var hash = document.location.hash;
+	hash = hash.replace(/^#/g, '').replace(/\+/g, ' ');
+	if(hash != '') {
+		hash = hash.split('/', 3);
+		var query = hash[0];
+		var timerange = hash[1];
+		if(hash[2]) {
+			var graphtypes = hash[2].split(' ');
+		}else{
+			var graphtypes = [];
+		}
+
+		if(!parseInt(timerange)) {
+			timerange = 1;
+		}
+		$('.graphtype').removeClass('selected');
+		for(var i = 0; i < graphtypes.length; i++) {
+			$('.graphtype[name="' + graphtypes[i] + '"]').addClass('selected');
+			$('.category[name="' + graphtypes[i].split('-', 1)[0] + '"]').show();
+		}
+		$('[name=pools]').val(query);
+		$('.timerange li').removeClass('selected');
+		$('.timerange [name=' + timerange + ']').addClass('selected');
+		update_graphs();
+	}
+	$('[name=pools]').focus();
+	$('[name=pools]').keypress(query_keypress);
+	$('.timerange li').click(select_timerange);
+	$('.graphtype').click(toggle_graphtype);
+	$('.group').click(toggle_group);
+});
+</script>
+
+<div id="sidebar">
+
+<fieldset class="search">
+	<label for="pools">Pools:</label>
+	<input type="text" name="pools" value="{{ query }}" class="pools" />
+
+	<ul class="timerange">
+		<li class="selected" name="1">1 hour</li>
+		<li name="6">6 hours</li>
+		<li name="12">12 hours</li>
+		<li name="24">Day</li>
+		<li name="168">Week</li>
+	</ul>
+
+	<div class="graphtypes">
+	{% for group in groups %}
+	<div class="group">
+		<h3>{{ group }}</h3>
+		<ul class="category" name="{{ group }}">
+			{% for graph in groups[group]  %}
+			<li class="graphtype group-{{ group }}" name="{{ group }}-{{ graph }}">{{ groups[group][graph] }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endfor %}
+	</div>
+</fieldset>
+
+</div>
+
+<ul class="servers">
+</ul>
+{% endblock %}
