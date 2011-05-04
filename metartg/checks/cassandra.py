@@ -36,10 +36,14 @@ def tpstats_metrics():
 def sstables_metrics():
     metrics = {}
 
-    for keyspace in os.listdir('/mnt/var/lib/penelope/data'):
+    for dirname in ('penelope', 'cassandra'):
+        if os.path.exists('/mnt/var/lib/' + dirname):
+            break
+        
+    for keyspace in os.listdir('/mnt/var/lib/%s/data' % dirname):
         now = int(time())
         sizes = {}
-        for filename in os.listdir('/mnt/var/lib/penelope/data/' + keyspace):
+        for filename in os.listdir('/mnt/var/lib/%s/data/%s' % (dirname, keyspace)):
             if not filename.endswith('-Data.db'):
                 continue
 
@@ -47,7 +51,7 @@ def sstables_metrics():
             if not columnfamily in sizes:
                 sizes[columnfamily] = []
 
-            st = os.stat('/mnt/var/lib/penelope/data/%s/%s' % (keyspace, filename))
+            st = os.stat('/mnt/var/lib/%s/data/%s/%s' % (dirname, keyspace, filename))
             sizes[columnfamily].append(st.st_size)
 
         for columnfamily in sizes:
