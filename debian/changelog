@@ -1,3 +1,13 @@
+metartg (0.2-1sg11) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Fix server name in templates
+  * Fix RRD step, rip out last remnants of ganglia
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 04 May 2011 17:59:32 +0000
+
 metartg (0.2-1sg10) lucid; urgency=low
 
   * UNRELEASED
