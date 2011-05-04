@@ -84,6 +84,39 @@ RRD_GRAPH_TYPES = [
 #    ('redis-memory', 'Redis memory'),
 ]
 
+tpstats_list = [
+    'AE-SERVICE-STAGE',
+    'CONSISTENCY-MANAGER',
+    'FLUSH-SORTER-POOL',
+    'FLUSH-WRITER-POOL',
+    'GMFD',
+    'HINTED-HANDOFF-POOL',
+    'LB-OPERATIONS',
+    'LB-TARGET',
+    'LOAD-BALANCER-STAGE',
+    'MEMTABLE-POST-FLUSHER',
+    'MESSAGE-STREAMING-POOL',
+    'METADATA-MUTATION-STAGE',
+    'MISCELLANEOUS-POOL',
+    'PENELOPE-STAGE',
+    'RESPONSE-STAGE',
+    'ROW-MUTATION-STAGE',
+    'ROW-READ-STAGE',
+    'STREAM-STAGE',
+    'THRIFT',
+]
+
+for tpstats in tpstats_list:
+    RRD_GRAPH_DEFS['cassandra-' + tpstats] = [
+        'DEF:pending=%%(rrdpath)s/cassandra_tpstats/%s_PendingTasks.rrd:sum:AVERAGE' % tpstats,
+        'DEF:active=%%(rrdpath)s/cassandra_tpstats/%s_ActiveCount.rrd:sum:AVERAGE' % tpstats,
+        'LINE:pending#FF6600:%s pending\\l' % tpstats,
+        'LINE:active#66FF00:%s active\\l' % tpstats,
+    ]
+    RRD_GRAPH_TITLE['cassandra-' + tpstats] = '%%(host)s | cassandra %s' % tpstats
+    RRD_GRAPH_TYPES.append(('cassandra-' + tpstats, tpstats))
+
+
 def get_clusto_name(dnsname):
     key = 'clusto/hostname/%s' % dnsname
     c = cache.get(key)
@@ -127,7 +160,7 @@ def create_rrd(filename, metric, data):
         RRA(cf='AVERAGE', xff=0.5, steps=672, rows=240),
         RRA(cf='AVERAGE', xff=0.5, steps=5760, rows=240),
     ]
-    rrd = RRD(filename, ds=ds, rra=rra, start=(data['ts'] - 1))
+    rrd = RRD(filename, ds=ds, rra=rra, start=(data['ts'] - 1), step=60)
     rrd.create()
 
 def update_rrd(filename, metric, data):
@@ -182,7 +215,7 @@ def get_rrd_graph(host, graphtype):
 
     if size == 'small':
         cmd += [
-            '--no-legend',
+            #'--no-legend',
             '--width', '375',
             '--height', '100'
         ]
@@ -204,68 +237,6 @@ def get_rrd_graph(host, graphtype):
 
     bottle.response.content_type = 'image/png'
     return stdout
-
-@bottle.get('/graph/:cluster/:host/:graphtype')
-def get_graph(cluster, host, graphtype):
-    now = int(time())
-    params = bottle.request.params
-    start = params.get('start', (now - 3600))
-    end = params.get('end', now)
-    size = params.get('size', 'large')
-
-    cmd = ['/usr/bin/rrdtool', 'graph',
-        '-',
-        '--font', 'DEFAULT:7:monospace',
-        '--font-render-mode', 'normal',
-        '--color', 'MGRID#880000',
-        '--color', 'GRID#777777',
-        '--color', 'CANVAS#000000',
-        '--color', 'FONT#ffffff',
-        '--color', 'BACK#444444',
-        '--color', 'SHADEA#000000',
-        '--color', 'SHADEB#000000',
-        '--color', 'FRAME#444444',
-        '--color', 'ARROW#FFFFFF',
-        '--imgformat', 'PNG',
-        '--tabwidth', '75',
-        '--start', str(start),
-        '--end', str(end),
-    ]
-
-    hostname = get_clusto_name(host)
-    cmd += RRD_GRAPH_OPTIONS.get(graphtype, [])
-    cmd += ['--title', RRD_GRAPH_TITLE.get(graphtype, hostname) % {'host': hostname}]
-
-    if size == 'small':
-        cmd += [
-            '--no-legend',
-            '--width', '375',
-            '--height', '100'
-        ]
-    else:
-        cmd += [
-            '--width', '600',
-            '--height', '200',
-            '--watermark', 'simplegeo'
-        ]
-
-    for gdef in RRD_GRAPH_DEFS.get(graphtype, []):
-        cmd.append(gdef % {
-            'rrdpath': '/var/lib/ganglia/rrds/%s/%s' % (cluster, host),
-            'cluster': cluster,
-            'host': host,
-        })
-    #print ' '.join(cmd)
-
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, env={'TZ': 'PST8PDT'})
-    stdout, stderr = proc.communicate()
-
-    bottle.response.content_type = 'image/png'
-    return stdout
-
-@bottle.get('/static/:filename')
-def server_static(filename):
-    return bottle.static_file(filename, root=STATIC_PATH)
 
 @bottle.get('/search')
 def search():
@@ -306,6 +277,10 @@ def search():
     cache.set(cachekey, json.dumps(servers))
 
     return dumps(servers)
+
+@bottle.get('/static/:filename')
+def server_static(filename):
+    return bottle.static_file(filename, root=STATIC_PATH)
 
 @bottle.get('/')
 def index():
