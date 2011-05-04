@@ -1,3 +1,13 @@
+metartg (0.2-1sg16) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Sorted cassandra sstable graphs
+  * Look at both /mnt/var/lib/{penelope,cassandra}
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 04 May 2011 23:24:49 +0000
+
 metartg (0.2-1sg15) lucid; urgency=low
 
   [ Jeremy Grosser ]
