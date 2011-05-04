@@ -71,6 +71,11 @@ def sstables_metrics():
                 'type': 'GAUGE',
                 'value': sum(sizes[columnfamily]),
             }
+            metrics['%s.%s.count' % (keyspace, columnfamily)] = {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': len(sizes[columnfamily]),
+            }
 
     return metrics
 
