@@ -25,7 +25,7 @@ clusto = clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
 RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
-    'memory': [
+    'system-memory': [
         'DEF:mem_free=%(rrdpath)s/memory/free_memory.rrd:sum:AVERAGE',
         'DEF:mem_total=%(rrdpath)s/memory/total_memory.rrd:sum:AVERAGE',
         'DEF:mem_buffers=%(rrdpath)s/memory/buffer_memory.rrd:sum:AVERAGE',
@@ -45,7 +45,7 @@ RRD_GRAPH_DEFS = {
         'LINE:net_bits_in#006699:Network in\\l',
         'LINE:net_bits_out#996600:Network out\\l',
     ],
-    'cpu': [
+    'system-cpu': [
         'DEF:cpu_user=%(rrdpath)s/cpu/user.rrd:sum:AVERAGE',
         'DEF:cpu_system=%(rrdpath)s/cpu/sys.rrd:sum:AVERAGE',
         'DEF:cpu_nice=%(rrdpath)s/cpu/nice.rrd:sum:AVERAGE',
@@ -64,21 +64,21 @@ RRD_GRAPH_DEFS = {
 }
 
 RRD_GRAPH_OPTIONS = {
-    'cpu': ['--upper-limit', '100.0'],
+    'system-cpu': ['--upper-limit', '100.0'],
     'io': ['--upper-limit', '100.0']
 }
 
 RRD_GRAPH_TITLE = {
     'network': '%(host)s | bits in/out',
-    'cpu': '%(host)s | cpu %%',
-    'memory': '%(host)s | memory utilization',
+    'system-cpu': '%(host)s | cpu %%',
+    'system-memory': '%(host)s | memory utilization',
     'io': '%(host)s | disk i/o',
     'redis-memory': '%(host)s | redis memory',
 }
 
 RRD_GRAPH_TYPES = [
-    ('cpu', 'CPU'),
-    ('memory', 'Memory'),
+    ('system-cpu', 'CPU'),
+    ('system-memory', 'Memory'),
 #    ('network', 'Network'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
@@ -279,13 +279,19 @@ def search():
     return dumps(servers)
 
 @bottle.get('/static/:filename')
-def server_static(filename):
+def serve_static(filename):
     return bottle.static_file(filename, root=STATIC_PATH)
 
 @bottle.get('/')
 def index():
-    template = env.get_template('search.html')
-    return template.render(graphtypes=RRD_GRAPH_TYPES)
+    template = env.get_template('metrics.html')
+    groups = {}
+    for name, human_name in RRD_GRAPH_TYPES:
+        group, metric = name.split('-', 1)
+        if not group in groups:
+            groups[group] = {}
+        groups[group][metric] = human_name
+    return template.render(groups=groups)
 
 if __name__ == '__main__':
     bottle.run()
