@@ -69,7 +69,7 @@ function update_graphs() {
 				}
 				html += '</div>';
 				if(server.name) {
-					var instance = server.name[0];
+					var instance = server.name;
 					html += '<ul class="graphs">';
 					for(var x = 0; x < graphtypes.length; x++) {
 						var graphtype = graphtypes[x];
