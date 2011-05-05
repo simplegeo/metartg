@@ -1,3 +1,13 @@
+metartg (0.2-1sg23) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Remove random sleep from checks, spin of a greenlet for each rrd
+    update on the server instead
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 05 May 2011 21:28:31 +0000
+
 metartg (0.2-1sg22) lucid; urgency=low
 
   [ Jeremy Grosser ]
