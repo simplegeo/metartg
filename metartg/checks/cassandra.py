@@ -9,7 +9,7 @@ def tpstats_metrics():
         '/usr/bin/java',
         '-jar', '/usr/share/metartg/contrib/GenericJMXLogJSON.jar',
         'localhost', '8080', 'org.apache.cassandra.concurrent:*',
-    ], stdout=subprocess.PIPE)
+    ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
     now = int(time())
 
