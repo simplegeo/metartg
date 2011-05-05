@@ -78,10 +78,10 @@ RRD_GRAPH_OPTIONS = {
 }
 
 RRD_GRAPH_TITLE = {
-    'network': '%(host)s | bits in/out',
+    #'network': '%(host)s | bits in/out',
     'system-cpu': '%(host)s | cpu %%',
     'system-memory': '%(host)s | memory utilization',
-    'io': '%(host)s | disk i/o',
+    #'io': '%(host)s | disk i/o',
     'redis-memory': '%(host)s | redis memory',
     'redis-connections': '%(host)s | redis connections',
 }
@@ -168,6 +168,44 @@ for ks, cf in sstables_list:
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-total' % (ks, cf), '%s %s total' % (ks, cf)))
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-count' % (ks, cf), '%s %s count' % (ks, cf)))
 
+
+for disk in ('md0', 'sda1'):
+    RRD_GRAPH_DEFS['disk-%s-requests' % disk] = [
+        'DEF:rrqm=%%(rrdpath)s/disk/%s.rrqm.rrd:sum:AVERAGE' % disk,
+        'DEF:wrqm=%%(rrdpath)s/disk/%s.wrqm.rrd:sum:AVERAGE' % disk,
+        'DEF:reads=%%(rrdpath)s/disk/%s.reads.rrd:sum:AVERAGE' % disk,
+        'DEF:writes=%%(rrdpath)s/disk/%s.writes.rrd:sum:AVERAGE' % disk,
+        'LINE:rrqm#66FFFF:reads queued/s\\l',
+        'LINE:wrqm#FF6600:writes queued/s\\l',
+        'LINE:reads#33CCCC:reads/s\\l',
+        'LINE:writes#CC3300:writes/s\\l',
+    ]
+    RRD_GRAPH_DEFS['disk-%s-bytes' % disk] = [
+        'DEF:rkb=%%(rrdpath)s/disk/%s.rkb.rrd:sum:AVERAGE' % disk,
+        'DEF:wkb=%%(rrdpath)s/disk/%s.wkb.rrd:sum:AVERAGE' % disk,
+        'CDEF:bytes_read=rkb,1024,*',
+        'CDEF:bytes_write=wkb,1024,*',
+        'LINE:bytes_read#EA8F00:bytes read/sec\\l',
+        'LINE:bytes_write#008FEA:bytes written/sec\\l',
+    ]
+    RRD_GRAPH_DEFS['disk-%s-latency' % disk] = [
+        'DEF:await=%%(rrdpath)s/disk/%s.await.rrd:sum:AVERAGE' % disk,
+        'LINE:await#8FEA00:request latency (ms)\\l',
+    ]
+    RRD_GRAPH_DEFS['disk-%s-util' % disk] = [
+        'DEF:util=%%(rrdpath)s/disk/%s.util.rrd:sum:AVERAGE' % disk,
+        'LINE:util#FFFF66:I/O utilization %\\l',
+    ]
+
+    RRD_GRAPH_TITLE['disk-%s-requests' % disk] = '%%(host)s | %s iops' % disk
+    RRD_GRAPH_TITLE['disk-%s-bytes' % disk] = '%%(host)s | %s bytes r/w' % disk
+    RRD_GRAPH_TITLE['disk-%s-latency' % disk] = '%%(host)s | %s latency' % disk
+    RRD_GRAPH_TITLE['disk-%s-util' % disk] = '%%(host)s | %s I/O utilization' % disk
+
+    RRD_GRAPH_TYPES.append(('disk-%s-requests' % disk, '%s iops' % disk))
+    RRD_GRAPH_TYPES.append(('disk-%s-bytes' % disk, '%s bytes r/w' % disk))
+    RRD_GRAPH_TYPES.append(('disk-%s-latency' % disk, '%s latency' % disk))
+    RRD_GRAPH_TYPES.append(('disk-%s-util' % disk, '%s utilization' % disk))
 
 def get_clusto_name(instanceid):
     key = 'clusto/hostname/%s' % instanceid
