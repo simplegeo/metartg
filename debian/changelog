@@ -1,3 +1,12 @@
+metartg (0.2-1sg17) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Capture stderr from cassandra checks
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 05 May 2011 17:14:34 +0000
+
 metartg (0.2-1sg16) lucid; urgency=low
 
   [ Jeremy Grosser ]
