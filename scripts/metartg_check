@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from random import randint
-from time import sleep
 import metartg
 import sys
 
@@ -8,5 +6,4 @@ logfile = file('/var/log/metartg.log', 'a')
 sys.stdout = logfile
 sys.stderr = logfile
 
-sleep(randint(1, 25))
 metartg.run_checks(sys.argv[1:])

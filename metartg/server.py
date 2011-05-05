@@ -194,8 +194,10 @@ for disk in ('md0', 'sda1'):
     ]
     RRD_GRAPH_DEFS['disk-%s-util' % disk] = [
         'DEF:util=%%(rrdpath)s/disk/%s.util.rrd:sum:AVERAGE' % disk,
-        'LINE:util#FFFF66:I/O utilization %\\l',
+        'CDEF:util_pct=util,100,*',
+        'LINE:util_pct#FFFF66:I/O utilization %%\\l',
     ]
+    RRD_GRAPH_OPTIONS['disk-%s-util' % disk] = ['--upper-limit', '100.0']
 
     RRD_GRAPH_TITLE['disk-%s-requests' % disk] = '%%(host)s | %s iops' % disk
     RRD_GRAPH_TITLE['disk-%s-bytes' % disk] = '%%(host)s | %s bytes r/w' % disk
@@ -255,19 +257,25 @@ def update_rrd(filename, metric, data):
     rrd.bufferValue(str(data['ts']), str(data['value']))
     rrd.update()
 
-@bottle.post('/rrd/:host/:service')
-def post_rrd_update(host, service):
-    metrics = json.loads(bottle.request.body.read())
+def process_rrd_update(host, service, body):
+    metrics = json.loads(body)
     for metric in metrics:
         rrdfile = RRDPATH % {
             'host': host,
             'service': service,
             'metric': metric,
         }
+        eventlet.sleep()
         if not os.path.exists(rrdfile):
             create_rrd(rrdfile, metric, metrics[metric])
-            bottle.response.status = 201
         update_rrd(rrdfile, metric, metrics[metric])
+    return
+
+
+@bottle.post('/rrd/:host/:service')
+def post_rrd_update(host, service):
+    eventlet.spawn_n(process_rrd_update, host, service, bottle.request.body.read())
+    bottle.response.status = 202
     return
 
 @bottle.get('/graph/:host/:graphtype')
