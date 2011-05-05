@@ -1,3 +1,13 @@
+metartg (0.2-1sg21) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add a random sleep to the metartg checks, so that we don't kill the
+    monitoring host
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 05 May 2011 18:42:54 +0000
+
 metartg (0.2-1sg20) lucid; urgency=low
 
   [ Jeremy Grosser ]
