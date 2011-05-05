@@ -160,9 +160,9 @@ for ks, cf in sstables_list:
         'LINE:count#00FF00:sstable count\\l',
     ]
 
-    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-minmaxavg' % (ks, cf)] = '%%(host)s | %s %s sstable size (min/max/avg)' % (ks, cf)
-    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-total' % (ks, cf)] = '%%(host)s | %s %s sstable size (total)' % (ks, cf)
-    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-count' % (ks, cf)] = '%%(host)s | %s %s sstable count' % (ks, cf)
+    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-minmaxavg' % (ks, cf)] = '%%(host)s | %s %s size (min/max/avg)' % (ks, cf)
+    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-total' % (ks, cf)] = '%%(host)s | %s %s size (total)' % (ks, cf)
+    RRD_GRAPH_TITLE['cassandra-sstables-%s-%s-count' % (ks, cf)] = '%%(host)s | %s %s count' % (ks, cf)
 
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-minmaxavg' % (ks, cf), '%s %s min/max/avg' % (ks, cf)))
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-total' % (ks, cf), '%s %s total' % (ks, cf)))

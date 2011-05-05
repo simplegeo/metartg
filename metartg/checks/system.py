@@ -46,4 +46,3 @@ def mem_metrics():
 def run_check(callback):
     callback('cpu', cpu_metrics())
     callback('memory', mem_metrics())
-    #callback('disk', disk_metrics())
