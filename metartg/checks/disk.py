@@ -15,7 +15,7 @@ def disk_metrics():
     for line in stdout.rsplit('\n\n', 2)[1].split('\n')[1:]:
         line = [x for x in line.split(' ') if x]
         device = line[0]
-        if not device in ('sda', 'md0'):
+        if not device in ('sda1', 'md0'):
             continue
         iostat = IOStat(*line[1:])._asdict()
         for field in iostat:
