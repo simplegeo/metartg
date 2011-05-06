@@ -1,3 +1,14 @@
+metartg (0.2-1sg25) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * MOAR GREENLETS
+  * Add cassandra scores graph
+  * Add rabbitmq check
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 06 May 2011 23:05:00 +0000
+
 metartg (0.2-1sg24) lucid; urgency=low
 
   [ Jeremy Grosser ]
