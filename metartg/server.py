@@ -86,6 +86,7 @@ RRD_GRAPH_TITLE = {
     #'io': '%(host)s | disk i/o',
     'redis-memory': '%(host)s | redis memory',
     'redis-connections': '%(host)s | redis connections',
+    'cassandra-scores': '%(host)s | cassandra scores',
 }
 
 RRD_GRAPH_TYPES = [
@@ -93,6 +94,7 @@ RRD_GRAPH_TYPES = [
     ('system-memory', 'Memory'),
     ('redis-memory', 'Memory'),
     ('redis-connections', 'Connections'),
+    ('cassandra-scores', 'Scores'),
 #    ('network', 'Network'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
@@ -309,6 +311,23 @@ def post_rrd_update(host, service):
     bottle.response.status = 202
     return
 
+
+def cassandra_scores_graphdef(host):
+    r = []
+    colors = ['FF6600', 'CC3333', '00FF00', 'FFCC00', 'DA4725', '66CC66', '6EA100', '0000FF', 'EACC00', 'D8ACE0', '4668E4', '35962B', '8D00BA']
+    files = glob('/var/lib/metartg/rrds/%s/cassandra_scores/*.rrd' % host)
+    files.sort()
+    for i, filename in enumerate(files):
+        peer = filename.rsplit('/', 1)[1]
+        name = peer.rsplit('.', 1)[0]
+        name = name.replace('.', '-')
+        r += [
+            'DEF:%s=%s:sum:AVERAGE' % (name, filename),
+            'LINE:%s#%s:%s score\\l' % (name, colors[i % len(colors)], name),
+        ]
+    return r
+
+
 @bottle.get('/graph/:host/:graphtype')
 def get_rrd_graph(host, graphtype):
     now = int(time())
@@ -353,6 +372,11 @@ def get_rrd_graph(host, graphtype):
             '--height', '200',
             '--watermark', 'simplegeo'
         ]
+
+    if graphtype == 'cassandra-scores':
+        if size == 'small':
+            cmd.append('--no-legend')
+        cmd += cassandra_scores_graphdef(host)
 
     for gdef in RRD_GRAPH_DEFS.get(graphtype, []):
         cmd.append(gdef % {
