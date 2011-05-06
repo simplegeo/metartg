@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from time import time
+import subprocess
 
 def rabbitmq_metrics():
     p = subprocess.Popen(['/usr/sbin/rabbitmqctl', '-q', 'list_queues', '-p', 'simplegeo'], stdout=subprocess.PIPE)
