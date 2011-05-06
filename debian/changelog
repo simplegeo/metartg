@@ -1,3 +1,12 @@
+metartg (0.2-1sg26) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * import subprocess
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 06 May 2011 23:22:17 +0000
+
 metartg (0.2-1sg25) lucid; urgency=low
 
   [ Jeremy Grosser ]
