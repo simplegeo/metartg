@@ -83,6 +83,37 @@ def sstables_metrics():
 
     return metrics
 
+
+def scores_metrics():
+    p = subprocess.Popen([
+        '/usr/bin/java',
+        '-jar', '/usr/share/cassandra/jmxterm-1.0-alpha-4-uber.jar',
+        '-v', 'silent', '-l', 'localhost:8080', '-n',
+    ], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    script = '''bean org.apache.cassandra.db:keyspace=Underdog_Records,type=DynamicEndpointSnitch
+get Scores'''
+    stdout, stderr = p.communicate(script)
+    now = int(time())
+
+    metrics = {}
+    for line in stdout.split('\n'):
+        line = line.strip(';\r\n\t ')
+        if not line.startswith('/'):
+            continue
+        line = line.lstrip('/')
+        host, score = line.split(' = ', 1)
+        metrics[host] = {
+            'ts': now,
+            'type': 'GAUGE',
+            'value': float(score),
+        }
+    return metrics
+
+
 def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
+    callback('cassandra_scores', scores_metrics())
+
+if __name__ == '__main__':
+    print json.dumps(scores_metrics(), indent=2)
