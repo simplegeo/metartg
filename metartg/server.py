@@ -1,12 +1,13 @@
 from xml.etree import ElementTree
 from time import time
 from glob import glob
-import subprocess
+#import multiprocessing
+import eventlet.green.subprocess as subprocess
 import socket
 import os.path
+import sys
 import os
 
-from pyrrd.rrd import RRD, RRA, DS
 import simplejson as json
 import clustohttp
 import eventlet
@@ -23,6 +24,7 @@ env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
 cache = memcache.Client(['127.0.0.1:11211'])
 gpool = eventlet.GreenPool(200)
 clusto = clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
+rrdqueue = eventlet.Queue()
 RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
@@ -235,27 +237,33 @@ def dumps(obj):
         bottle.response.content_type = 'application/json'
     return result
 
+def rrdtool(args):
+    p = subprocess.Popen(['rrdtool'] + args.split(' '))
+    p.wait()
+
+
 def create_rrd(filename, metric, data):
     try:
         os.makedirs(os.path.dirname(filename))
     except:
         pass
 
-    ds = [
-        DS(dsName='sum', dsType=data['type'], heartbeat=600),
-    ]
-    rra = [
-        RRA(cf='AVERAGE', xff=0.5, steps=1, rows=1500),
-        RRA(cf='AVERAGE', xff=0.5, steps=5, rows=2304),
-        RRA(cf='AVERAGE', xff=0.5, steps=30, rows=4320),
-    ]
-    rrd = RRD(filename, ds=ds, rra=rra, start=(data['ts'] - 1), step=60)
-    rrd.create()
+    rrdtool('create %(filename)s --start %(start)s --step 60 \
+DS:sum:%(dstype)s:600:U:U \
+RRA:AVERAGE:0.5:1:1500 \
+RRA:AVERAGE:0.5:5:2304 \
+RRA:AVERAGE:0.5:30:4320' % {
+    'filename': filename,
+    'start': (data['ts'] - 1),
+    'dstype': data['type'],
+})
+
 
 def update_rrd(filename, metric, data):
-    rrd = RRD(filename)
-    rrd.bufferValue(str(data['ts']), str(data['value']))
-    rrd.update()
+    #filename = filename.split('/var/lib/metartg/rrds/', 1)[1]
+    #rrdtool('update --daemon 127.0.0.1:42217 %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
+    rrdtool('update %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
+
 
 def process_rrd_update(host, service, body):
     metrics = json.loads(body)
@@ -265,16 +273,39 @@ def process_rrd_update(host, service, body):
             'service': service,
             'metric': metric,
         }
-        eventlet.sleep()
         if not os.path.exists(rrdfile):
             create_rrd(rrdfile, metric, metrics[metric])
         update_rrd(rrdfile, metric, metrics[metric])
     return
 
 
+def rrdupdate_worker(queue):
+    while True:
+        #sys.stdout.write('.')
+        #sys.stdout.flush()
+        process_rrd_update(*queue.get())
+        queue.task_done()
+
+procs = []
+for i in range(16):
+    procs.append(eventlet.spawn_n(rrdupdate_worker, rrdqueue))
+
+#procs = []
+#for i in range(4):
+#    proc = multiprocessing.Process(target=rrdupdate_worker, args=(update_queue,))
+#    proc.start()
+#    procs.append(proc)
+
+@bottle.get('/status')
+def status():
+    return dumps({
+        'rrdqueue': rrdqueue.qsize(),
+    })
+
 @bottle.post('/rrd/:host/:service')
 def post_rrd_update(host, service):
-    eventlet.spawn_n(process_rrd_update, host, service, bottle.request.body.read())
+    rrdqueue.put((host, service, bottle.request.body.read()))
+    #eventlet.spawn_n(process_rrd_update, host, service, bottle.request.body.read())
     bottle.response.status = 202
     return
 
