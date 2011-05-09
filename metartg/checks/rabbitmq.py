@@ -3,17 +3,22 @@ from time import time
 import subprocess
 
 def rabbitmq_metrics():
-    p = subprocess.Popen(['/usr/sbin/rabbitmqctl', '-q', 'list_queues', '-p', 'simplegeo'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['/usr/sbin/rabbitmqctl', '-q', 'list_queues', '-p', 'simplegeo', 'name', 'messages', 'messages_unacknowledged'], stdout=subprocess.PIPE)
     stdout, stderr = p.communicate()
 
     now = int(time())
     metrics = {}
     for line in stdout.strip().split('\n'):
-        queue, count = line.split('\t', 1)
+        queue, count, unack = line.split('\t', 2)
         metrics[queue] = {
             'ts': now,
             'type': 'GAUGE',
             'value': int(count),
+        }
+        metrics[queue + '_unack'] = {
+            'ts': now,
+            'type': 'GAUGE',
+            'value': int(unack),
         }
     return metrics
 
