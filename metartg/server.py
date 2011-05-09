@@ -173,6 +173,27 @@ for ks, cf in sstables_list:
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-count' % (ks, cf), '%s %s count' % (ks, cf)))
 
 
+queues_list = {}
+path = RRDPATH % {
+    'host': '*',
+    'service': 'rabbitmq',
+    'metric': '*',
+}
+for filename in glob(path):
+    filename = os.path.basename(filename)
+    k = filename.rsplit('.', 1)[0]
+    queues_list[k] = None
+queues_list = queues_list.keys()
+
+for queue in queues_list:
+    RRD_GRAPH_DEFS['rabbitmq-%s' % queue] = [
+        'DEF:size=%%(rrdpath)s/rabbitmq/%s.rrd:sum:AVERAGE' % queue,
+        'LINE:size#FF6600:%s queue size\\l' % queue,
+    ]
+    RRD_GRAPH_TITLE['rabbitmq-%s' % queue] = '%%(host)s | %s queue size' % queue
+    RRD_GRAPH_TYPES.append(('rabbitmq-%s' % queue, '%s size' % queue))
+
+
 for disk in ('md0', 'sda1'):
     RRD_GRAPH_DEFS['disk-%s-requests' % disk] = [
         'DEF:rrqm=%%(rrdpath)s/disk/%s.rrqm.rrd:sum:AVERAGE' % disk,
@@ -289,7 +310,7 @@ def rrdupdate_worker(queue):
         queue.task_done()
 
 procs = []
-for i in range(16):
+for i in range(2):
     procs.append(eventlet.spawn_n(rrdupdate_worker, rrdqueue))
 
 #procs = []
@@ -426,6 +447,7 @@ def search():
         }
 
     servers = list(gpool.imap(get_server_info, first.intersection(*pools)))
+    servers.sort(key=lambda x: x['name'])
     cache.set(cachekey, json.dumps(servers))
 
     return dumps(servers)
