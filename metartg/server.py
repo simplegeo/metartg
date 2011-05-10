@@ -182,16 +182,20 @@ path = RRDPATH % {
 for filename in glob(path):
     filename = os.path.basename(filename)
     k = filename.rsplit('.', 1)[0]
+    if k.endswith('_unack'):
+        continue
     queues_list[k] = None
 queues_list = queues_list.keys()
 
 for queue in queues_list:
     RRD_GRAPH_DEFS['rabbitmq-%s' % queue] = [
         'DEF:size=%%(rrdpath)s/rabbitmq/%s.rrd:sum:AVERAGE' % queue,
+        'DEF:unack=%%(rrdpath)s/rabbitmq/%s_unack.rrd:sum:AVERAGE' % queue,
         'LINE:size#FF6600:%s queue size\\l' % queue,
+        'LINE:unack#FF0000:%s unacknowledged\\l' % queue,
     ]
     RRD_GRAPH_TITLE['rabbitmq-%s' % queue] = '%%(host)s | %s queue size' % queue
-    RRD_GRAPH_TYPES.append(('rabbitmq-%s' % queue, '%s size' % queue))
+    RRD_GRAPH_TYPES.append(('rabbitmq-%s' % queue, queue))
 
 
 for disk in ('md0', 'sda1'):
