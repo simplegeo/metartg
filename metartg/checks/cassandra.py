@@ -85,13 +85,18 @@ def sstables_metrics():
 
 
 def scores_metrics():
+    try:
+        keyspace = file('/etc/metartg_cassandra_keyspace', 'r').read().strip('\r\n\t ')
+    except:
+        keyspace = 'Underdog_Records'
+
     p = subprocess.Popen([
         '/usr/bin/java',
         '-jar', '/usr/share/cassandra/jmxterm-1.0-alpha-4-uber.jar',
         '-v', 'silent', '-l', 'localhost:8080', '-n',
     ], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    script = '''bean org.apache.cassandra.db:keyspace=Underdog_Records,type=DynamicEndpointSnitch
-get Scores'''
+    script = '''bean org.apache.cassandra.db:keyspace=%s,type=DynamicEndpointSnitch
+get Scores''' % keyspace
     stdout, stderr = p.communicate(script)
     now = int(time())
 
