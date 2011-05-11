@@ -1,3 +1,12 @@
+metartg (0.2-1sg29) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Cast memory values to integers, add redis metric logging
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 11 May 2011 18:47:57 +0000
+
 metartg (0.2-1sg28) lucid; urgency=low
 
   [ Jeremy Grosser ]
