@@ -15,6 +15,8 @@ import memcache
 import bottle
 import jinja2
 
+redis = eventlet.import_patched('redis')
+
 STATIC_PATH = '/usr/share/metartg/static'
 TEMPLATE_PATH = '/usr/share/metartg/templates'
 
@@ -25,6 +27,7 @@ cache = memcache.Client(['127.0.0.1:11211'])
 gpool = eventlet.GreenPool(200)
 clusto = clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
 rrdqueue = eventlet.Queue()
+db = redis.Redis()
 RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
@@ -292,6 +295,10 @@ def update_rrd(filename, metric, data):
     rrdtool('update %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
 
 
+def update_redis(host, service, metricname, metric):
+    db.sadd('hosts', host)
+    db.hset('metrics/%s' % host, '%s/%s' % (service, metricname), json.dumps((metric['ts'], metric['value'])))
+
 def process_rrd_update(host, service, body):
     metrics = json.loads(body)
     for metric in metrics:
@@ -303,6 +310,7 @@ def process_rrd_update(host, service, body):
         if not os.path.exists(rrdfile):
             create_rrd(rrdfile, metric, metrics[metric])
         update_rrd(rrdfile, metric, metrics[metric])
+        update_redis(host, service, metric, metrics[metric])
     return
 
 

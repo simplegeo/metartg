@@ -38,11 +38,24 @@ def mem_metrics():
         metrics[label] = {
             'ts': now,
             'type': 'GAUGE',
-            'value': count,
+            'value': int(count),
         }
     return metrics
+
+
+def network_metrics():
+    p = subprocess.Popen(['/sbin/ifconfig'], stdout=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+
+    for lines in stdout.split('\n\n'):
+        if not lines.startswith('eth'):
+            continue
+        for line in lines.split('\n'):
+            line = [x for x in line.split(' ') if x]
+    return {}
 
 
 def run_check(callback):
     callback('cpu', cpu_metrics())
     callback('memory', mem_metrics())
+    callback('network', network_metrics())
