@@ -69,6 +69,6 @@ class Metartg(object):
 
         req = Request('POST', '%s/rrd/%s/%s' %
             (self.url, self.hostname, service),
-            data=json.dumps(metrics), headers=headers)
+            data=json.dumps(metrics, use_decimal=True), headers=headers)
         resp = urllib2.urlopen(req)
         return (resp.info().status, resp.read())

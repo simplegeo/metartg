@@ -1,0 +1,10 @@
+Jinja2==2.5.5
+PyRRD==0.0.7
+bottle==0.8.5
+distribute==0.6.10
+eventlet==0.9.15
+greenlet==0.3.1
+gunicorn==0.12.1
+python-memcached==1.47
+simplejson==2.1.5
+wsgiref==0.1.2

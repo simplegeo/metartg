@@ -6,7 +6,8 @@ setup(name='metartg',
       author='Jeremy Grosser',
       packages=['metartg', 'metartg.checks'],
       scripts=[
-        'scripts/metartg_check'
+        'scripts/metartg_check',
+        'scripts/metartg_consumer'
       ],
       install_requires=[
         'eventlet',

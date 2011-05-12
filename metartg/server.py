@@ -9,6 +9,7 @@ import sys
 import os
 
 import simplejson as json
+import logging
 import clustohttp
 import eventlet
 import memcache
@@ -26,8 +27,26 @@ env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
 cache = memcache.Client(['127.0.0.1:11211'])
 gpool = eventlet.GreenPool(200)
 clusto = clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
-rrdqueue = eventlet.Queue()
+#rrdqueue = eventlet.Queue()
 db = redis.Redis()
+
+class RedisQueue(object):
+    def __init__(self, key):
+        self.key = key
+
+    def put(self, obj):
+        db.lpush(self.key, json.dumps(obj))
+
+    def get(self):
+        return json.loads(db.brpop(self.key)[1])
+
+    def qsize(self):
+        return db.llen(self.key)
+
+
+rrdqueue = RedisQueue('rrdqueue')
+
+
 RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
@@ -132,8 +151,16 @@ for tpstats in tpstats_list:
         'LINE:pending#FF6600:%s pending\\l' % tpstats,
         'LINE:active#66FF00:%s active\\l' % tpstats,
     ]
+    RRD_GRAPH_DEFS['cassandra-tpstats-%s-completed' % tpstats] = [
+        'DEF:completed=%%(rrdpath)s/cassandra_tpstats/%s_CompletedTasks.rrd:sum:AVERAGE' % tpstats,
+        'LINE:completed#0066FF:%s completed\\l' % tpstats,
+    ]
+
     RRD_GRAPH_TITLE['cassandra-tpstats-' + tpstats] = '%%(host)s | cassandra %s' % tpstats
+    RRD_GRAPH_TITLE['cassandra-tpstats-%s-completed' % tpstats] = '%%(host)s | cassandra %s completed' % tpstats
+
     RRD_GRAPH_TYPES.append(('cassandra-tpstats-' + tpstats, tpstats))
+    RRD_GRAPH_TYPES.append(('cassandra-tpstats-%s-completed' % tpstats, '%s completed' % tpstats))
 
 sstables_list = {}
 path = RRDPATH % {
@@ -292,6 +319,7 @@ RRA:AVERAGE:0.5:30:4320' % {
 def update_rrd(filename, metric, data):
     #filename = filename.split('/var/lib/metartg/rrds/', 1)[1]
     #rrdtool('update --daemon 127.0.0.1:42217 %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
+    #ts = data['ts'] - (data['ts'] % 60)
     rrdtool('update %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
 
 
@@ -318,12 +346,13 @@ def rrdupdate_worker(queue):
     while True:
         #sys.stdout.write('.')
         #sys.stdout.flush()
-        process_rrd_update(*queue.get())
-        queue.task_done()
+        metric = queue.get()
+        if metric:
+            process_rrd_update(*metric)
 
-procs = []
-for i in range(2):
-    procs.append(eventlet.spawn_n(rrdupdate_worker, rrdqueue))
+#procs = []
+#for i in range(2):
+#    procs.append(eventlet.spawn_n(rrdupdate_worker, rrdqueue))
 
 #procs = []
 #for i in range(4):
