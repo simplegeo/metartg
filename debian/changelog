@@ -1,3 +1,41 @@
+metartg (0.2-1sg33) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Fix server name in templates
+  * Fix RRD step, rip out last remnants of ganglia
+  * Remove unused templates
+  * Dirty hack to make cron messages go away
+  * Metric groupings
+  * Add cassandra sstable sizes metrics
+  * Add sstable count metric
+  * Sorted cassandra sstable graphs
+  * Look at both /mnt/var/lib/{penelope,cassandra}
+  * Capture stderr from cassandra checks
+  * Add disk stats, tweak cassandra graph titles
+  * We only care about sda and md0 disk stats for now
+  * Add graphs for disk stats, use sda1, not sda
+  * Add a random sleep to the metartg checks, so that we don't kill the
+    monitoring host
+  * Add init script
+  * Remove random sleep from checks, spin of a greenlet for each rrd
+    update on the server instead
+  * Add underdog scores check
+  * MOAR GREENLETS
+  * Add cassandra scores graph
+  * Add rabbitmq check
+  * import subprocess
+  * Add rabbitmq check
+  * Add unacked messages to rabbitmq check
+  * Add rabbitmq unack graph
+  * Allow defining different cassandra keyspaces for score stats
+  * Cast memory values to integers, add redis metric logging
+  * Use redis as a queue and split processing into a separate consumer
+  * Add cloudwatch and dewpoint module
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 12 May 2011 23:22:45 +0000
+
 metartg (0.2-1sg0) lucid; urgency=low
 
   * New major release
