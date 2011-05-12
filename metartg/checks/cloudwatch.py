@@ -1,9 +1,6 @@
-import dewpoint.aws
-import simplejson as json
-from xml.etree import ElementTree
 from decimal import Decimal
-from time import time, gmtime, strftime
-import re
+from time import time
+import dewpoint.aws
 
 cloudwatch = dewpoint.aws.AWSProxy(
     key='AKIAISNDECTOP7SBLDDQ',
@@ -51,33 +48,39 @@ def run_check(callback):
 
     callback('elb', {
         'latency_min': {
-            'ts': metrics['Latency']['Timestamp'],
+            'ts': metrics['Latency'][0]['Timestamp'],
             'type': 'GAUGE',
-            'value': metrics['Latency']['Minimum'],
+            'value': metrics['Latency'][0]['Minimum'],
         },
         'latency_max': {
-            'ts': metrics['Latency']['Timestamp'],
+            'ts': metrics['Latency'][0]['Timestamp'],
             'type': 'GAUGE',
-            'value': metrics['Latency']['Maximum'],
+            'value': metrics['Latency'][0]['Maximum'],
         },
         'latency_avg': {
-            'ts': metrics['Latency']['Timestamp'],
+            'ts': metrics['Latency'][0]['Timestamp'],
             'type': 'GAUGE',
-            'value': metrics['Latency']['Average'],
-        }
+            'value': metrics['Latency'][0]['Average'],
+        },
         'request_count': {
-            'ts': metrics['RequestCount']['Timestamp'],
+            'ts': metrics['RequestCount'][0]['Timestamp'],
             'type': 'GAUGE',
-            'value': metrics['RequestCount']['Sum'],
-        }
+            'value': metrics['RequestCount'][0]['Sum'],
+        },
         'healthy_hosts': {
-            'ts': metrics['HealthyHostCount']['Timestamp'],
+            'ts': metrics['HealthyHostCount'][0]['Timestamp'],
             'type': 'GAUGE',
-            'value': metrics['HealthyHostCount']['Average'],
-        }
+            'value': metrics['HealthyHostCount'][0]['Average'],
+        },
         'unhealthy_hosts': {
-            'ts': metrics['UnHealthyHostCount']['Timestamp'],
+            'ts': metrics['UnHealthyHostCount'][0]['Timestamp'],
             'type': 'GAUGE',
-            'value': metrics['UnHealthyHostCount']['Average'],
-        }
+            'value': metrics['UnHealthyHostCount'][0]['Average'],
+        },
     })
+
+if __name__ == '__main__':
+    import simplejson as json
+    def func(name, metrics):
+        print json.dumps(metrics, indent=2, use_decimal=True)
+    run_check(func)
