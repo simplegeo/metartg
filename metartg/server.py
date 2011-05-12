@@ -94,6 +94,18 @@ RRD_GRAPH_DEFS = {
         'LINE:connected_slaves#0000FF:Connected slaves\\l',
         'LINE:blocked_clients#FF0000:Blocked clients\\l',
     ],
+    'elb-requests': [
+        'DEF:request_count=%(rrdpath)s/elb/request_count.rrd:sum:AVERAGE',
+        'LINE:request_count#00FF00:Requests per minute\\l',
+    ],
+    'elb-latency': [
+        #'DEF:min=%(rrdpath)s/elb/latency_min.rrd:sum:AVERAGE',
+        #'DEF:max=%(rrdpath)s/elb/latency_max.rrd:sum:AVERAGE',
+        'DEF:avg=%(rrdpath)s/elb/latency_avg.rrd:sum:AVERAGE',
+        #'LINE:min#FF0000:Upstream latency (min)\\l',
+        #'LINE:max#0000FF:Upstream latency (max)\\l',
+        'LINE:avg#3333FF:Upstream latency (avg)\\l',
+    ],
 }
 
 RRD_GRAPH_OPTIONS = {
@@ -109,6 +121,8 @@ RRD_GRAPH_TITLE = {
     'redis-memory': '%(host)s | redis memory',
     'redis-connections': '%(host)s | redis connections',
     'cassandra-scores': '%(host)s | cassandra scores',
+    'elb-requests': '%(host)s | ELB requests/min',
+    'elb-latency': '%(host)s | ELB latency (seconds)',
 }
 
 RRD_GRAPH_TYPES = [
@@ -117,6 +131,8 @@ RRD_GRAPH_TYPES = [
     ('redis-memory', 'Memory'),
     ('redis-connections', 'Connections'),
     ('cassandra-scores', 'Scores'),
+    ('elb-requests', 'ELB Requests'),
+    ('elb-latency', 'ELB Latency'),
 #    ('network', 'Network'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),

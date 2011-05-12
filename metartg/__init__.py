@@ -52,7 +52,7 @@ class Metartg(object):
         self.hostname = hostname
         self.auth = conf('auth')
 
-    def update(self, service, metrics):
+    def update(self, service, metrics, hostname=None):
         '''
         @param service  Name of the service to send metrics for
         @param metrics  dict in the following form
@@ -62,13 +62,15 @@ class Metartg(object):
         '''
 
         #pprint((service, metrics))
+        if hostname is None:
+            hostname = self.hostname
 
         headers = {'Content-type': 'application/json'}
         if self.auth:
             headers['Authorization'] = 'Basic ' + b64encode('%(username)s:%(password)s' % self.auth)
 
         req = Request('POST', '%s/rrd/%s/%s' %
-            (self.url, self.hostname, service),
-            data=json.dumps(metrics), headers=headers)
+            (self.url, hostname, service),
+            data=json.dumps(metrics, use_decimal=True), headers=headers)
         resp = urllib2.urlopen(req)
         return (resp.info().status, resp.read())
