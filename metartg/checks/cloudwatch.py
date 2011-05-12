@@ -3,7 +3,7 @@ from time import time
 import socket
 
 import dewpoint.aws
-from metartg.config import conf
+from metartg import conf
 
 awscreds = conf('aws')
 cloudwatch = dewpoint.aws.AWSProxy(
