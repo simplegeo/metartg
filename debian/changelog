@@ -1,3 +1,12 @@
+metartg (0.2-1sg31) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Move dewpoint library, install globally
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 12 May 2011 22:37:24 +0000
+
 metartg (0.2-1sg30) lucid; urgency=low
 
   [ Jeremy Grosser ]
