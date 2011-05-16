@@ -4,7 +4,7 @@ from glob import glob
 setup(name='metartg',
       version='0.1',
       author='Jeremy Grosser',
-      packages=['metartg', 'metartg.checks', 'dewpoint'],
+      packages=['metartg', 'metartg.checks', 'dewpoint', 'metartg.thrift'],
       scripts=[
         'scripts/metartg_check',
         'scripts/metartg_consumer'
@@ -17,5 +17,6 @@ setup(name='metartg',
         'bottle',
         'jinja2',
         'pyrrd',
+        'thrift'
       ]
 )
