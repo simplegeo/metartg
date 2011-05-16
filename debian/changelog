@@ -1,3 +1,12 @@
+metartg (0.2-1sg35) lucid; urgency=low
+
+  [ Paul Lathrop ]
+  * Add Cassandra thrift bindings.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 16 May 2011 23:40:18 +0000
+
 metartg (0.2-1sg34) lucid; urgency=low
 
   [ Jeremy Grosser ]
