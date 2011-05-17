@@ -1,3 +1,12 @@
+metartg (0.2-1sg37) lucid; urgency=low
+
+  [ Paul Lathrop ]
+  * Add missing package.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 17 May 2011 00:27:17 +0000
+
 metartg (0.2-1sg36) lucid; urgency=low
 
   [ Jeremy Grosser ]
