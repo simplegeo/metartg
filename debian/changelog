@@ -1,3 +1,12 @@
+metartg (0.2-1sg38) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add EBS metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 17 May 2011 19:14:40 +0000
+
 metartg (0.2-1sg37) lucid; urgency=low
 
   [ Paul Lathrop ]
