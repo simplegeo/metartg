@@ -1,3 +1,13 @@
+metartg (0.2-1sg41) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Use maximum values for EBS metrics
+  * Add graphs for EBS, don't send metrics if there aren't any.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 17 May 2011 23:28:32 +0000
+
 metartg (0.2-1sg40) lucid; urgency=low
 
   [ Jeremy Grosser ]
