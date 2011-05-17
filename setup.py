@@ -17,6 +17,5 @@ setup(name='metartg',
         'bottle',
         'jinja2',
         'pyrrd',
-        'thrift'
       ]
 )
