@@ -244,6 +244,38 @@ for queue in queues_list:
     RRD_GRAPH_TYPES.append(('rabbitmq-%s' % queue, queue))
 
 
+path = RRDPATH % {
+    'host': '*',
+    'service': 'ebs',
+    'metric': '*',
+}
+ebs_mounts = {}
+for filename in glob(path):
+    filename = os.path.basename(filename)
+    k = filename.split('_', 1)[0]
+    if not k in ebs_mounts:
+        ebs_mounts[k] = True
+ebs_mounts = ebs_mounts.keys()
+
+for mount in ebs_mounts:
+    RRD_GRAPH_DEFS['ebs-%s-ops' % mount] = [
+        'DEF:reads=%%(rrdpath)s/ebs/%s_read_ops.rrd:sum:AVERAGE' % mount,
+        'DEF:writes=%%(rrdpath)s/ebs/%s_write_ops.rrd:sum:AVERAGE' % mount,
+        'LINE:reads#FF6600:max reads/sec\\l',
+        'LINE:writes#00FF66:max writes/sec\\l',
+    ]
+    RRD_GRAPH_DEFS['ebs-%s-queue' % mount] = [
+        'DEF:queue=%%(rrdpath)s/ebs/%s_queue_length.rrd:sum:AVERAGE' % mount,
+        'LINE:queue#66FFFF:Queued operations\\l',
+    ]
+
+    RRD_GRAPH_TITLE['ebs-%s-ops' % mount] = '%%(host)s | %s ebs iops' % mount
+    RRD_GRAPH_TITLE['ebs-%s-queue' % mount] = '%%(host)s | %s ebs queue' % mount
+
+    RRD_GRAPH_TYPES.append(('ebs-%s-ops' % mount, '%s ebs iops' % mount))
+    RRD_GRAPH_TYPES.append(('ebs-%s-queue' % mount, '%s ebs queue' % mount))
+
+
 for disk in ('md0', 'sda1'):
     RRD_GRAPH_DEFS['disk-%s-requests' % disk] = [
         'DEF:rrqm=%%(rrdpath)s/disk/%s.rrqm.rrd:sum:AVERAGE' % disk,

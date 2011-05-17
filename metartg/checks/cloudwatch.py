@@ -78,10 +78,10 @@ def ebs_metrics(mountpoint, volume):
         results[metric] = datapoints
 
     rmap = {
-        'idle_time': ('VolumeIdleTime', 'Average', 'GAUGE'),
-        'queue_length': ('VolumeQueueLength', 'Average', 'GAUGE'),
-        'read_ops': ('VolumeReadOps', 'Average', 'GAUGE'),
-        'write_ops': ('VolumeWriteOps', 'Average', 'GAUGE'),
+        'idle_time': ('VolumeIdleTime', 'Maximum', 'GAUGE'),
+        'queue_length': ('VolumeQueueLength', 'Maximum', 'GAUGE'),
+        'read_ops': ('VolumeReadOps', 'Maximum', 'GAUGE'),
+        'write_ops': ('VolumeWriteOps', 'Maximum', 'GAUGE'),
     }
 
     r = {}
