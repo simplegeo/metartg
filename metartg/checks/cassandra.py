@@ -188,6 +188,7 @@ def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
     callback('cassandra_scores', scores_metrics())
+    callback('cassandra_cfstats-cache', cfstats_cache_metrics())
 
 if __name__ == '__main__':
     print json.dumps(scores_metrics(), indent=2)
