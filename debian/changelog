@@ -1,3 +1,12 @@
+metartg (0.2-1sg40) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Log full tracebacks
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 17 May 2011 22:36:19 +0000
+
 metartg (0.2-1sg39) lucid; urgency=low
 
   [ Paul Lathrop ]
