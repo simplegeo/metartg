@@ -1,5 +1,6 @@
 from base64 import b64encode
 from pprint import pprint
+from traceback import format_exc
 import simplejson as json
 import logging
 import urllib2
@@ -25,7 +26,7 @@ def run_checks(checks):
         try:
             check.run_check(metartg.update)
         except:
-            logging.error('Exception from %s.run_check: %s' % (filename, sys.exc_info()[1]))
+            logging.error('Exception from %s.run_check: %s' % (filename, format_exc()))
             return
 
 
