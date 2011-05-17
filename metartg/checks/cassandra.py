@@ -64,7 +64,7 @@ def cfstats_cache_metrics():
                     get_local_ipv4(), column_family, cache_type, keyspace)
                 cache_stats = json.load(urllib2.urlopen(url))
                 for label in ('RecentHitRate', 'Capacity', 'Size'):
-                    metrics['%s-%s_%sCache%s' % (keyspace, column_family, cache_type, label)] = {
+                    metrics['%s-%s-%sCache%s' % (keyspace, column_family, cache_type, label)] = {
                         'ts': now,
                         'type': 'GAUGE',
                         'value': cache_stats['value'][label],
@@ -188,7 +188,7 @@ def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
     callback('cassandra_scores', scores_metrics())
-    callback('cassandra_cfstats-cache', cfstats_cache_metrics())
+    callback('cassandra_cfstats_cache', cfstats_cache_metrics())
 
 if __name__ == '__main__':
     print json.dumps(scores_metrics(), indent=2)
