@@ -1,3 +1,14 @@
+metartg (0.2-1sg39) lucid; urgency=low
+
+  [ Paul Lathrop ]
+  * Add cassandra column family cache metrics.
+  * Forgot to add the call to actually run the new checks.
+  * Fix based on feedback from @synack.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 17 May 2011 21:09:17 +0000
+
 metartg (0.2-1sg38) lucid; urgency=low
 
   [ Jeremy Grosser ]
