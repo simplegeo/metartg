@@ -66,6 +66,9 @@ class Metartg(object):
         if hostname is None:
             hostname = self.hostname
 
+        if not metrics:
+            return
+
         headers = {'Content-type': 'application/json'}
         if self.auth:
             headers['Authorization'] = 'Basic ' + b64encode('%(username)s:%(password)s' % self.auth)
