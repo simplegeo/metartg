@@ -188,7 +188,11 @@ def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
     callback('cassandra_scores', scores_metrics())
-    callback('cassandra_cfstats_cache', cfstats_cache_metrics())
+
+    try:
+        callback('cassandra_cfstats_cache', cfstats_cache_metrics())
+    except urllib2.URLError:
+        pass
 
 if __name__ == '__main__':
     print json.dumps(scores_metrics(), indent=2)
