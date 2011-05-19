@@ -1,3 +1,12 @@
+metartg (0.2-1sg42) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Catch cfstats metric exception
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 19 May 2011 21:24:27 +0000
+
 metartg (0.2-1sg41) lucid; urgency=low
 
   [ Jeremy Grosser ]
