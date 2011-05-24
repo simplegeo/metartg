@@ -1,3 +1,12 @@
+metartg (0.3-1sg48) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Measure queued metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 24 May 2011 20:04:39 +0000
+
 metartg (0.3-1sg47) lucid; urgency=low
 
   * UNRELEASED
