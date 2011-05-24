@@ -6,12 +6,11 @@ import urllib2
 import socket
 
 import dewpoint.aws
-import metartg.clustohttp
-from metartg import conf
+from metartg import conf, clustohttp
 
 region = urllib2.urlopen(urllib2.Request('http://169.254.169.254/latest/meta-data/placement/availability-zone')).read()[:-1]
 
-clusto = metartg.clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
+clusto = clustohttp.ClustoProxy('http://clusto.simplegeo.com/api')
 awscreds = conf('aws')
 cloudwatch = dewpoint.aws.AWSProxy(
     key=awscreds['key'],

@@ -106,6 +106,10 @@ RRD_GRAPH_DEFS = {
         #'LINE:max#0000FF:Upstream latency (max)\\l',
         'LINE:avg#3333FF:Upstream latency (avg)\\l',
     ],
+    'metartg-processed': [
+        'DEF:processed=%(rrdpath)s/metartg/processed.rrd:sum:AVERAGE',
+        'LINE:processed#00FF00:Processed metrics\\l',
+    ]
 }
 
 RRD_GRAPH_OPTIONS = {
@@ -123,6 +127,7 @@ RRD_GRAPH_TITLE = {
     'cassandra-scores': '%(host)s | cassandra scores',
     'elb-requests': '%(host)s | ELB requests/min',
     'elb-latency': '%(host)s | ELB latency (seconds)',
+    'metartg-processed': '%(host)s | metrics processed',
 }
 
 RRD_GRAPH_TYPES = [
@@ -133,6 +138,7 @@ RRD_GRAPH_TYPES = [
     ('cassandra-scores', 'Scores'),
     ('elb-requests', 'ELB Requests'),
     ('elb-latency', 'ELB Latency'),
+    ('metartg-processed', 'Processed'),
 #    ('network', 'Network'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
