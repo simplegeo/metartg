@@ -8,7 +8,12 @@ def metartg_metrics():
         'processed': {
             'ts': now,
             'type': 'COUNTER',
-            'value': db.get('processed')
+            'value': db.get('processed'),
+        },
+        'queued': {
+            'ts': now,
+            'type': 'GAUGE',
+            'value': db.llen('rrdqueue'),
         }
     }
     
