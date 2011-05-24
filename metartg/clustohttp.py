@@ -20,7 +20,7 @@ log.addHandler(handler)
 log.setLevel(logging.DEBUG)
 
 try:
-    AUTH_BASIC = file('%s/.infra' % os.environ['HOME'], 'r').read()
+    AUTH_BASIC = file('/etc/clustohttp.conf', 'r').read()
 except:
     AUTH_BASIC = None
 
