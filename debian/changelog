@@ -1,3 +1,12 @@
+metartg (0.2-1sg45) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Update clustohttp
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 24 May 2011 18:07:05 +0000
+
 metartg (0.2-1sg44) lucid; urgency=low
 
   [ Jeremy Grosser ]
