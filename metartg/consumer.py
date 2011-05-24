@@ -3,7 +3,6 @@ from time import time
 from glob import glob
 import multiprocessing
 import subprocess
-import socket
 import os.path
 import sys
 import os
@@ -11,6 +10,7 @@ import os
 import simplejson as json
 import logging
 import clustohttp
+from eventlet.green import socket
 import eventlet
 import memcache
 import bottle
@@ -34,10 +34,36 @@ class RedisQueue(object):
         return db.llen(self.key)
 
 
+class RRDCached(object):
+    def __init__(self, host, port=42217):
+        self.sock = socket.socket()
+        self.sock.connect((host, port))
+        self.buf = ''
+
+    def update(self, filename, values):
+        self.sock.sendall('UPDATE %s %s\n' % (filename, values))
+        line = self.readline()
+        status, line = line.split(' ', 1)
+        status = int(status)
+        if status < 0:
+            logging.warning(line)
+            return
+        for i in range(status):
+            logging.debug(self.readline())
+    
+    def readline(self):
+        while True:
+            if self.buf.find('\n') != -1:
+                line, self.buf = self.buf.split('\n', 1)
+                return line
+            self.buf += self.sock.recv(1024)
+
+
 rrdqueue = RedisQueue('rrdqueue')
+rrdcache = RRDCached('127.0.0.1')
+#eventlet.spawn_n(rrdcache.run)
 
-
-RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
+RRDPATH = '%(host)s/%(service)s/%(metric)s.rrd'
 
 def rrdtool(args):
     p = subprocess.Popen(['rrdtool'] + args.split(' '))
@@ -65,7 +91,8 @@ def update_rrd(filename, metric, data):
     #filename = filename.split('/var/lib/metartg/rrds/', 1)[1]
     #rrdtool('update --daemon 127.0.0.1:42217 %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
     #ts = data['ts'] - (data['ts'] % 60)
-    rrdtool('update %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
+    #rrdtool('update %s %s:%s' % (filename, str(data['ts']), str(data['value'])))
+    rrdcache.update(filename, '%s:%s' % (str(data['ts']), str(data['value'])))
 
 
 def update_redis(host, service, metricname, metric):
@@ -100,6 +127,9 @@ def rrdupdate_worker(i, queue):
             print 'Process[%i]: wrote %i metrics' % (i, count)
 
 def main():
+    rrdupdate_worker(0, rrdqueue)
+    return
+
     procs = []
     for i in range(8):
         p = multiprocessing.Process(target=rrdupdate_worker, args=(i, rrdqueue))
