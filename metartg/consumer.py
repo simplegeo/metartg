@@ -98,6 +98,7 @@ def update_rrd(filename, metric, data):
 def update_redis(host, service, metricname, metric):
     db.sadd('hosts', host)
     db.hset('metrics/%s' % host, '%s/%s' % (service, metricname), json.dumps((metric['ts'], metric['value'])))
+    db.incr('processed')
 
 def process_rrd_update(host, service, body):
     metrics = json.loads(body)
