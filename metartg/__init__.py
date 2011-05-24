@@ -2,6 +2,7 @@ from base64 import b64encode
 from pprint import pprint
 from traceback import format_exc
 import simplejson as json
+import clustohttp
 import logging
 import urllib2
 import os.path
