@@ -47,7 +47,7 @@ class RedisQueue(object):
 rrdqueue = RedisQueue('rrdqueue')
 
 
-RRDPATH = '/var/lib/metartg/rrds/%(host)s/%(service)s/%(metric)s.rrd'
+RRDPATH = '%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
     'system-memory': [
@@ -276,6 +276,27 @@ for mount in ebs_mounts:
     RRD_GRAPH_TYPES.append(('ebs-%s-queue' % mount, '%s ebs queue' % mount))
 
 
+#path = RRDPATH % {
+#    'host': '*',
+#    'service': 'haproxy',
+#    'metric': '*',
+#}
+#hosts = []
+#for filename in glob(path):
+#    hostname = filename.split('/')[-1].split('_', 1)[0]
+#    if not hostname in hosts:
+#        hosts.append(hostname)
+#
+#RRD_GRAPH_DEFS['haproxy-sessions'] = []
+#for host in hosts:
+#    RRD_GRAPH_DEFS['haproxy-sessions'] += [
+#        'DEF:%s_total=%%(rrdpath)s/haproxy/%s_stot.rrd' % (host, host),
+#        'LINE:%s_total#66FFFF:%s total sessions\\l' % (host, host),
+#    ]
+#RRD_GRAPH_TITLE['haproxy-sessions'] = '%%(host)s | haproxy sessions'
+#RRD_GRAPH_TYPES.append(('haproxy-sessions', 'Sessions'))
+
+
 for disk in ('md0', 'sda1'):
     RRD_GRAPH_DEFS['disk-%s-requests' % disk] = [
         'DEF:rrqm=%%(rrdpath)s/disk/%s.rrqm.rrd:sum:AVERAGE' % disk,
@@ -425,7 +446,7 @@ def post_rrd_update(host, service):
 def cassandra_scores_graphdef(host):
     r = []
     colors = ['FF6600', 'CC3333', '00FF00', 'FFCC00', 'DA4725', '66CC66', '6EA100', '0000FF', 'EACC00', 'D8ACE0', '4668E4', '35962B', '8D00BA']
-    files = glob('/var/lib/metartg/rrds/%s/cassandra_scores/*.rrd' % host)
+    files = glob('%s/cassandra_scores/*.rrd' % host)
     files.sort()
     for i, filename in enumerate(files):
         peer = filename.rsplit('/', 1)[1]
@@ -448,6 +469,7 @@ def get_rrd_graph(host, graphtype):
 
     cmd = ['/usr/bin/rrdtool', 'graph',
         '-',
+        '--daemon', '127.0.0.1:42217',
         '--font', 'DEFAULT:7:monospace',
         '--font-render-mode', 'normal',
         '--color', 'MGRID#880000',
@@ -490,7 +512,7 @@ def get_rrd_graph(host, graphtype):
 
     for gdef in RRD_GRAPH_DEFS.get(graphtype, []):
         cmd.append(gdef % {
-            'rrdpath': '/var/lib/metartg/rrds/%s' % host,
+            'rrdpath': '%s' % host,
         })
     #print '\n'.join(cmd)
 
