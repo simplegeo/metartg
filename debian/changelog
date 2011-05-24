@@ -1,3 +1,12 @@
+metartg (0.2-1sg46) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Rename metartg -> metartgmetrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 24 May 2011 18:16:00 +0000
+
 metartg (0.2-1sg45) lucid; urgency=low
 
   [ Jeremy Grosser ]
