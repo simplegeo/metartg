@@ -1,3 +1,13 @@
+metartg (0.2-1sg44) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Talk directly to rrdcached, don't call rrdtool update
+  * Rename redis check, add metartg check, increment counter
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 24 May 2011 18:02:03 +0000
+
 metartg (0.2-1sg43) lucid; urgency=low
 
   [ Jeremy Grosser ]
