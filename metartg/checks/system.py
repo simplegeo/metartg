@@ -44,15 +44,40 @@ def mem_metrics():
 
 
 def network_metrics():
-    p = subprocess.Popen(['/sbin/ifconfig'], stdout=subprocess.PIPE)
-    stdout, stderr = p.communicate()
-
-    for lines in stdout.split('\n\n'):
-        if not lines.startswith('eth'):
+    metrics = {}
+    now = int(time())
+    fd = file('/proc/net/dev', 'r')
+    head1 = fd.next()
+    head2 = fd.next()
+    for line in fd:
+        line = line.strip('\n ')
+        iface, line = line.split(':', 1)
+        if not iface.startswith('eth'):
             continue
-        for line in lines.split('\n'):
-            line = [x for x in line.split(' ') if x]
-    return {}
+        line = [x for x in line.split(' ') if x]
+        metrics[iface] = {
+            'rx_bytes': {
+                'ts': now,
+                'type': 'COUNTER',
+                'value': int(line[0]),
+            },
+            'tx_bytes': {
+                'ts': now,
+                'type': 'COUNTER',
+                'value': int(line[8]),
+            },
+            'rx_packets': {
+                'ts': now,
+                'type': 'COUNTER',
+                'value': int(line[1]),
+            },
+            'tx_packets': {
+                'ts': now,
+                'type': 'COUNTER',
+                'value': int(line[9]),
+            },
+        }
+    return metrics
 
 
 def run_check(callback):
