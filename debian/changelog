@@ -1,3 +1,12 @@
+metartg (0.3-1sg49) lucid; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add network metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 25 May 2011 17:14:15 +0000
+
 metartg (0.3-1sg48) lucid; urgency=low
 
   [ Jeremy Grosser ]
