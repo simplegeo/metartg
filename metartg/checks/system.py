@@ -49,34 +49,35 @@ def network_metrics():
     fd = file('/proc/net/dev', 'r')
     head1 = fd.next()
     head2 = fd.next()
+
     for line in fd:
         line = line.strip('\n ')
         iface, line = line.split(':', 1)
         if not iface.startswith('eth'):
             continue
         line = [x for x in line.split(' ') if x]
-        metrics[iface] = {
-            'rx_bytes': {
+        metrics.update({
+            '%s_rx_bytes' % iface: {
                 'ts': now,
                 'type': 'COUNTER',
                 'value': int(line[0]),
             },
-            'tx_bytes': {
+            '%s_tx_bytes' % iface: {
                 'ts': now,
                 'type': 'COUNTER',
                 'value': int(line[8]),
             },
-            'rx_packets': {
+            '%s_rx_packets' % iface: {
                 'ts': now,
                 'type': 'COUNTER',
                 'value': int(line[1]),
             },
-            'tx_packets': {
+            '%s_tx_packets' % iface: {
                 'ts': now,
                 'type': 'COUNTER',
                 'value': int(line[9]),
-            },
-        }
+            }
+        })
     return metrics
 
 
@@ -84,3 +85,7 @@ def run_check(callback):
     callback('cpu', cpu_metrics())
     callback('memory', mem_metrics())
     callback('network', network_metrics())
+
+if __name__ == '__main__':
+    import json
+    print json.dumps(network_metrics(), indent=2)
