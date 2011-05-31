@@ -62,14 +62,18 @@ RRD_GRAPH_DEFS = {
         'LINE:gb_mem_total#FFFFFF:Total memory\\l',
         'AREA:gb_mem_used#006699:Used memory\\l',
     ],
-    #'network': [
-    #    'DEF:net_in=%(rrdpath)s/bytes_in.rrd:sum:AVERAGE',
-    #    'DEF:net_out=%(rrdpath)s/bytes_out.rrd:sum:AVERAGE',
-    #    'CDEF:net_bits_in=net_in,8,*',
-    #    'CDEF:net_bits_out=net_out,8,*',
-    #    'LINE:net_bits_in#006699:Network in\\l',
-    #    'LINE:net_bits_out#996600:Network out\\l',
-    #],
+    'network-bytes': [
+        'DEF:rx_bytes=%(rrdpath)s/network/eth0_rx_bytes.rrd:sum:AVERAGE',
+        'DEF:tx_bytes=%(rrdpath)s/network/eth0_tx_bytes.rrd:sum:AVERAGE',
+        'LINE:rx_bytes#006699:rx bytes\\l',
+        'LINE:tx_bytes#996600:tx bytes\\l',
+    ],
+    'network-packets': [
+        'DEF:rx_packets=%(rrdpath)s/network/eth0_rx_packets.rrd:sum:AVERAGE',
+        'DEF:tx_packets=%(rrdpath)s/network/eth0_tx_packets.rrd:sum:AVERAGE',
+        'LINE:rx_packets#006699:rx packets\\l',
+        'LINE:tx_packets#996600:tx packets\\l',
+    ],
     'system-cpu': [
         'DEF:cpu_user=%(rrdpath)s/cpu/user.rrd:sum:AVERAGE',
         'DEF:cpu_system=%(rrdpath)s/cpu/sys.rrd:sum:AVERAGE',
@@ -108,7 +112,9 @@ RRD_GRAPH_DEFS = {
     ],
     'metartg-processed': [
         'DEF:processed=%(rrdpath)s/metartg/processed.rrd:sum:AVERAGE',
+        'DEF:queued=%(rrdpath)s/metartg/queued.rrd:sum:AVERAGE',
         'LINE:processed#00FF00:Processed metrics\\l',
+        'LINE:queued#FF0000:Queued metrics\\l',
     ]
 }
 
@@ -118,7 +124,8 @@ RRD_GRAPH_OPTIONS = {
 }
 
 RRD_GRAPH_TITLE = {
-    #'network': '%(host)s | bits in/out',
+    'network-bytes': '%(host)s | bytes in/out',
+    'network-packets': '%(host)s | packets in/out',
     'system-cpu': '%(host)s | cpu %%',
     'system-memory': '%(host)s | memory utilization',
     #'io': '%(host)s | disk i/o',
@@ -127,7 +134,7 @@ RRD_GRAPH_TITLE = {
     'cassandra-scores': '%(host)s | cassandra scores',
     'elb-requests': '%(host)s | ELB requests/min',
     'elb-latency': '%(host)s | ELB latency (seconds)',
-    'metartg-processed': '%(host)s | metrics processed',
+    'metartg-processed': '%(host)s | metrics processed per minute',
 }
 
 RRD_GRAPH_TYPES = [
@@ -139,7 +146,8 @@ RRD_GRAPH_TYPES = [
     ('elb-requests', 'ELB Requests'),
     ('elb-latency', 'ELB Latency'),
     ('metartg-processed', 'Processed'),
-#    ('network', 'Network'),
+    ('network-bytes', 'Bytes tx/rx'),
+    ('network-packets', 'Packets tx/rx'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
 ]
@@ -375,6 +383,7 @@ def rrdtool(args):
 
 
 def create_rrd(filename, metric, data):
+    print 'Creating rrd', filename, metric, data
     try:
         os.makedirs(os.path.dirname(filename))
     except:
@@ -410,8 +419,9 @@ def process_rrd_update(host, service, body):
             'service': service,
             'metric': metric,
         }
-        if not os.path.exists(rrdfile):
-            create_rrd(rrdfile, metric, metrics[metric])
+        rrdfullpath = '/var/lib/metartg/rrds/' + rrdfile
+        if not os.path.exists(rrdfullpath):
+            create_rrd(rrdfullpath, metric, metrics[metric])
         update_rrd(rrdfile, metric, metrics[metric])
         update_redis(host, service, metric, metrics[metric])
     return
