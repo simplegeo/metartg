@@ -71,6 +71,7 @@ def rrdtool(args):
 
 
 def create_rrd(filename, metric, data):
+    print 'Creating rrd', filename
     try:
         os.makedirs(os.path.dirname(filename))
     except:
@@ -108,8 +109,12 @@ def process_rrd_update(host, service, body):
             'service': service,
             'metric': metric,
         }
-        if not os.path.exists(rrdfile):
-            create_rrd(rrdfile, metric, metrics[metric])
+        if not 'ts' in metrics[metric]:
+            print 'Invalid metric:', host, service, metric, metrics[metric]
+            continue
+        rrdfilepath = '/var/lib/metartg/rrds/' + rrdfile
+        if not os.path.exists(rrdfilepath):
+            create_rrd(rrdfilepath, metric, metrics[metric])
         update_rrd(rrdfile, metric, metrics[metric])
         update_redis(host, service, metric, metrics[metric])
     return
