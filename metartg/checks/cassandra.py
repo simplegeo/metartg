@@ -24,6 +24,7 @@ def get_keyspaces():
     transport = TTransport.TFramedTransport(socket)
     protocol = TBinaryProtocolAccelerated(transport)
     client = Cassandra.Client(protocol)
+    keyspaces = {}
     try:
         transport.open()
         keyspaces = client.describe_keyspaces()

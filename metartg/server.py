@@ -115,7 +115,7 @@ RRD_GRAPH_DEFS = {
         'DEF:queued=%(rrdpath)s/metartg/queued.rrd:sum:AVERAGE',
         'LINE:processed#00FF00:Processed metrics\\l',
         'LINE:queued#FF0000:Queued metrics\\l',
-    ]
+    ],
 }
 
 RRD_GRAPH_OPTIONS = {
@@ -289,6 +289,37 @@ for mount in ebs_mounts:
     RRD_GRAPH_TYPES.append(('ebs-%s-ops' % mount, '%s ebs iops' % mount))
     RRD_GRAPH_TYPES.append(('ebs-%s-queue' % mount, '%s ebs queue' % mount))
 
+
+path = RRDPATH % {
+    'host': '*',
+    'service': 'monit',
+    'metric': '*',
+}
+services = {}
+for filename in glob(path):
+    filename = os.path.basename(filename)
+    monitservice = filename.split('_', 1)[0]
+    services[monitservice] = None
+
+for monitservice in services.keys():
+    RRD_GRAPH_DEFS['monit-%s-cpu' % monitservice] = [
+        'DEF:cpu=%%(rrdpath)s/monit/%s_cpu.rrd:sum:AVERAGE' % monitservice,
+        'CDEF:cpu_pct=cpu,100,*',
+        'LINE:cpu_pct#FF00FF:%s CPU\\l' % monitservice,
+    ]
+    RRD_GRAPH_DEFS['monit-%s-memory' % monitservice] = [
+        'DEF:memory=%%(rrdpath)s/monit/%s_memory.rrd:sum:AVERAGE' % monitservice,
+        'CDEF:memory_bytes=memory,1024,*',
+        'LINE:memory_bytes#00FF00:%s memory\\l' % monitservice,
+    ]
+
+    RRD_GRAPH_TITLE['monit-%s-cpu' % monitservice] = '%%(host)s | %s CPU' % monitservice
+    RRD_GRAPH_TITLE['monit-%s-memory' % monitservice] = '%%(host)s | %s memory' % monitservice
+
+    RRD_GRAPH_TYPES.append(('monit-%s-cpu' % monitservice, '%s CPU' % monitservice))
+    RRD_GRAPH_TYPES.append(('monit-%s-memory' % monitservice, '%s Memory' % monitservice))
+
+    RRD_GRAPH_OPTIONS['monit-%s-cpu' % monitservice] = ['--upper-limit', '100.0']
 
 #path = RRDPATH % {
 #    'host': '*',
