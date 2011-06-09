@@ -137,7 +137,7 @@ def main():
     return
 
     procs = []
-    for i in range(8):
+    for i in range(2):
         p = multiprocessing.Process(target=rrdupdate_worker, args=(i, rrdqueue))
         p.start()
         print 'Process[%i]: running' % i
