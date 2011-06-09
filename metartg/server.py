@@ -304,8 +304,8 @@ for filename in glob(path):
 for monitservice in services.keys():
     RRD_GRAPH_DEFS['monit-%s-cpu' % monitservice] = [
         'DEF:cpu=%%(rrdpath)s/monit/%s_cpu.rrd:sum:AVERAGE' % monitservice,
-        'CDEF:cpu_pct=cpu,100,*',
-        'LINE:cpu_pct#FF00FF:%s CPU\\l' % monitservice,
+        #'CDEF:cpu_pct=cpu,100,*',
+        'LINE:cpu#FF00FF:%s CPU\\l' % monitservice,
     ]
     RRD_GRAPH_DEFS['monit-%s-memory' % monitservice] = [
         'DEF:memory=%%(rrdpath)s/monit/%s_memory.rrd:sum:AVERAGE' % monitservice,
