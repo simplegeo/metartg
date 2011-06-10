@@ -1,0 +1,20 @@
+{
+	"requests": {
+		"title": "requests/min",
+		"rrds": {
+			"request_count": "elb/request_count.rrd"
+		},
+		"config": [
+			"LINE:requst_count#00FF00:Requests per minute\\l"
+		]
+	},
+	"latency": {
+		"title": "upstream latency (avg)",
+		"rrds": {
+			"avg": "elb/latency_avg.rrd"
+		},
+		"config": [
+			"LINE:avg#3333FF:Upstream latency (avg)\\l"
+		]
+	}
+}

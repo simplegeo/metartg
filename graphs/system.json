@@ -1,0 +1,33 @@
+{
+	"memory": {
+		"title": "memory utilization",
+		"rrds": {
+			"mem_free": "memory/free_memory.rrd",
+			"mem_total": "memory/total_memory.rrd",
+			"mem_buffer": "memory/buffer_memory.rrd"
+		},
+		"config": [
+			"CDEF:gb_mem_free=mem_free,1024,*",
+			"CDEF:gb_mem_total=mem_total,1024,*",
+			"CDEF:gb_mem_buffers=mem_buffer,1024,*",
+			"CDEF:t_mem_used=gb_mem_total,gb_mem_free,-",
+			"CDEF:gb_mem_used=t_mem_used,gb_mem_buffers,-",
+			"LINE:gb_mem_total#FFFFFF:Total memory\\l",
+			"AREA:gb_mem_used#006699:Used memory\\l"
+		]
+	},
+	"cpu": {
+		"title": "cpu percent",
+		"rrdargs": "--upper-limit 100.0",
+		"rrds": {
+			"cpu_user": "cpu/user.rrd",
+			"cpu_system": "cpu/sys.rrd",
+			"cpu_nice": "cpu/nice.rrd"
+		},
+		"config": [
+			"AREA:cpu_system#FF6600:CPU system\\l:STACK",
+			"AREA:cpu_nice#FFCC00:CPU nice\\l:STACK",
+			"AREA:cpu_user#FFFF66:CPU user\\l:STACK"
+		]
+	}
+}

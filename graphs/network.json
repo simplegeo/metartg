@@ -1,0 +1,24 @@
+{
+	"eth0.bytes": {
+		"title": "bytes in/out",
+		"rrds": {
+			"rx_bytes": "network/eth0_rx_bytes.rrd",
+			"tx_bytes": "network/eth0_tx_bytes.rrd"
+		},
+		"config": [
+			"LINE:rx_bytes#006699:rx bytes\\l",
+			"LINE:tx_bytes#006699:tx bytes\\l"
+		]
+	},
+	"eth0.packets": {
+		"title": "packets in/out",
+		"rrds": {
+			"rx_packets": "network/eth0_rx_packets.rrd",
+			"tx_packets": "network/eth0_tx_packets.rrd"
+		},
+		"config": [
+			"LINE:rx_packets#006699:rx packets\\l",
+			"LINE:tx_packets#006699:tx packets\\l"
+		]
+	}
+}
