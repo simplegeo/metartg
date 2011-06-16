@@ -46,6 +46,7 @@ def get_column_families(keyspace):
     except Thrift.TException, tx:
         print 'Thrift: %s' % tx.message
     finally:
+        column_families = None
         transport.close()
 
     return column_families
