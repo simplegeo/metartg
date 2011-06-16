@@ -1,3 +1,13 @@
+metartg (0.3-1sg54) lucid; urgency=low
+
+  [ dsmith ]
+  * Make sure the variable is declared before returning it
+  * Added a Timer object for each check
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 16 Jun 2011 21:48:24 +0000
+
 metartg (0.3-1sg53) lucid; urgency=low
 
   [ Jeremy Grosser ]
