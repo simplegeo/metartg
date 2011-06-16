@@ -8,6 +8,7 @@ import urllib2
 import os.path
 import sys
 import os
+import threading
 
 
 def conf(key):
@@ -17,18 +18,29 @@ def conf(key):
 
 def run_checks(checks):
     metartg = Metartg()
+    check_timeout = conf('check_timeout') || 20.0
+
     for filename in checks:
+
         try:
             check = __import__('metartg.checks.%s' % filename, {}, {}, ['run_check'], 0)
         except:
             logging.error('Unable to import check %s: %s' % (filename, sys.exc_info()[1]))
             return
 
+        def check_timedout():
+            raise Exception('Timeout from %s.run_check' % (filename, ))
+
+        timer = threading.Timer(check_timeout, check_timedout)
+        timer.start()
+
         try:
             check.run_check(metartg.update)
         except:
             logging.error('Exception from %s.run_check: %s' % (filename, format_exc()))
             return
+        finally:
+          timer.cancel()
 
 
 class Request(urllib2.Request):
