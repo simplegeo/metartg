@@ -1,3 +1,12 @@
+metartg (0.3-1sg55) lucid; urgency=low
+
+  [ dsmith ]
+  * Setup defaults differently
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 17 Jun 2011 01:06:09 +0000
+
 metartg (0.3-1sg54) lucid; urgency=low
 
   [ dsmith ]
