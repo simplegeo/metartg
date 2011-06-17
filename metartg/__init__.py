@@ -11,14 +11,14 @@ import os
 import threading
 
 
-def conf(key):
+def conf(key, default=None):
     config = json.load(file('/etc/metartg.conf', 'r'))
-    return config.get(key, None)
+    return config.get(key, default)
 
 
 def run_checks(checks):
     metartg = Metartg()
-    check_timeout = conf('check_timeout') || 20.0
+    check_timeout = conf('check_timeout', default=20)
 
     for filename in checks:
 
