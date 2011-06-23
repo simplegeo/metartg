@@ -257,6 +257,15 @@ for queue in queues_list:
     RRD_GRAPH_TITLE['rabbitmq-%s' % queue] = '%%(host)s | %s queue size' % queue
     RRD_GRAPH_TYPES.append(('rabbitmq-%s' % queue, queue))
 
+    rabbitmq_rate_graph = 'rabbitmq-rates-%s' % queue
+    RRD_GRAPH_DEFS[rabbitmq_rate_graph] = [
+        'DEF:in=%%(rrdpath)s/rabbitmq/%s_incoming_rate.rrd:AVERAGE' % queue,
+        'DEF:ack=%%(rrdpath)s/rabbitmq/%s_ack_rate.rrd:AVERAGE' % queue,
+        'LINE:in#FF3484:%s incoming/s\\l' % queue,
+        'LINE:in#4EFF4D:%s acknowledged/s\\l' % queue,
+    ]
+    RRD_GRAPH_TITLE[rabbitmq_rate_graph] = '%%(host)s | %s queue rates' % queue
+    RRD_GRAPH_TYPES.append((rabbitmq_rate_graph, queue))
 
 path = RRDPATH % {
     'host': '*',
