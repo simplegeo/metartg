@@ -242,7 +242,7 @@ path = RRDPATH % {
 for filename in glob(path):
     filename = os.path.basename(filename)
     k = filename.rsplit('.', 1)[0]
-    if k.endswith('_unack'):
+    if k.endswith('_unack') or k.endswith('_rate'):
         continue
     queues_list[k] = None
 queues_list = queues_list.keys()
@@ -265,7 +265,7 @@ for queue in queues_list:
         'LINE:ack#4EFF4D:%s acknowledged/s\\l' % queue,
     ]
     RRD_GRAPH_TITLE[rabbitmq_rate_graph] = '%%(host)s | %s queue rates' % queue
-    RRD_GRAPH_TYPES.append((rabbitmq_rate_graph, queue))
+    RRD_GRAPH_TYPES.append((rabbitmq_rate_graph, '%s rates' % queue))
 
 path = RRDPATH % {
     'host': '*',
