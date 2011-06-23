@@ -1,3 +1,12 @@
+metartg (0.3-1sg56) lucid; urgency=low
+
+  [ mihasya ]
+  * add rabbitmq rate metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 23 Jun 2011 21:22:49 +0000
+
 metartg (0.3-1sg55) lucid; urgency=low
 
   [ dsmith ]
