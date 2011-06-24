@@ -9,6 +9,7 @@ import sys
 import os
 import re
 
+from decimal import Decimal
 import simplejson as json
 import logging
 import clustohttp
@@ -70,7 +71,7 @@ def get_clusto_name(instanceid):
 
 def dumps(obj):
     callback = bottle.request.params.get('callback', None)
-    result = json.dumps(obj, indent=2)
+    result = json.dumps(obj, indent=2, sort_keys=True, use_decimal=True)
 
     if callback:
         bottle.response.content_type = 'text/javascript'
@@ -79,6 +80,14 @@ def dumps(obj):
         bottle.response.content_type = 'application/json'
     return result
 
+
+def parse_value(value):
+    value, exp = value.rsplit('e', 1)
+    value = Decimal(value)
+    value = value * Decimal(str(pow(10, int(exp))))
+    if value == 0:
+        return 0
+    return value
 
 @bottle.get('/status')
 def status():
@@ -93,8 +102,42 @@ def post_rrd_update(host, service):
     bottle.response.status = 202
     return
 
+@bottle.get('/graph/:host/:service/:graph.json')
+def get_graph_data(host, service, graph):
+    graphdefs = json.load(file('%s/%s.json' % (GRAPHDEFS, service), 'r'))
+    if not graph in graphdefs:
+        bottle.abort(404, 'No graph definition named %s in %s.json' % (graph, service))
+    graphdef = graphdefs[graph]
 
-@bottle.get('/graph/:host/:service/:graph')
+    now = int(time())
+    params = bottle.request.params
+    start = params.get('start', (now - 3600))
+    end = params.get('end', now)
+
+    cmd = ['/usr/bin/rrdtool', 'fetch']
+
+    for defname, rrdpath in graphdef['rrds'].items():
+        rrdpath = os.path.join(RRDS, host, rrdpath)
+        cmd += [rrdpath, 'AVERAGE']
+
+    cmd += [
+        '--start', str(start),
+        '--end', str(end),
+        #'--daemon', '127.0.0.1:42217',
+    ]
+    if 'resolution' in params:
+        cmd += ['--resolution', params['resolution']]
+
+    print ' '.join(cmd)
+
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, env={'TZ': 'PST8PDT'})
+    stdout, stderr = proc.communicate()
+
+    header, data = stdout.split('\n\n', 1)
+    return dumps([(int(ts), parse_value(value)) for ts, value in [x.split(': ', 1) for x in data.split('\n') if x and not x.endswith('nan')]])
+
+
+@bottle.get('/graph/:host/:service/:graph.png')
 def get_graph(host, service, graph):
     graphdefs = json.load(file('%s/%s.json' % (GRAPHDEFS, service), 'r'))
     if not graph in graphdefs:
