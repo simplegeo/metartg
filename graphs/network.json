@@ -7,7 +7,7 @@
 		},
 		"config": [
 			"LINE:rx_bytes#006699:rx bytes\\l",
-			"LINE:tx_bytes#006699:tx bytes\\l"
+			"LINE:tx_bytes#996600:tx bytes\\l"
 		]
 	},
 	"eth0.packets": {
@@ -18,7 +18,7 @@
 		},
 		"config": [
 			"LINE:rx_packets#006699:rx packets\\l",
-			"LINE:tx_packets#006699:tx packets\\l"
+			"LINE:tx_packets#996600:tx packets\\l"
 		]
 	}
 }
