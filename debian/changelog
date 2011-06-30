@@ -1,3 +1,15 @@
+metartg (0.3-1sg61) maverick; urgency=low
+
+  [ mihasya ]
+  * remove all reference to JMX in favor of Jolokia HTTP calls from
+    cassandra checks
+  * use easier jolokia interface to get all the pools at once
+  * jvm memory usage metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 30 Jun 2011 20:46:43 +0000
+
 metartg (0.3-1sg60) lucid; urgency=low
 
   [ Jeremy Grosser ]
