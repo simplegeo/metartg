@@ -4,105 +4,54 @@ from time import time
 import subprocess
 import os
 import urllib2
+import sys
+import re
 
-from thrift import Thrift
-from thrift.transport import TTransport
-from thrift.transport import TSocket
-from thrift.protocol.TBinaryProtocol import TBinaryProtocolAccelerated
-from metartg.thrift.cassandra import Cassandra
-from metartg.thrift.cassandra.ttypes import *
-
-def get_local_ipv4():
-    # This only works on ec2 and should thus be made better. But it
-    # was the quickest way I could think of to gett the IP (no,
-    # 'localhost' won't work.)
-    url = 'http://169.254.169.254/latest/meta-data/local-ipv4'
-    return urllib2.urlopen(url).read()
-
-def get_keyspaces():
-    socket = TSocket.TSocket(get_local_ipv4(), 9160)
-    transport = TTransport.TFramedTransport(socket)
-    protocol = TBinaryProtocolAccelerated(transport)
-    client = Cassandra.Client(protocol)
-    keyspaces = {}
-    try:
-        transport.open()
-        keyspaces = client.describe_keyspaces()
-    except Thrift.TException, tx:
-        print 'Thrift: %s' % tx.message
-    finally:
-        transport.close()
-
-    return keyspaces
-
-def get_column_families(keyspace):
-    socket = TSocket.TSocket(get_local_ipv4(), 9160)
-    transport = TTransport.TFramedTransport(socket)
-    protocol = TBinaryProtocolAccelerated(transport)
-    client = Cassandra.Client(protocol)
-    try:
-        transport.open()
-        column_families = client.describe_keyspace(keyspace)
-    except Thrift.TException, tx:
-        print 'Thrift: %s' % tx.message
-    finally:
-        column_families = None
-        transport.close()
-
-    return column_families
 
 def cfstats_cache_metrics():
-    keyspaces = get_keyspaces()
     now = int(time())
+    url = "http://localhost:8778/jolokia/read/*:*,type=Caches"
+    try:
+        caches = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error fetching list of CF Cache mbeans: %s" % e)
+        return None
+
+    pattern = re.compile(":cache\=(?P<column_family>.+?)(?P<cache_type>Row|Key)Cache,keyspace\=(?P<keyspace>.+?),")
 
     metrics = {}
-    for keyspace in keyspaces:
-        column_families = get_column_families(keyspace)
-        for column_family in column_families.keys():
-            for cache_type in ('Key', 'Row'):
-                url = 'http://%s:8778/jolokia/read/' \
-                    'org.apache.cassandra.db:cache=' \
-                    '%s%sCache,keyspace=%s,type=Caches' % (
-                    get_local_ipv4(), column_family, cache_type, keyspace)
-                cache_stats = json.load(urllib2.urlopen(url))
-                for label in ('RecentHitRate', 'Capacity', 'Size'):
-                    metrics['%s-%s-%sCache%s' % (keyspace, column_family, cache_type, label)] = {
-                        'ts': now,
-                        'type': 'GAUGE',
-                        'value': cache_stats['value'][label],
-                        }
+    for mbean, cache in caches.items():
+        attrs = pattern.search(mbean).groupdict()
+        for metric in ('RecentHitRate', 'Capacity', 'Size'):
+            metrics['%s-%s-%sCache%s' % (attrs['keyspace'], attrs['column_family'], attrs['cache_type'], metric)] = {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': cache[metric] or 0,
+            }
 
     return metrics
 
 
 def tpstats_metrics():
-    p = subprocess.Popen([
-        '/usr/bin/java',
-        '-jar', '/usr/share/metartg/contrib/GenericJMXLogJSON.jar',
-        'localhost', '8080', 'org.apache.cassandra.concurrent:*',
-    ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate()
     now = int(time())
+    url = 'http://localhost:8778/jolokia/read/org.apache.cassandra.concurrent:*'
+    try:
+        pools = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error while fetching list of beans for tpstats: %s" % e)
+        return None
 
     metrics = {}
-    for line in stdout.split('\n'):
-        if not line:
-            continue
-        line = json.loads(line)
-        name = line['name'].split('=', 1)[1]
-        for label in ('ActiveCount', 'PendingTasks', 'CompletedTasks'):
-            if label == 'CompletedTasks':
-                datatype = 'COUNTER'
-            else:
-                datatype = 'GAUGE'
-
-            metrics['%s_%s' % (name, label)] = {
+    for mbean, values in pools.items():
+        pool = mbean.split('=')[-1]
+        for metric, datatype in (('ActiveCount', 'GAUGE'), ('PendingTasks', 'GAUGE'), ('CompletedTasks', 'COUNTER')):
+            metrics['%s_%s' % (pool, metric)] = {
                 'ts': now,
                 'type': datatype,
-                'value': line[label],
+                'value': values[metric]
             }
-
     return metrics
+
 
 def sstables_metrics():
     metrics = {}
@@ -156,29 +105,23 @@ def sstables_metrics():
 
 
 def scores_metrics():
+    now = int(time())
     try:
         keyspace = file('/etc/metartg_cassandra_keyspace', 'r').read().strip('\r\n\t ')
     except:
         keyspace = 'Underdog_Records'
 
-    p = subprocess.Popen([
-        '/usr/bin/java',
-        '-jar', '/usr/share/cassandra/jmxterm-1.0-alpha-4-uber.jar',
-        '-v', 'silent', '-l', 'localhost:8080', '-n',
-    ], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    script = '''bean org.apache.cassandra.db:keyspace=%s,type=DynamicEndpointSnitch
-get Scores''' % keyspace
-    stdout, stderr = p.communicate(script)
-    now = int(time())
+    url = 'http://localhost:8778/jolokia/read/org.apache.cassandra.db:keyspace=%s,type=DynamicEndpointSnitch/Scores' % keyspace
+    try:
+        scores = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error while fetching DES scores: %s" % e)
+        return None
 
     metrics = {}
-    for line in stdout.split('\n'):
-        line = line.strip(';\r\n\t ')
-        if not line.startswith('/'):
-            continue
-        line = line.lstrip('/')
-        host, score = line.split(' = ', 1)
-        metrics[host] = {
+    for endpoint, score in scores.items():
+        endpoint = endpoint.lstrip('/')
+        metrics[endpoint] = {
             'ts': now,
             'type': 'GAUGE',
             'value': float(score),
@@ -186,15 +129,42 @@ get Scores''' % keyspace
     return metrics
 
 
+def memory_metrics():
+    now = int(time())
+    url = 'http://localhost:8778/jolokia/read/java.lang:type=Memory'
+    try:
+        results = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error while fetching memory metrics: %s" % e)
+
+    mapping = {
+        'jvm.heap.committed': ('HeapMemoryUsage', 'committed'),
+        'jvm.heap.used': ('HeapMemoryUsage', 'used'),
+        'jvm.nonheap.committed': ('NonHeapMemoryUsage', 'committed'),
+        'jvm.nonheap.used': ('NonHeapMemoryUsage', 'used'),
+    }
+
+    metrics = {}
+    for name, (memory_type, metric) in mapping.items():
+        metrics[name] = {
+            'ts': now,
+            'type': 'GAUGE',
+            'value': results[memory_type][metric],
+        }
+
+    return metrics
+
 def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
     callback('cassandra_scores', scores_metrics())
-
-    try:
-        callback('cassandra_cfstats_cache', cfstats_cache_metrics())
-    except urllib2.URLError:
-        pass
+    callback('cassandra_memory', memory_metrics())
+    callback('cassandra_cfstats_cache', cfstats_cache_metrics())
 
 if __name__ == '__main__':
     print json.dumps(scores_metrics(), indent=2)
+    print json.dumps(cfstats_cache_metrics(), indent=2)
+    print json.dumps(tpstats_metrics(), indent=2)
+    print json.dumps(sstables_metrics(), indent=2)
+    print json.dumps(memory_metrics(), indent=2)
+
