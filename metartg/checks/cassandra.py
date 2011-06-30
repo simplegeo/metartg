@@ -34,27 +34,22 @@ def cfstats_cache_metrics():
 
 def tpstats_metrics():
     now = int(time())
-    url = 'http://localhost:8778/jolokia/list/org.apache.cassandra.concurrent'
+    url = 'http://localhost:8778/jolokia/read/org.apache.cassandra.concurrent:*'
     try:
-        beans = [x for x in json.loads(urllib2.urlopen(url).read())['value'].keys()]
+        pools = json.loads(urllib2.urlopen(url).read())['value']
     except Exception, e:
         sys.stderr.write("Error while fetching list of beans for tpstats: %s" % e)
         return None
 
     metrics = {}
-    for bean in beans:
-        try:
-            url = 'http://localhost:8778/jolokia/read/%s:%s' % ('org.apache.cassandra.concurrent', bean)
-            values = json.loads(urllib2.urlopen(url).read())['value']
-            name = bean.split('=', 1)[1]
-            for metric, datatype in (('ActiveCount', 'GAUGE'), ('PendingTasks', 'GAUGE'), ('CompletedTasks', 'COUNTER')):
-                metrics['%s_%s' % (name, metric)] = {
-                    'ts': now,
-                    'type': datatype,
-                    'value': values[metric]
-                }
-        except Exception, e:
-            sys.stderr.write("Error while fetching tpstats for %s: %s" % (bean, e))
+    for mbean, values in pools.items():
+        pool = mbean.split('=')[-1]
+        for metric, datatype in (('ActiveCount', 'GAUGE'), ('PendingTasks', 'GAUGE'), ('CompletedTasks', 'COUNTER')):
+            metrics['%s_%s' % (pool, metric)] = {
+                'ts': now,
+                'type': datatype,
+                'value': values[metric]
+            }
     return metrics
 
 
