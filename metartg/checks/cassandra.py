@@ -129,19 +129,42 @@ def scores_metrics():
     return metrics
 
 
+def memory_metrics():
+    now = int(time())
+    url = 'http://localhost:8778/jolokia/read/java.lang:type=Memory'
+    try:
+        results = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error while fetching memory metrics: %s" % e)
+
+    mapping = {
+        'jvm.heap.committed': ('HeapMemoryUsage', 'committed'),
+        'jvm.heap.used': ('HeapMemoryUsage', 'used'),
+        'jvm.nonheap.committed': ('NonHeapMemoryUsage', 'committed'),
+        'jvm.nonheap.used': ('NonHeapMemoryUsage', 'used'),
+    }
+
+    metrics = {}
+    for name, (memory_type, metric) in mapping.items():
+        metrics[name] = {
+            'ts': now,
+            'type': 'GAUGE',
+            'value': results[memory_type][metric],
+        }
+
+    return metrics
+
 def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
     callback('cassandra_scores', scores_metrics())
-
-    try:
-        callback('cassandra_cfstats_cache', cfstats_cache_metrics())
-    except urllib2.URLError:
-        pass
+    callback('cassandra_memory', memory_metrics())
+    callback('cassandra_cfstats_cache', cfstats_cache_metrics())
 
 if __name__ == '__main__':
     print json.dumps(scores_metrics(), indent=2)
     print json.dumps(cfstats_cache_metrics(), indent=2)
     print json.dumps(tpstats_metrics(), indent=2)
     print json.dumps(sstables_metrics(), indent=2)
+    print json.dumps(memory_metrics(), indent=2)
 
