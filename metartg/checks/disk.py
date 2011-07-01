@@ -3,7 +3,7 @@ from collections import namedtuple
 from time import time
 import subprocess
 import simplejson as json
-import os
+import os, sys
 
 
 IOStat = namedtuple('IOStat', 'rrqm wrqm reads writes rkb wkb avgrq avgq await svctm util')
@@ -30,7 +30,8 @@ def disk_metrics():
 
 def disk_space_metrics():
     if not os.path.exists('/proc/mounts'):
-        return {}
+        sys.stderr.write("Couldn't retreive list of mounts in disk space checks")
+        return None
 
     metrics = {}
     for l in file('/proc/mounts'):
