@@ -1,3 +1,25 @@
+metartg (0.3-1sg62) maverick; urgency=low
+
+  [ mihasya ]
+  * return None on error
+  * collect compaction metrics
+  * add commit log data
+
+  [ dsmith ]
+  * Added a new check for disk usage
+  * remove the path value from the disk metrics
+
+  [ mihasya ]
+  * streaming metrics
+
+  [ dsmith ]
+  * Added a bit of logging to inform us when /proc/mounts does not exist
+  * Only graph the metrics that we want
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 01 Jul 2011 18:39:19 +0000
+
 metartg (0.3-1sg61) maverick; urgency=low
 
   [ mihasya ]
