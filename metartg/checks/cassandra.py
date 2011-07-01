@@ -216,6 +216,42 @@ def commitlog_metrics():
     return metrics
 
 
+def streaming_metrics():
+    now = int(time())
+    url = 'http://localhost:8778/jolokia/read/org.apache.cassandra.streaming:type=StreamingService'
+    try:
+        results = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error while fetching streaming metrics: %s " % e)
+        return None
+
+    metrics = {}
+    pattern = re.compile("Receiving from:\n(?P<sources>.*?)\nSending to:\n(?P<destinations>.*?)\n", re.S)
+    match = pattern.search(results['Status'])
+    if not match:
+        return None
+
+    values = match.groupdict()
+    if values['sources']:
+        metrics.update({
+            'streaming.from': {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': len(values['sources'].strip().split('\n')),
+            }
+        })
+    if values['destinations']:
+        metrics.update({
+            'streaming.to': {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': len(values['destinations'].strip().split('\n')),
+            }
+        })
+
+    return metrics
+
+
 def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
@@ -224,6 +260,7 @@ def run_check(callback):
     callback('cassandra_cfstats_cache', cfstats_cache_metrics())
     callback('cassandra_compaction', compaction_metrics())
     callback('cassandra_commitlog', commitlog_metrics())
+    callback('cassandra_streaming', streaming_metrics())
 
 
 if __name__ == '__main__':
@@ -234,4 +271,5 @@ if __name__ == '__main__':
     print json.dumps(memory_metrics(), indent=2)
     print json.dumps(compaction_metrics(), indent=2)
     print json.dumps(commitlog_metrics(), indent=2)
+    print json.dumps(streaming_metrics(), indent=2)
 
