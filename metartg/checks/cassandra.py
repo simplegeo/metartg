@@ -191,6 +191,31 @@ def compaction_metrics():
     return metrics or None
 
 
+def commitlog_metrics():
+    now = int(time())
+    url = 'http://localhost:8778/jolokia/read/org.apache.cassandra.db:type=Commitlog'
+    try:
+        results = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error while fetching streaming metrics: %s " % e)
+        return None
+
+    metrics = {
+        'tasks.completed': {
+            'ts': now,
+            'type': 'COUNTER',
+            'value': results['CompletedTasks'],
+        },
+        'tasks.pending': {
+            'ts': now,
+            'type': 'GAUGE',
+            'value': results['PendingTasks'],
+        },
+    }
+
+    return metrics
+
+
 def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
@@ -198,6 +223,7 @@ def run_check(callback):
     callback('cassandra_memory', memory_metrics())
     callback('cassandra_cfstats_cache', cfstats_cache_metrics())
     callback('cassandra_compaction', compaction_metrics())
+    callback('cassandra_commitlog', commitlog_metrics())
 
 
 if __name__ == '__main__':
@@ -207,4 +233,5 @@ if __name__ == '__main__':
     print json.dumps(sstables_metrics(), indent=2)
     print json.dumps(memory_metrics(), indent=2)
     print json.dumps(compaction_metrics(), indent=2)
+    print json.dumps(commitlog_metrics(), indent=2)
 
