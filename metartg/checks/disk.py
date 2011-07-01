@@ -40,7 +40,6 @@ def disk_space_metrics():
             path = l[1]
             stats = os.statvfs(path)
             device_metrics = {
-                    'path': path,
                     'preferred_block_size': int(stats.f_bsize),
                     'fundamental_block_size': int(stats.f_blocks),
                     'total_blocks': int(stats.f_blocks),
