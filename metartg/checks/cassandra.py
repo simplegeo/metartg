@@ -136,6 +136,7 @@ def memory_metrics():
         results = json.loads(urllib2.urlopen(url).read())['value']
     except Exception, e:
         sys.stderr.write("Error while fetching memory metrics: %s" % e)
+        return None
 
     mapping = {
         'jvm.heap.committed': ('HeapMemoryUsage', 'committed'),
