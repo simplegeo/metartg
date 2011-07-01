@@ -155,12 +155,50 @@ def memory_metrics():
 
     return metrics
 
+
+def compaction_metrics():
+    now = int(time())
+    url = 'http://localhost:8778/jolokia/read/org.apache.cassandra.db:type=CompactionManager'
+    try:
+        results = json.loads(urllib2.urlopen(url).read())['value']
+    except Exception, e:
+        sys.stderr.write("Error while fetching compaction metrics: %s " % e)
+        return None
+
+    metrics = {}
+
+    if results['PendingTasks']:
+        metrics['tasks.pending'] = {
+            'ts': now,
+            'type': 'GAUGE',
+            'value': results['PendingTasks']
+        }
+
+    if results['BytesTotalInProgress']:
+        metrics.update({
+            'bytes.compacting': {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': results['BytesTotalInProgress'],
+            },
+            'bytes.remaining': {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': results['BytesCompacted'],
+            }
+        })
+
+    return metrics or None
+
+
 def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
     callback('cassandra_scores', scores_metrics())
     callback('cassandra_memory', memory_metrics())
     callback('cassandra_cfstats_cache', cfstats_cache_metrics())
+    callback('cassandra_compaction', compaction_metrics())
+
 
 if __name__ == '__main__':
     print json.dumps(scores_metrics(), indent=2)
@@ -168,4 +206,5 @@ if __name__ == '__main__':
     print json.dumps(tpstats_metrics(), indent=2)
     print json.dumps(sstables_metrics(), indent=2)
     print json.dumps(memory_metrics(), indent=2)
+    print json.dumps(compaction_metrics(), indent=2)
 
