@@ -274,6 +274,20 @@ RRD_GRAPH_DEFS['cassandra-compaction-tasks'] = [
 RRD_GRAPH_TITLE['cassandra-compaction-tasks'] = '%(host)s | Compaction Tasks'
 RRD_GRAPH_TYPES.append(('cassandra-compaction-tasks', 'Compaction Tasks'))
 
+# Heap graphs
+RRD_GRAPH_DEFS['cassandra-memory'] = [
+    'DEF:heap_committed=%(rrdpath)s/cassandra_memory/jvm.heap.committed.rrd:sum:AVERAGE',
+    'DEF:heap_used=%(rrdpath)s/cassandra_memory/jvm.heap.used.rrd:sum:AVERAGE',
+    'DEF:nonheap_committed=%(rrdpath)s/cassandra_memory/jvm.nonheap.committed.rrd:sum:AVERAGE',
+    'DEF:nonheap_used=%(rrdpath)s/cassandra_memory/jvm.nonheap.used.rrd:sum:AVERAGE',
+    'CDEF:nonheap_committed_stack=heap_committed,nonheap_committed,+',
+    'AREA:heap_used#006699:heap used\\l',
+    'LINE:heap_committed#FFFFFF:heap committed\\l',
+    'AREA:nonheap_used#009966:nonheap used\\l:STACK',
+    'LINE:nonheap_committed_stack#FFFFFF:nonheap committed\\l',
+]
+RRD_GRAPH_TITLE['cassandra-memory'] = '%(host)s | Cassandra Memory'
+RRD_GRAPH_TYPES.append(('cassandra-memory', 'Cassandra Memory'))
 
 queues_list = {}
 path = RRDPATH % {
