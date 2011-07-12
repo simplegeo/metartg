@@ -232,6 +232,21 @@ for ks, cf in sstables_list:
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-total' % (ks, cf), '%s %s total' % (ks, cf)))
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-count' % (ks, cf), '%s %s count' % (ks, cf)))
 
+# Commit log graphs
+RRD_GRAPH_DEFS['cassandra-commitlog-pending'] = [
+    'DEF:pending=%(rrdpath)s/cassandra_commitlog/tasks.pending.rrd:sum:AVERAGE',
+    'LINE:pending#FF0000:tasks pending\\l',
+]
+RRD_GRAPH_TITLE['cassandra-commitlog-pending'] = '%(host)s | Commitlog - Pending'
+RRD_GRAPH_TYPES.append(('cassandra-commitlog-pending', 'Commitlog Pending'))
+
+RRD_GRAPH_DEFS['cassandra-commitlog-completed'] = [
+    'DEF:completed=%(rrdpath)s/cassandra_commitlog/tasks.completed.rrd:sum:AVERAGE',
+    'LINE:completed#55FF55:tasks completed\\l',
+]
+RRD_GRAPH_TITLE['cassandra-commitlog-completed'] = '%(host)s | Commitlog - Completed'
+RRD_GRAPH_TYPES.append(('cassandra-commitlog-completed', 'Commitlog Completed'))
+
 
 queues_list = {}
 path = RRDPATH % {
