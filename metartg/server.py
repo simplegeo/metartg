@@ -257,6 +257,23 @@ RRD_GRAPH_DEFS['cassandra-streaming'] = [
 RRD_GRAPH_TITLE['cassandra-streaming'] = '%(host)s | Streaming Activity'
 RRD_GRAPH_TYPES.append(('cassandra-streaming', 'Streaming Activity'))
 
+# Compaction graphs
+RRD_GRAPH_DEFS['cassandra-compaction'] = [
+    'DEF:compacting=%(rrdpath)s/cassandra_compaction/bytes.compacting.rrd:sum:AVERAGE',
+    'DEF:remaining=%(rrdpath)s/cassandra_compaction/bytes.remaining.rrd:sum:AVERAGE',
+    'LINE:compacting#55FF55:compacting\\l',
+    'LINE:remaining#FF5555:remaining\\l',
+]
+RRD_GRAPH_TITLE['cassandra-compaction'] = '%(host)s | Compaction Activity'
+RRD_GRAPH_TYPES.append(('cassandra-compaction', 'Compaction Activity'))
+
+RRD_GRAPH_DEFS['cassandra-compaction-tasks'] = [
+    'DEF:pending=%(rrdpath)s/cassandra_compaction/tasks.pending.rrd:sum:AVERAGE',
+    'LINE:pending#55FF55:pending\\l',
+]
+RRD_GRAPH_TITLE['cassandra-compaction-tasks'] = '%(host)s | Compaction Tasks'
+RRD_GRAPH_TYPES.append(('cassandra-compaction-tasks', 'Compaction Tasks'))
+
 
 queues_list = {}
 path = RRDPATH % {
