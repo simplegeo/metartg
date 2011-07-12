@@ -247,6 +247,16 @@ RRD_GRAPH_DEFS['cassandra-commitlog-completed'] = [
 RRD_GRAPH_TITLE['cassandra-commitlog-completed'] = '%(host)s | Commitlog - Completed'
 RRD_GRAPH_TYPES.append(('cassandra-commitlog-completed', 'Commitlog Completed'))
 
+# Streaming graphs
+RRD_GRAPH_DEFS['cassandra-streaming'] = [
+    'DEF:from=%(rrdpath)s/cassandra_streaming/streaming.from.rrd:sum:AVERAGE',
+    'DEF:to=%(rrdpath)s/cassandra_streaming/streaming.to.rrd:sum:AVERAGE',
+    'LINE:from#55FF55:from\\l',
+    'LINE:to#FF5555:to\\l',
+]
+RRD_GRAPH_TITLE['cassandra-streaming'] = '%(host)s | Streaming Activity'
+RRD_GRAPH_TYPES.append(('cassandra-streaming', 'Streaming Activity'))
+
 
 queues_list = {}
 path = RRDPATH % {
