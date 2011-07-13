@@ -432,8 +432,7 @@ for disk in ('raid0', 'sda1'):
     ]
     RRD_GRAPH_DEFS['disk-%s-util' % disk] = [
         'DEF:util=%%(rrdpath)s/disk/%s.util.rrd:sum:AVERAGE' % disk,
-        'CDEF:util_pct=util,100,*',
-        'LINE:util_pct#FFFF66:I/O utilization %%\\l',
+        'LINE:util#FFFF66:I/O utilization %%\\l',
     ]
     RRD_GRAPH_OPTIONS['disk-%s-util' % disk] = ['--upper-limit', '100.0']
 
