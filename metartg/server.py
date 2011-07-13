@@ -232,6 +232,62 @@ for ks, cf in sstables_list:
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-total' % (ks, cf), '%s %s total' % (ks, cf)))
     RRD_GRAPH_TYPES.append(('cassandra-sstables-%s-%s-count' % (ks, cf), '%s %s count' % (ks, cf)))
 
+# Commit log graphs
+RRD_GRAPH_DEFS['cassandra-commitlog-pending'] = [
+    'DEF:pending=%(rrdpath)s/cassandra_commitlog/tasks.pending.rrd:sum:AVERAGE',
+    'LINE:pending#FF0000:tasks pending\\l',
+]
+RRD_GRAPH_TITLE['cassandra-commitlog-pending'] = '%(host)s | Commitlog - Pending'
+RRD_GRAPH_TYPES.append(('cassandra-commitlog-pending', 'Commitlog Pending'))
+
+RRD_GRAPH_DEFS['cassandra-commitlog-completed'] = [
+    'DEF:completed=%(rrdpath)s/cassandra_commitlog/tasks.completed.rrd:sum:AVERAGE',
+    'LINE:completed#55FF55:tasks completed\\l',
+]
+RRD_GRAPH_TITLE['cassandra-commitlog-completed'] = '%(host)s | Commitlog - Completed'
+RRD_GRAPH_TYPES.append(('cassandra-commitlog-completed', 'Commitlog Completed'))
+
+# Streaming graphs
+RRD_GRAPH_DEFS['cassandra-streaming'] = [
+    'DEF:from=%(rrdpath)s/cassandra_streaming/streaming.from.rrd:sum:AVERAGE',
+    'DEF:to=%(rrdpath)s/cassandra_streaming/streaming.to.rrd:sum:AVERAGE',
+    'LINE:from#55FF55:from\\l',
+    'LINE:to#FF5555:to\\l',
+]
+RRD_GRAPH_TITLE['cassandra-streaming'] = '%(host)s | Streaming Activity'
+RRD_GRAPH_TYPES.append(('cassandra-streaming', 'Streaming Activity'))
+
+# Compaction graphs
+RRD_GRAPH_DEFS['cassandra-compaction'] = [
+    'DEF:compacting=%(rrdpath)s/cassandra_compaction/bytes.compacting.rrd:sum:AVERAGE',
+    'DEF:remaining=%(rrdpath)s/cassandra_compaction/bytes.remaining.rrd:sum:AVERAGE',
+    'LINE:compacting#55FF55:compacting\\l',
+    'LINE:remaining#FF5555:remaining\\l',
+]
+RRD_GRAPH_TITLE['cassandra-compaction'] = '%(host)s | Compaction Activity'
+RRD_GRAPH_TYPES.append(('cassandra-compaction', 'Compaction Activity'))
+
+RRD_GRAPH_DEFS['cassandra-compaction-tasks'] = [
+    'DEF:pending=%(rrdpath)s/cassandra_compaction/tasks.pending.rrd:sum:AVERAGE',
+    'LINE:pending#55FF55:pending\\l',
+]
+RRD_GRAPH_TITLE['cassandra-compaction-tasks'] = '%(host)s | Compaction Tasks'
+RRD_GRAPH_TYPES.append(('cassandra-compaction-tasks', 'Compaction Tasks'))
+
+# Heap graphs
+RRD_GRAPH_DEFS['cassandra-memory'] = [
+    'DEF:heap_committed=%(rrdpath)s/cassandra_memory/jvm.heap.committed.rrd:sum:AVERAGE',
+    'DEF:heap_used=%(rrdpath)s/cassandra_memory/jvm.heap.used.rrd:sum:AVERAGE',
+    'DEF:nonheap_committed=%(rrdpath)s/cassandra_memory/jvm.nonheap.committed.rrd:sum:AVERAGE',
+    'DEF:nonheap_used=%(rrdpath)s/cassandra_memory/jvm.nonheap.used.rrd:sum:AVERAGE',
+    'CDEF:nonheap_committed_stack=heap_committed,nonheap_committed,+',
+    'AREA:heap_used#006699:heap used\\l',
+    'LINE:heap_committed#FFFFFF:heap committed\\l',
+    'AREA:nonheap_used#009966:nonheap used\\l:STACK',
+    'LINE:nonheap_committed_stack#FFFFFF:nonheap committed\\l',
+]
+RRD_GRAPH_TITLE['cassandra-memory'] = '%(host)s | Cassandra Memory'
+RRD_GRAPH_TYPES.append(('cassandra-memory', 'Cassandra Memory'))
 
 queues_list = {}
 path = RRDPATH % {
@@ -351,7 +407,7 @@ for monitservice in services.keys():
 #RRD_GRAPH_TYPES.append(('haproxy-sessions', 'Sessions'))
 
 
-for disk in ('md0', 'sda1'):
+for disk in ('raid0', 'sda1'):
     RRD_GRAPH_DEFS['disk-%s-requests' % disk] = [
         'DEF:rrqm=%%(rrdpath)s/disk/%s.rrqm.rrd:sum:AVERAGE' % disk,
         'DEF:wrqm=%%(rrdpath)s/disk/%s.wrqm.rrd:sum:AVERAGE' % disk,
