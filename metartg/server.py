@@ -407,7 +407,7 @@ for monitservice in services.keys():
 #RRD_GRAPH_TYPES.append(('haproxy-sessions', 'Sessions'))
 
 
-for disk in ('md0', 'sda1'):
+for disk in ('raid0', 'sda1'):
     RRD_GRAPH_DEFS['disk-%s-requests' % disk] = [
         'DEF:rrqm=%%(rrdpath)s/disk/%s.rrqm.rrd:sum:AVERAGE' % disk,
         'DEF:wrqm=%%(rrdpath)s/disk/%s.wrqm.rrd:sum:AVERAGE' % disk,
