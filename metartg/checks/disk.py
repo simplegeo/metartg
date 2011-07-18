@@ -17,24 +17,41 @@ def disk_metrics():
         line = [x for x in line.split(' ') if x]
         line = DiskStat(*line)._asdict()
 
+        if not line['device'] in ('sda1', 'md0'):
+            continue
+
         for field in line:
             if field in ('major_dev_num', 'minor_dev_num', 'device',
                          'ms_reading', 'ms_writing', 'ms_doing_io',
                          'reads_merged', 'writes_merged'):
                 continue
 
-            if not line['device'] in ('sda1', 'md0'):
-                continue
+            value = int(line[field])
 
             if field in ('current_iops', 'weighted_ms_doing_io'):
                 metric_type = 'GAUGE'
             else:
                 metric_type = 'COUNTER'
 
+            if field in ('sectors_read', 'sectors_written'):
+                field = 'bytes_' + field.split('_', 1)[1]
+                value *= 1024
+
             metrics['%s.%s' % (line['device'], field)] = {
                 'ts': now,
                 'type': metric_type,
-                'value': int(line[field]),
+                'value': value,
+            }
+
+        # Use ext4 stats if we can, as they're more accurate
+        if os.path.exists('/sys/fs/ext4/%s/lifetime_write_kbytes' %
+            line['device']):
+            value = int(file('/sys/fs/ext4/%s/lifetime_write_kbytes' % 
+                        line['device']).read()) * 1024
+            metrics['%s.bytes_written' % line['device']] = {
+                'ts': now,
+                'type': 'COUNTER',
+                'value': value,
             }
 
     return metrics
