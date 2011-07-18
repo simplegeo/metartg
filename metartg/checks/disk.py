@@ -17,7 +17,10 @@ def disk_metrics():
         line = [x for x in line.split(' ') if x]
         line = DiskStat(*line)._asdict()
 
-        if not line['device'] in ('sda1', 'md0'):
+        if line['device'] in ('dm-0', 'md0'):
+            line['device'] = 'raid0'
+
+        if not line['device'] in ('sda1', 'raid0'):
             continue
 
         for field in line:
