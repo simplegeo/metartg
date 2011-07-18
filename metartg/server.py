@@ -435,10 +435,10 @@ def get_clusto_name(instanceid):
     try:
         server = clusto.get(instanceid)
         hostname = server[0].attr_value(key='system', subkey='hostname')
-        cache.set(key, hostname)
+        cache.set(key, hostname, 300)
         return hostname
     except:
-        cache.set(key, instanceid)
+        cache.set(key, instanceid, 300)
         return instanceid
 
 def dumps(obj):
@@ -650,7 +650,7 @@ def search():
 
     servers = list(gpool.imap(get_server_info, first.intersection(*pools)))
     servers.sort(key=lambda x: x['name'])
-    cache.set(cachekey, json.dumps(servers))
+    cache.set(cachekey, json.dumps(servers), 300)
 
     return dumps(servers)
 
