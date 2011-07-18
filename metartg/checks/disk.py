@@ -23,7 +23,7 @@ def disk_metrics():
                          'reads_merged', 'writes_merged'):
                 continue
 
-            if not line['device'] in ('sda', 'md0'):
+            if not line['device'] in ('sda1', 'md0'):
                 continue
 
             if field in ('current_iops', 'weighted_ms_doing_io'):
