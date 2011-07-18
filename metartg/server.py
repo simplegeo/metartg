@@ -417,8 +417,8 @@ for disk in ('raid0', 'sda1'):
     RRD_GRAPH_DEFS['disk-%s-bytes' % disk] = [
         'DEF:read=%%(rrdpath)s/disk/%s.bytes_read.rrd:sum:AVERAGE' % disk,
         'DEF:written=%%(rrdpath)s/disk/%s.bytes_written.rrd:sum:AVERAGE' % disk,
-        'CDEF:read_sec,read,60,/',
-        'CDEF:written_sec,written,60,/',
+        'CDEF:read_sec=read,60,/',
+        'CDEF:written_sec=written,60,/',
         'LINE:read_sec=#55FFFF:bytes read\\l',
         'LINE:written_sec=#FF5500:bytes written\\l',
     ]
