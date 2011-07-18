@@ -6,56 +6,37 @@ import simplejson as json
 import os, sys
 
 
-IOStat = namedtuple('IOStat', 'rrqm wrqm reads writes rkb wkb avgrq avgq await svctm util')
+DiskStat = namedtuple('DiskStat', 'major_dev_num minor_dev_num device reads reads_merged sectors_read ms_reading writes writes_merged sectors_written ms_writing current_iops ms_doing_io weighted_ms_doing_io')
+
+
 def disk_metrics():
-    p = subprocess.Popen(['/usr/bin/iostat', '-x', '-d', '-k', '1', '2'], stdout=subprocess.PIPE)
-    stdout, stderr = p.communicate()
     now = int(time())
 
     metrics = {}
-    measured_devices = {}
-    for line in stdout.rsplit('\n\n', 2)[1].split('\n')[1:]:
+    for line in file('/proc/diskstats', 'r'):
         line = [x for x in line.split(' ') if x]
-        device = line[0]
-        iostat = IOStat(*line[1:])._asdict()
-        if device == 'dm-0':
-            measured_devices['raid0'] = iostat
-        elif device == 'xvdap1':
-            measured_devices['sda1'] = iostat
-        else:
-            measured_devices[device] = iostat
+        line = DiskStat(*line)._asdict()
 
-    # approximating hack to make raid0 stats work for mdadm devices
-    if not 'raid0' in measured_devices and 'md0' in measured_devices:
-        total_avgq = 0.0
-        total_await = 0.0
-        total_svctm = 0.0
-        total_util = 0.0
-        devices = 0.0
-        for device, iostat in measured_devices.items():
-            if device in ('xvdb', 'xvdc', 'xvdd', 'xvde'):
-                devices += 1.0
-                total_avgq += float(iostat['avgq'])
-                total_await += float(iostat['await'])
-                total_svctm += float(iostat['svctm'])
-                total_util += float(iostat['util'])
+        for field in line:
+            if field in ('major_dev_num', 'minor_dev_num', 'device',
+                         'ms_reading', 'ms_writing', 'ms_doing_io',
+                         'reads_merged', 'writes_merged'):
+                continue
 
-        raid_stats = measured_devices['md0']
-        raid_stats['avgq'] = total_avgq
-        raid_stats['await'] = total_await / devices
-        raid_stats['svctm'] = total_await / devices
-        raid_stats['util'] = total_util / devices
+            if not line['device'] in ('sda', 'md0'):
+                continue
 
-        measured_devices['raid0'] = raid_stats
+            if field in ('current_iops', 'weighted_ms_doing_io'):
+                metric_type = 'GAUGE'
+            else:
+                metric_type = 'COUNTER'
 
-    for device in ('raid0', 'sda1'):
-        iostat = measured_devices[device]
-        for field in iostat:
-            metrics['%s.%s' % (device, field)] = {
+            metrics['%s.%s' % (line['device'], field)] = {
                 'ts': now,
-                'type': 'GAUGE',
-                'value': float(iostat[field]),
+                'type': metric_type,
+                'value': int(line[field]),
             }
+
     return metrics
 
 
