@@ -414,9 +414,19 @@ for disk in ('raid0', 'sda1'):
         'LINE:reads#33CCCC:reads/s\\l',
         'LINE:writes#CC3300:writes/s\\l',
     ]
+    RRD_GRAPH_DEFS['disk-%s-bytes' % disk] = [
+        'DEF:read=%%(rrdpath)s/disk/%s.bytes_read.rrd:sum:AVERAGE' % disk,
+        'DEF:written=%%(rrdpath)s/disk/%s.bytes_written.rrd:sum:AVERAGE' % disk,
+        'CDEF:read_sec,read,60,/',
+        'CDEF:written_sec,written,60,/',
+        'LINE:read_sec=#55FFFF:bytes read\\l',
+        'LINE:written_sec=#FF5500:bytes written\\l',
+    ]
 
     RRD_GRAPH_TITLE['disk-%s-iops' % disk] = '%%(host)s | %s iops' % disk
+    RRD_GRAPH_TITLE['disk-%s-bytes' % disk] = '%%(host)s | %s bytes/sec' % disk
     RRD_GRAPH_TYPES.append(('disk-%s-iops' % disk, '%s iops' % disk))
+    RRD_GRAPH_TYPES.append(('disk-%s-bytes' % disk, '%s bytes' % disk))
 
 def get_clusto_name(instanceid):
     key = 'clusto/hostname/%s' % instanceid
