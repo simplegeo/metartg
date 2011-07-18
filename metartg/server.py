@@ -419,8 +419,8 @@ for disk in ('raid0', 'sda1'):
         'DEF:written=%%(rrdpath)s/disk/%s.bytes_written.rrd:sum:AVERAGE' % disk,
         'CDEF:read_sec=read,60,/',
         'CDEF:written_sec=written,60,/',
-        'LINE:read_sec=#55FFFF:bytes read\\l',
-        'LINE:written_sec=#FF5500:bytes written\\l',
+        'LINE:read_sec#55FFFF:bytes read\\l',
+        'LINE:written_sec#FF5500:bytes written\\l',
     ]
 
     RRD_GRAPH_TITLE['disk-%s-iops' % disk] = '%%(host)s | %s iops' % disk
