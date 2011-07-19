@@ -1,3 +1,12 @@
+metartg (0.3-1sg78) maverick; urgency=low
+
+  [ mihasya ]
+  * cachesize graphs
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 19 Jul 2011 23:43:52 +0000
+
 metartg (0.3-1sg77) maverick; urgency=low
 
   [ mihasya ]
