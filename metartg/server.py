@@ -310,6 +310,13 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TITLE['penelope-%s-cache-hitrate' % index_type] = '%%(host)s | %s cache hit rate' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-cache-hitrate' % index_type, 'Penelope %s cache hit rate' % index_type))
 
+    RRD_GRAPH_DEFS['penelope-%s-cache-size' % index_type] = [
+        'DEF:items=%%(rrdpath)s/penelope/%s_nodecache_size\:mean.rrd:sum:AVERAGE' % index_type,
+        'AREA:items#9999FF:items\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-cache-size' % index_type] = '%%(host)s | %s cache size' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-cache-size' % index_type, 'Penelope %s cache size' % index_type))
+
 
 queues_list = {}
 path = RRDPATH % {
