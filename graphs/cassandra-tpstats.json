@@ -1,0 +1,382 @@
+{
+	"AE-SERVICE-STAGE/tasks": {
+		"title": "cassandra AE-SERVICE-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/AE-SERVICE-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/AE-SERVICE-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:AE-SERVICE-STAGE pending\\l",
+			"LINE:active#66FF00:AE-SERVICE-STAGE active\\l"
+		]
+	},
+	"AE-SERVICE-STAGE/completed": {
+		"title": "cassandra AE-SERVICE-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/AE-SERVICE-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:AE-SERVICE-STAGE/completed\\l"
+		]
+	},
+	"CONSISTENCY-MANAGER/tasks": {
+		"title": "cassandra CONSISTENCY-MANAGER",
+		"rrds": {
+			"pending": "cassandra_tpstats/CONSISTENCY-MANAGER_PendingTasks.rrd",
+			"active": "cassandra_tpstats/CONSISTENCY-MANAGER_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:CONSISTENCY-MANAGER pending\\l",
+			"LINE:active#66FF00:CONSISTENCY-MANAGER active\\l"
+		]
+	},
+	"CONSISTENCY-MANAGER/completed": {
+		"title": "cassandra CONSISTENCY-MANAGER/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/CONSISTENCY-MANAGER_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:CONSISTENCY-MANAGER/completed\\l"
+		]
+	},
+	"FLUSH-SORTER-POOL/tasks": {
+		"title": "cassandra FLUSH-SORTER-POOL",
+		"rrds": {
+			"pending": "cassandra_tpstats/FLUSH-SORTER-POOL_PendingTasks.rrd",
+			"active": "cassandra_tpstats/FLUSH-SORTER-POOL_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:FLUSH-SORTER-POOL pending\\l",
+			"LINE:active#66FF00:FLUSH-SORTER-POOL active\\l"
+		]
+	},
+	"FLUSH-SORTER-POOL/completed": {
+		"title": "cassandra FLUSH-SORTER-POOL/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/FLUSH-SORTER-POOL_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:FLUSH-SORTER-POOL/completed\\l"
+		]
+	},
+	"FLUSH-WRITER-POOL/tasks": {
+		"title": "cassandra FLUSH-WRITER-POOL",
+		"rrds": {
+			"pending": "cassandra_tpstats/FLUSH-WRITER-POOL_PendingTasks.rrd",
+			"active": "cassandra_tpstats/FLUSH-WRITER-POOL_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:FLUSH-WRITER-POOL pending\\l",
+			"LINE:active#66FF00:FLUSH-WRITER-POOL active\\l"
+		]
+	},
+	"FLUSH-WRITER-POOL/completed": {
+		"title": "cassandra FLUSH-WRITER-POOL/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/FLUSH-WRITER-POOL_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:FLUSH-WRITER-POOL/completed\\l"
+		]
+	},
+	"GMFD/tasks": {
+		"title": "cassandra GMFD",
+		"rrds": {
+			"pending": "cassandra_tpstats/GMFD_PendingTasks.rrd",
+			"active": "cassandra_tpstats/GMFD_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:GMFD pending\\l",
+			"LINE:active#66FF00:GMFD active\\l"
+		]
+	},
+	"GMFD/completed": {
+		"title": "cassandra GMFD/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/GMFD_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:GMFD/completed\\l"
+		]
+	},
+	"HINTED-HANDOFF-POOL/tasks": {
+		"title": "cassandra HINTED-HANDOFF-POOL",
+		"rrds": {
+			"pending": "cassandra_tpstats/HINTED-HANDOFF-POOL_PendingTasks.rrd",
+			"active": "cassandra_tpstats/HINTED-HANDOFF-POOL_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:HINTED-HANDOFF-POOL pending\\l",
+			"LINE:active#66FF00:HINTED-HANDOFF-POOL active\\l"
+		]
+	},
+	"HINTED-HANDOFF-POOL/completed": {
+		"title": "cassandra HINTED-HANDOFF-POOL/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/HINTED-HANDOFF-POOL_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:HINTED-HANDOFF-POOL/completed\\l"
+		]
+	},
+	"LB-OPERATIONS/tasks": {
+		"title": "cassandra LB-OPERATIONS",
+		"rrds": {
+			"pending": "cassandra_tpstats/LB-OPERATIONS_PendingTasks.rrd",
+			"active": "cassandra_tpstats/LB-OPERATIONS_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:LB-OPERATIONS pending\\l",
+			"LINE:active#66FF00:LB-OPERATIONS active\\l"
+		]
+	},
+	"LB-OPERATIONS/completed": {
+		"title": "cassandra LB-OPERATIONS/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/LB-OPERATIONS_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:LB-OPERATIONS/completed\\l"
+		]
+	},
+	"LB-TARGET/tasks": {
+		"title": "cassandra LB-TARGET",
+		"rrds": {
+			"pending": "cassandra_tpstats/LB-TARGET_PendingTasks.rrd",
+			"active": "cassandra_tpstats/LB-TARGET_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:LB-TARGET pending\\l",
+			"LINE:active#66FF00:LB-TARGET active\\l"
+		]
+	},
+	"LB-TARGET/completed": {
+		"title": "cassandra LB-TARGET/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/LB-TARGET_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:LB-TARGET/completed\\l"
+		]
+	},
+	"LOAD-BALANCER-STAGE/tasks": {
+		"title": "cassandra LOAD-BALANCER-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/LOAD-BALANCER-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/LOAD-BALANCER-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:LOAD-BALANCER-STAGE pending\\l",
+			"LINE:active#66FF00:LOAD-BALANCER-STAGE active\\l"
+		]
+	},
+	"LOAD-BALANCER-STAGE/completed": {
+		"title": "cassandra LOAD-BALANCER-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/LOAD-BALANCER-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:LOAD-BALANCER-STAGE/completed\\l"
+		]
+	},
+	"MEMTABLE-POST-FLUSHER/tasks": {
+		"title": "cassandra MEMTABLE-POST-FLUSHER",
+		"rrds": {
+			"pending": "cassandra_tpstats/MEMTABLE-POST-FLUSHER_PendingTasks.rrd",
+			"active": "cassandra_tpstats/MEMTABLE-POST-FLUSHER_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:MEMTABLE-POST-FLUSHER pending\\l",
+			"LINE:active#66FF00:MEMTABLE-POST-FLUSHER active\\l"
+		]
+	},
+	"MEMTABLE-POST-FLUSHER/completed": {
+		"title": "cassandra MEMTABLE-POST-FLUSHER/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/MEMTABLE-POST-FLUSHER_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:MEMTABLE-POST-FLUSHER/completed\\l"
+		]
+	},
+	"MESSAGE-STREAMING-POOL/tasks": {
+		"title": "cassandra MESSAGE-STREAMING-POOL",
+		"rrds": {
+			"pending": "cassandra_tpstats/MESSAGE-STREAMING-POOL_PendingTasks.rrd",
+			"active": "cassandra_tpstats/MESSAGE-STREAMING-POOL_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:MESSAGE-STREAMING-POOL pending\\l",
+			"LINE:active#66FF00:MESSAGE-STREAMING-POOL active\\l"
+		]
+	},
+	"MESSAGE-STREAMING-POOL/completed": {
+		"title": "cassandra MESSAGE-STREAMING-POOL/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/MESSAGE-STREAMING-POOL_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:MESSAGE-STREAMING-POOL/completed\\l"
+		]
+	},
+	"METADATA-MUTATION-STAGE/tasks": {
+		"title": "cassandra METADATA-MUTATION-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/METADATA-MUTATION-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/METADATA-MUTATION-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:METADATA-MUTATION-STAGE pending\\l",
+			"LINE:active#66FF00:METADATA-MUTATION-STAGE active\\l"
+		]
+	},
+	"METADATA-MUTATION-STAGE/completed": {
+		"title": "cassandra METADATA-MUTATION-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/METADATA-MUTATION-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:METADATA-MUTATION-STAGE/completed\\l"
+		]
+	},
+	"MISCELLANEOUS-POOL/tasks": {
+		"title": "cassandra MISCELLANEOUS-POOL",
+		"rrds": {
+			"pending": "cassandra_tpstats/MISCELLANEOUS-POOL_PendingTasks.rrd",
+			"active": "cassandra_tpstats/MISCELLANEOUS-POOL_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:MISCELLANEOUS-POOL pending\\l",
+			"LINE:active#66FF00:MISCELLANEOUS-POOL active\\l"
+		]
+	},
+	"MISCELLANEOUS-POOL/completed": {
+		"title": "cassandra MISCELLANEOUS-POOL/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/MISCELLANEOUS-POOL_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:MISCELLANEOUS-POOL/completed\\l"
+		]
+	},
+	"PENELOPE-STAGE/tasks": {
+		"title": "cassandra PENELOPE-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/PENELOPE-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/PENELOPE-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:PENELOPE-STAGE pending\\l",
+			"LINE:active#66FF00:PENELOPE-STAGE active\\l"
+		]
+	},
+	"PENELOPE-STAGE/completed": {
+		"title": "cassandra PENELOPE-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/PENELOPE-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:PENELOPE-STAGE/completed\\l"
+		]
+	},
+	"RESPONSE-STAGE/tasks": {
+		"title": "cassandra RESPONSE-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/RESPONSE-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/RESPONSE-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:RESPONSE-STAGE pending\\l",
+			"LINE:active#66FF00:RESPONSE-STAGE active\\l"
+		]
+	},
+	"RESPONSE-STAGE/completed": {
+		"title": "cassandra RESPONSE-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/RESPONSE-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:RESPONSE-STAGE/completed\\l"
+		]
+	},
+	"ROW-MUTATION-STAGE/tasks": {
+		"title": "cassandra ROW-MUTATION-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/ROW-MUTATION-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/ROW-MUTATION-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:ROW-MUTATION-STAGE pending\\l",
+			"LINE:active#66FF00:ROW-MUTATION-STAGE active\\l"
+		]
+	},
+	"ROW-MUTATION-STAGE/completed": {
+		"title": "cassandra ROW-MUTATION-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/ROW-MUTATION-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:ROW-MUTATION-STAGE/completed\\l"
+		]
+	},
+	"ROW-READ-STAGE/tasks": {
+		"title": "cassandra ROW-READ-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/ROW-READ-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/ROW-READ-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:ROW-READ-STAGE pending\\l",
+			"LINE:active#66FF00:ROW-READ-STAGE active\\l"
+		]
+	},
+	"ROW-READ-STAGE/completed": {
+		"title": "cassandra ROW-READ-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/ROW-READ-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:ROW-READ-STAGE/completed\\l"
+		]
+	},
+	"STREAM-STAGE/tasks": {
+		"title": "cassandra STREAM-STAGE",
+		"rrds": {
+			"pending": "cassandra_tpstats/STREAM-STAGE_PendingTasks.rrd",
+			"active": "cassandra_tpstats/STREAM-STAGE_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:STREAM-STAGE pending\\l",
+			"LINE:active#66FF00:STREAM-STAGE active\\l"
+		]
+	},
+	"STREAM-STAGE/completed": {
+		"title": "cassandra STREAM-STAGE/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/STREAM-STAGE_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:STREAM-STAGE/completed\\l"
+		]
+	},
+	"THRIFT/tasks": {
+		"title": "cassandra THRIFT",
+		"rrds": {
+			"pending": "cassandra_tpstats/THRIFT_PendingTasks.rrd",
+			"active": "cassandra_tpstats/THRIFT_ActiveCount.rrd"
+		},
+		"config": [
+			"LINE:pending#FF6600:THRIFT pending\\l",
+			"LINE:active#66FF00:THRIFT active\\l"
+		]
+	},
+	"THRIFT/completed": {
+		"title": "cassandra THRIFT/completed",
+		"rrds": {
+			"completed": "cassandra_tpstats/THRIFT_CompletedTasks.rrd"
+		},
+		"config": [
+			"LINE:completed#0066FF:THRIFT/completed\\l"
+		]
+	}
+}

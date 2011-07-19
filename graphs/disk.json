@@ -1,0 +1,46 @@
+{
+	"raid0.iops": {
+		"title": "raid0 iops",
+		"rrds": {
+			"reads": "disk/raid0.reads.rrd",
+			"writes": "disk/raid0.writes.rrd"
+		},
+		"config": [
+			"LINE:reads#33CCCC:reads/s\\l",
+			"LINE:writes#CC3300:writes/s\\l"
+		]
+	},
+	"raid0.bytes": {
+		"title": "raid0 bytes/sec",
+		"rrds": {
+			"read": "disk/raid0.bytes_read.rrd",
+			"written": "disk/raid0.bytes_written.rrd"
+		},
+		"config": [
+			"LINE:read#55FFFF:bytes read\\l",
+			"LINE:written#FF5500:bytes written\\l"
+		]
+	},
+	"sda1.iops": {
+		"title": "sda1 iops",
+		"rrds": {
+			"reads": "disk/sda1.reads.rrd",
+			"writes": "disk/sda1.writes.rrd"
+		},
+		"config": [
+			"LINE:reads#33CCCC:reads/s\\l",
+			"LINE:writes#CC3300:writes/s\\l"
+		]
+	},
+	"sda1.bytes": {
+		"title": "sda1 bytes/sec",
+		"rrds": {
+			"read": "disk/sda1.bytes_read.rrd",
+			"written": "disk/sda1.bytes_written.rrd"
+		},
+		"config": [
+			"LINE:read#55FFFF:bytes read\\l",
+			"LINE:written#FF5500:bytes written\\l"
+		]
+	}
+}

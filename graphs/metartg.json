@@ -1,0 +1,13 @@
+{
+	"processed": {
+		"title": "metrics queue",
+		"rrds": {
+			"processed": "metartg/processed.rrd",
+			"queued": "metartg/queued.rrd"
+		},
+		"config": [
+			"LINE:processed#00FF00:Processed metrics\\l",
+			"LINE:queued#FF0000:Queued metrics\\l"
+		]
+	}
+}

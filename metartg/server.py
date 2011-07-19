@@ -102,7 +102,7 @@ def post_rrd_update(host, service):
     bottle.response.status = 202
     return
 
-@bottle.get('/graph/:host/:service/:graph.json')
+@bottle.get('/graph/:host/:service/:graph#.*#.json')
 def get_graph_data(host, service, graph):
     graphdefs = json.load(file('%s/%s.json' % (GRAPHDEFS, service), 'r'))
     if not graph in graphdefs:
@@ -137,7 +137,7 @@ def get_graph_data(host, service, graph):
     return dumps([(int(ts), parse_value(value)) for ts, value in [x.split(': ', 1) for x in data.split('\n') if x and not x.endswith('nan')]])
 
 
-@bottle.get('/graph/:host/:service/:graph.png')
+@bottle.get('/graph/:host/:service/:graph#.*#.png')
 def get_graph(host, service, graph):
     graphdefs = json.load(file('%s/%s.json' % (GRAPHDEFS, service), 'r'))
     if not graph in graphdefs:
