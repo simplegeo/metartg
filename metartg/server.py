@@ -310,7 +310,7 @@ for index_type in ['bplus', 'kdmulti']:
     ]
     RRD_GRAPH_TITLE['penelope-%s-cache-hitrate' % index_type] = '%%(host)s | %s cache hit rate' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-cache-hitrate' % index_type, 'Penelope %s cache hit rate' % index_type))
-    RRD_GRAPH_OPTIONS['penelope-%s-cache-hitrate' % index_type] = ['--upper-limit', '100.0']
+    RRD_GRAPH_OPTIONS['penelope-%s-cache-hitrate' % index_type] = ['--upper-limit', '100.0', '--lower-limit', '0.0']
 
     # size of caches
     RRD_GRAPH_DEFS['penelope-%s-cache-size' % index_type] = [
@@ -323,10 +323,26 @@ for index_type in ['bplus', 'kdmulti']:
     # eviction info
     RRD_GRAPH_DEFS['penelope-%s-cache-evictions' % index_type] = [
         'DEF:evictions=%%(rrdpath)s/penelope/%s_nodecache_evictions\:total.rrd:sum:AVERAGE' % index_type,
-        'LINE:evictions#FF0066:evictions\\l',
+        'LINE:evictions#FF0066:evictions/min\\l',
     ]
     RRD_GRAPH_TITLE['penelope-%s-cache-evictions' % index_type] = '%%(host)s | %s cache evictions' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-cache-evictions' % index_type, 'Penelope %s cache evictions' % index_type))
+
+    # operation counters info
+    RRD_GRAPH_DEFS['penelope-%s-index' % index_type] = [
+        'DEF:index=%%(rrdpath)s/penelope/%s_index\:count.rrd:sum:AVERAGE' % index_type,
+        'LINE:index#66FF00:index operations/min\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-index' % index_type] = '%%(host)s | %s index operations' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-index' % index_type, 'Penelope %s index operations' % index_type))
+
+    # split info
+    RRD_GRAPH_DEFS['penelope-%s-split' % index_type] = [
+        'DEF:split=%%(rrdpath)s/penelope/%s_split\:count.rrd:sum:AVERAGE' % index_type,
+        'LINE:split#66FF00:tree splits/min\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-split' % index_type] = '%%(host)s | %s splits' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-split' % index_type, 'Penelope %s splits' % index_type))
 
 
 queues_list = {}
