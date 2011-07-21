@@ -1,3 +1,12 @@
+metartg (0.3-1sg82) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Slightly cleaner metartg_check --local output
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 21 Jul 2011 20:41:48 +0000
+
 metartg (0.3-1sg81) maverick; urgency=low
 
   [ Jeremy Grosser ]
