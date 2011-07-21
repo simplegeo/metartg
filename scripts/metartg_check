@@ -26,7 +26,7 @@ def local(options, args):
         def callback(service, metrics):
             if not service in checks[check]:
                 checks[check][service] = []
-            checks[check][service].append(metrics)
+            checks[check][service] = metrics
 
         results = list(metartg.get_checks([check]))
         if not results:
