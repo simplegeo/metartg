@@ -303,6 +303,7 @@ for op in ['index', 'unindex']:
     RRD_GRAPH_TYPES.append(('penelope-batch-%s' % op, 'Penelope batch_%s requests' % op))
 
 for index_type in ['bplus', 'kdmulti']:
+    # hitrate for caches
     RRD_GRAPH_DEFS['penelope-%s-cache-hitrate' % index_type] = [
         'DEF:hitrate=%%(rrdpath)s/penelope/%s_nodecache_recent_hit_rate\:mean.rrd:sum:AVERAGE' % index_type,
         'LINE:hitrate#66FF00:hitrate\\l',
@@ -310,12 +311,21 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TITLE['penelope-%s-cache-hitrate' % index_type] = '%%(host)s | %s cache hit rate' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-cache-hitrate' % index_type, 'Penelope %s cache hit rate' % index_type))
 
+    # size of caches
     RRD_GRAPH_DEFS['penelope-%s-cache-size' % index_type] = [
         'DEF:items=%%(rrdpath)s/penelope/%s_nodecache_size\:mean.rrd:sum:AVERAGE' % index_type,
         'AREA:items#9999FF:items\\l',
     ]
     RRD_GRAPH_TITLE['penelope-%s-cache-size' % index_type] = '%%(host)s | %s cache size' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-cache-size' % index_type, 'Penelope %s cache size' % index_type))
+
+    # eviction info
+    RRD_GRAPH_DEFS['penelope-%s-cache-evictions' % index_type] = [
+        'DEF:evictions=%%(rrdpath)s/penelope/%s_nodecache_evictions\:total.rrd:sum:AVERAGE' % index_type,
+        'LINE:evictions#FF0066:evictions\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-cache-evictions' % index_type] = '%%(host)s | %s cache evictions' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-cache-evictions' % index_type, 'Penelope %s cache evictions' % index_type))
 
 
 queues_list = {}
