@@ -16,18 +16,23 @@ def conf(key, default=None):
     return config.get(key, default)
 
 
+def get_checks(checks):
+    for filename in checks:
+        try:
+            check = __import__('metartg.checks.%s' % filename, {}, {}, ['run_check'], 0)
+        except Exception, e:
+            logging.error('Unable to import check %s: %s' % (filename, str(e)))
+            return
+
+        yield (filename, check)
+    return
+
+
 def run_checks(checks):
     metartg = Metartg()
     check_timeout = conf('check_timeout', default=20)
 
-    for filename in checks:
-
-        try:
-            check = __import__('metartg.checks.%s' % filename, {}, {}, ['run_check'], 0)
-        except:
-            logging.error('Unable to import check %s: %s' % (filename, sys.exc_info()[1]))
-            return
-
+    for filename, check in get_checks(checks):
         def check_timedout():
             raise Exception('Timeout from %s.run_check' % (filename, ))
 
