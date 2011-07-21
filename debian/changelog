@@ -1,3 +1,12 @@
+metartg (0.3-1sg81) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add --local option to metartg_check
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 21 Jul 2011 20:31:49 +0000
+
 metartg (0.3-1sg80) maverick; urgency=low
 
   [ Jeremy Grosser ]
