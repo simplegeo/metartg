@@ -310,6 +310,7 @@ for index_type in ['bplus', 'kdmulti']:
     ]
     RRD_GRAPH_TITLE['penelope-%s-cache-hitrate' % index_type] = '%%(host)s | %s cache hit rate' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-cache-hitrate' % index_type, 'Penelope %s cache hit rate' % index_type))
+    RRD_GRAPH_OPTIONS['penelope-%s-cache-hitrate' % index_type] = ['--upper-limit', '100.0']
 
     # size of caches
     RRD_GRAPH_DEFS['penelope-%s-cache-size' % index_type] = [
