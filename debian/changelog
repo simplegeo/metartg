@@ -1,3 +1,12 @@
+metartg (0.3-1sg83) maverick; urgency=low
+
+  [ mihasya ]
+  * scale rate graphs correctly
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 21 Jul 2011 20:44:48 +0000
+
 metartg (0.3-1sg82) maverick; urgency=low
 
   [ Jeremy Grosser ]
