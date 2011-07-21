@@ -1,17 +1,10 @@
 #!/usr/bin/env python
+import simplejson as json
 import metartg
 import optparse
 import sys
 
-parser = optparse.OptionParser(usage='%prog [options] <checks>')
-parser.add_option('-d', '--debug', dest='debug', default=False,
-                  action='store_true',
-                  help='Print the JSON metrics that would be sent to the ' + \
-                       'metartg server')
-options, args = parser.parse_args()
-
-if options.debug:
-    import simplejson as json
+def debug(options, args):
     results = {}
     def callback(service, metrics):
         if not service in results:
@@ -23,9 +16,46 @@ if options.debug:
         check.run_check(callback)
         print json.dumps(results, indent=2, sort_keys=True, use_decimal=True)
         results = {}
-else:
+
+
+def local(options, args):
+    checks = {}
+    for check in args:
+        checks[check] = {}
+
+        def callback(service, metrics):
+            if not service in checks[check]:
+                checks[check][service] = []
+            checks[check][service].append(metrics)
+
+        results = list(metartg.get_checks([check]))
+        if not results:
+            continue
+        results[0][1].run_check(callback)
+
+    print json.dumps(checks, indent=2, sort_keys=True, use_decimal=True)
+
+
+def main(options, args):
     logfile = file('/var/log/metartg.log', 'a')
     sys.stdout = logfile
     sys.stderr = logfile
 
     metartg.run_checks(args)
+
+if __name__ == '__main__':
+    parser = optparse.OptionParser(usage='%prog [options] <checks>')
+    parser.add_option('-d', '--debug', dest='debug', default=False,
+                      action='store_true',
+                      help='Print the JSON metrics that would be sent to ' + \
+                           'the metartg server')
+    parser.add_option('-l', '--local', dest='local', default=False,
+                      action='store_true',
+                      help='Print the JSON metrics for local use by nagios')
+    options, args = parser.parse_args()
+
+    if options.debug:
+        sys.exit(debug(options, args))
+    if options.local:
+        sys.exit(local(options, args))
+    sys.exit(main(options, args))
