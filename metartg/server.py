@@ -344,6 +344,28 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TITLE['penelope-%s-split' % index_type] = '%%(host)s | %s splits' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-split' % index_type, 'Penelope %s splits' % index_type))
 
+    # metadata read info
+    RRD_GRAPH_DEFS['penelope-%s-metadata-reads' % index_type] = [
+        'DEF:local=%%(rrdpath)s/penelope/%s_metadata_local_read\:count.rrd:sum:AVERAGE' % index_type,
+        'DEF:remote=%%(rrdpath)s/penelope/%s_metadata_remote_read\:count.rrd:sum:AVERAGE' % index_type,
+        'DEF:retry=%%(rrdpath)s/penelope/%s_metadata_retry\:count.rrd:sum:AVERAGE' % index_type,
+        'AREA:local#66FF00:local reads/min\\l',
+        'AREA:remote#6600FF:remote reads/min\\l:STACK',
+        'AREA:retry#FF6666:retried remote reads/min\\l:STACK',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-metadata-reads' % index_type] = '%%(host)s | %s metadata reads' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-metadata-reads' % index_type, 'Penelope %s metadata reads' % index_type))
+
+    # metadata invalidation info
+    RRD_GRAPH_DEFS['penelope-%s-metadata-invalidation' % index_type] = [
+        'DEF:total=%%(rrdpath)s/penelope/%s_metadata_invalidation\:count.rrd:sum:AVERAGE' % index_type,
+        'DEF:remote=%%(rrdpath)s/penelope/%s_metadata_invalidation_cmd_rx\:count.rrd:sum:AVERAGE' % index_type,
+        'AREA:total#66FF00:invalidations total/min\\l',
+        'AREA:remote#6600FF:invalidations from remote command/min\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-metadata-invalidation' % index_type] = '%%(host)s | %s metadata invalidation' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-metadata-invalidation' % index_type, 'Penelope %s metadata invalidation' % index_type))
+
 
 queues_list = {}
 path = RRDPATH % {
