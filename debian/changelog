@@ -1,3 +1,13 @@
+metartg (0.3-1sg85) maverick; urgency=low
+
+  [ mihasya ]
+  * metadata graphs
+  * correct label
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 22 Jul 2011 20:01:49 +0000
+
 metartg (0.3-1sg84) maverick; urgency=low
 
   [ mihasya ]
