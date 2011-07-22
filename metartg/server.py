@@ -360,8 +360,8 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_DEFS['penelope-%s-metadata-invalidation' % index_type] = [
         'DEF:total=%%(rrdpath)s/penelope/%s_metadata_invalidation\:count.rrd:sum:AVERAGE' % index_type,
         'DEF:remote=%%(rrdpath)s/penelope/%s_metadata_invalidation_cmd_rx\:count.rrd:sum:AVERAGE' % index_type,
-        'AREA:total#66FF00:local reads/min\\l',
-        'AREA:remote#6600FF:remote reads/min\\l',
+        'AREA:total#66FF00:invalidations total/min\\l',
+        'AREA:remote#6600FF:invalidations from remote command/min\\l',
     ]
     RRD_GRAPH_TITLE['penelope-%s-metadata-invalidation' % index_type] = '%%(host)s | %s metadata invalidation' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-metadata-invalidation' % index_type, 'Penelope %s metadata invalidation' % index_type))
