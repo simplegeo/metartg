@@ -1,3 +1,13 @@
+metartg (0.3-1sg86) maverick; urgency=low
+
+  [ mihasya ]
+  * graph more information about metadata reads and index redirect
+    operations
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 25 Jul 2011 21:08:56 +0000
+
 metartg (0.3-1sg85) maverick; urgency=low
 
   [ mihasya ]
