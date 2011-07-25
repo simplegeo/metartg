@@ -312,13 +312,21 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TYPES.append(('penelope-%s-cache-hitrate' % index_type, 'Penelope %s cache hit rate' % index_type))
     RRD_GRAPH_OPTIONS['penelope-%s-cache-hitrate' % index_type] = ['--upper-limit', '100.0', '--lower-limit', '0.0']
 
-    # size of caches
+    # size of node caches
     RRD_GRAPH_DEFS['penelope-%s-cache-size' % index_type] = [
         'DEF:items=%%(rrdpath)s/penelope/%s_nodecache_size\:mean.rrd:sum:AVERAGE' % index_type,
         'AREA:items#9999FF:items\\l',
     ]
-    RRD_GRAPH_TITLE['penelope-%s-cache-size' % index_type] = '%%(host)s | %s cache size' % index_type
-    RRD_GRAPH_TYPES.append(('penelope-%s-cache-size' % index_type, 'Penelope %s cache size' % index_type))
+    RRD_GRAPH_TITLE['penelope-%s-cache-size' % index_type] = '%%(host)s | %s node cache size' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-cache-size' % index_type, 'Penelope %s node cache size' % index_type))
+
+    # size of metadata caches
+    RRD_GRAPH_DEFS['penelope-%s-metadata-cache-size' % index_type] = [
+        'DEF:items=%%(rrdpath)s/penelope/%s_metadata_cache_size\:mean.rrd:sum:AVERAGE' % index_type,
+        'AREA:items#9999FF:items\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-metadata-cache-size' % index_type] = '%%(host)s | %s metadata cache size' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-metadata-cache-size' % index_type, 'Penelope %s metadata cache size' % index_type))
 
     # eviction info
     RRD_GRAPH_DEFS['penelope-%s-cache-evictions' % index_type] = [
@@ -344,7 +352,15 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TITLE['penelope-%s-split' % index_type] = '%%(host)s | %s splits' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-split' % index_type, 'Penelope %s splits' % index_type))
 
-    # metadata read info
+    # redirect info
+    RRD_GRAPH_DEFS['penelope-%s-index-redirect' % index_type] = [
+        'DEF:redirect=%%(rrdpath)s/penelope/%s_index_redirect\:count.rrd:sum:AVERAGE' % index_type,
+        'LINE:redirect#00FF66:redirects/min\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-index-redirect' % index_type] = '%%(host)s | %s index redirects' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-index-redirect' % index_type, 'Penelope %s index redirects' % index_type))
+
+    # metadata read rates
     RRD_GRAPH_DEFS['penelope-%s-metadata-reads' % index_type] = [
         'DEF:local=%%(rrdpath)s/penelope/%s_metadata_local_read\:count.rrd:sum:AVERAGE' % index_type,
         'DEF:remote=%%(rrdpath)s/penelope/%s_metadata_remote_read\:count.rrd:sum:AVERAGE' % index_type,
@@ -355,6 +371,22 @@ for index_type in ['bplus', 'kdmulti']:
     ]
     RRD_GRAPH_TITLE['penelope-%s-metadata-reads' % index_type] = '%%(host)s | %s metadata reads' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-metadata-reads' % index_type, 'Penelope %s metadata reads' % index_type))
+
+    # metadata read duration
+    RRD_GRAPH_DEFS['penelope-%s-metadata-read-duration' % index_type] = [
+        'DEF:local_min=%%(rrdpath)s/penelope/%s_metadata_local_read_duration\:min.rrd:sum:AVERAGE' % index_type,
+        'DEF:local_mean=%%(rrdpath)s/penelope/%s_metadata_local_read_duration\:mean.rrd:sum:AVERAGE' % index_type,
+        'DEF:local_max=%%(rrdpath)s/penelope/%s_metadata_local_read_duration\:max.rrd:sum:AVERAGE' % index_type,
+        'DEF:remote_min=%%(rrdpath)s/penelope/%s_metadata_remote_read_duration\:min.rrd:sum:AVERAGE' % index_type,
+        'DEF:remote_mean=%%(rrdpath)s/penelope/%s_metadata_remote_read_duration\:mean.rrd:sum:AVERAGE' % index_type,
+        'DEF:remote_max=%%(rrdpath)s/penelope/%s_metadata_remote_read_duration\:max.rrd:sum:AVERAGE' % index_type,
+        'LINE:local_mean#66FF00:local reads mean ms\\l',
+        'LINE:local_max#FFFF00:local reads max ms\\l',
+        'LINE:remote_mean#6600FF:remote reads mean ms\\l',
+        'LINE:remote_max#FF00FF:remote reads max ms \\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-metadata-read-duration' % index_type] = '%%(host)s | %s metadata read duration' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-metadata-read-duration' % index_type, 'Penelope %s metadata read duration' % index_type))
 
     # metadata invalidation info
     RRD_GRAPH_DEFS['penelope-%s-metadata-invalidation' % index_type] = [
