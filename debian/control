@@ -8,5 +8,5 @@ Standards-Version: 3.8.3
 Package: metartg
 Architecture: any
 Depends: ${python:Depends}, python-simplejson
-Suggests: python-pyrrd, python-memcache, python-eventlet, python-bottle, python-jinja2, rrdtool, python-thrift
+Suggests: python-pyrrd, python-memcache, python-eventlet, python-bottle, python-jinja2, rrdtool, python-thrift, python-simplejson (>= 2.1.0)
 Description: RRD based metrics collection and storage system
