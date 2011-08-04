@@ -1,3 +1,13 @@
+metartg (0.3-1sg90) maverick; urgency=low
+
+  [ mihasya ]
+  * make the incoming line dashed so that we can see when the lines
+    overlap
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 04 Aug 2011 17:17:36 +0000
+
 metartg (0.3-1sg89) maverick; urgency=low
 
   * UNRELEASED
