@@ -398,6 +398,14 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TITLE['penelope-%s-metadata-invalidation' % index_type] = '%%(host)s | %s metadata invalidation' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-metadata-invalidation' % index_type, 'Penelope %s metadata invalidation' % index_type))
 
+# metadata invalidation info
+RRD_GRAPH_DEFS['penelope-metadata-remote-commands-serviced'] = [
+    'DEF:total=%(rrdpath)s/penelope/metadata_remote_commands_serviced\:count.rrd:sum:AVERAGE',
+    'AREA:total#6600FF:remote reads serviced/min\\l',
+]
+RRD_GRAPH_TITLE['penelope-metadata-remote-commands-serviced'] = '%%(host)s | metadata remote reads serviced'
+RRD_GRAPH_TYPES.append(('penelope-metadata-remote-commands-serviced', 'Penelope metadata remote reads serviced'))
+
 
 queues_list = {}
 path = RRDPATH % {
