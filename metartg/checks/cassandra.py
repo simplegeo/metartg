@@ -252,6 +252,21 @@ def streaming_metrics():
     return metrics
 
 
+def connection_metrics():
+    netstat = subprocess.Popen(['netstat', '-an'], stdout=subprocess.PIPE)
+    grep1 = subprocess.Popen(['grep', 'ESTABLISHED'], stdin=netstat.stdout, stdout=subprocess.PIPE)
+    awk = subprocess.Popen(["awk", "{print $4}"], stdin=grep1.stdout, stdout=subprocess.PIPE)
+    grep2 = subprocess.Popen(['grep', ':9160$'], stdin=awk.stdout, stdout=subprocess.PIPE)
+    count = len(grep2.communicate()[0].strip().split("\n"))
+    return {
+        'connections.open': {
+            'ts': int(time()),
+            'type': 'GAUGE',
+            'value': count,
+        }
+    }
+
+
 def run_check(callback):
     callback('cassandra_tpstats', tpstats_metrics())
     callback('cassandra_sstables', sstables_metrics())
@@ -261,6 +276,7 @@ def run_check(callback):
     callback('cassandra_compaction', compaction_metrics())
     callback('cassandra_commitlog', commitlog_metrics())
     callback('cassandra_streaming', streaming_metrics())
+    callback('cassandra_connection', connection_metrics())
 
 
 if __name__ == '__main__':
@@ -272,4 +288,5 @@ if __name__ == '__main__':
     print json.dumps(compaction_metrics(), indent=2)
     print json.dumps(commitlog_metrics(), indent=2)
     print json.dumps(streaming_metrics(), indent=2)
+    print json.dumps(connection_metrics(), indent=2)
 
