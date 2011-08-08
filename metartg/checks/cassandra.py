@@ -253,11 +253,8 @@ def streaming_metrics():
 
 
 def connection_metrics():
-    netstat = subprocess.Popen(['netstat', '-an'], stdout=subprocess.PIPE)
-    grep1 = subprocess.Popen(['grep', 'ESTABLISHED'], stdin=netstat.stdout, stdout=subprocess.PIPE)
-    awk = subprocess.Popen(["awk", "{print $4}"], stdin=grep1.stdout, stdout=subprocess.PIPE)
-    grep2 = subprocess.Popen(['grep', ':9160$'], stdin=awk.stdout, stdout=subprocess.PIPE)
-    count = len(grep2.communicate()[0].strip().split("\n"))
+    command = subprocess.Popen("netstat -an | grep ESTABLISHED | awk '{print $4}' | grep \":9160$\" | wc -l", shell=True, stdout=subprocess.PIPE)
+    count = int(command.communicate()[0].strip())
     return {
         'connections.open': {
             'ts': int(time()),
