@@ -1,3 +1,13 @@
+metartg (0.3-1sg100) maverick; urgency=low
+
+  [ Mike Newton ]
+  * sadf gives the 1st entry instead of the last when asked for 1. fixed
+    :(
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 09 Aug 2011 22:29:53 +0000
+
 metartg (0.3-1sg99) maverick; urgency=low
 
   [ Jeremy Grosser ]
