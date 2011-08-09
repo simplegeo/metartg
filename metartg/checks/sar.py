@@ -17,7 +17,7 @@ def cpu_metrics():
         data = [float(x) for x in data.split(';')]
         for i, name in enumerate(('user', 'nice', 'sys', 'iowait', 'steal','irq', 'soft', 'guest', 'idle')):
             metrics[name] = {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': data[i],
             }
@@ -38,42 +38,42 @@ def paging_metrics():
         kbpgin_s,kbpgout_s,pgfault_s,majfault_s,pgfree_s,pgscank_s,pgscand_s,pgsteal_s,extras = data.split(';')
         metrics.update({
             'kb_pagein_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(kbpgin_s),
             },
             'kb_pageout_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(kbpgout_s),
             },
             'page_fault_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(pgfault_s),
             },
             'major_fault_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(majfault_s),
             },
             'pages_freed_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(pgfree_s),
             },
             'pages_scanned_kswapd_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(pgscank_s),
             },
             'pages_scanned_directly_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(pgscand_s),
             },
             'pages_stolen_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(pgsteal_s),
             },
@@ -95,27 +95,27 @@ def load_metrics():
         runqsz,plistsz,ldavg1,ldavg5,ldavg15 = data.split(';')
         metrics.update({
             'run_queue_length': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(runqsz),
             },
             'proc_list_size': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(plistsz),
             },
             'load_avg_1m': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(ldavg1),
             },
             'load_avg_5m': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(ldavg5),
             },
             'load_avg_15m': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(ldavg15),
             },
@@ -137,27 +137,27 @@ def mem_metrics():
         kbmemfree,kbmemused,pct_memused,kbbuffers,kbcached,kbcommit,pct_commit = data.split(';')
         metrics.update({
             'free_memory': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(kbmemfree),
             },
             'used_memory': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(kbmemused),
             },
             'buffer_memory': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(kbbuffers),
             },
             'swap_cache': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(kbcached),
             },
             'total_memory': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(int(kbmemfree)+int(kbmemused)),
             },
@@ -179,27 +179,27 @@ def io_metrics():
         tps,rtps,wtps,bread_s,bwritten_s = data.split(';')
         metrics.update({
             'io_req_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(tps),
             },
             'read_io_req_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(rtps),
             },
             'write_io_req_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(wtps),
             },
             'bytes_read_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(bread_s),
             },
             'bytes_written_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(bwritten_s),
             },
@@ -221,22 +221,22 @@ def network_metrics():
         if not iface.startswith('eth'): continue
         metrics.update({
             '%s_rx_bytes' % iface: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(rxkBps),
             },
             '%s_tx_bytes' % iface: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(txkBps),
             },
             '%s_rx_packets' % iface: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(rxpps),
             },
             '%s_tx_packets' % iface: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(txpps),
             }
@@ -258,22 +258,22 @@ def tables_metrics():
         dentunusd,file_nr,inode_nr,pty_nr = data.split(';')
         metrics.update({
             'used_dircache_entries': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(dentunusd),
             },
             'used_file_handles': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(file_nr),
             },
             'used_inode_handlers': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(inode_nr),
             },
             'used_ptys': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': int(pty_nr),
             },
@@ -295,12 +295,12 @@ def proc_context_metrics():
         procs_s,cswch_s = data.split(';')
         metrics.update({
             'procs_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(procs_s),
             },
             'context_switches_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(cswch_s),
             },
@@ -322,12 +322,12 @@ def swapping_metrics():
         pswpin_s,pswpout_s = data.split(';')
         metrics.update({
             'pages_swapped_in_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(pswpin_s),
             },
             'pages_swapped_out_sec': {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(pswpout_s),
             },
@@ -350,42 +350,42 @@ def blockdev_metrics():
         tps,rd_sec_s,wr_sec_s,avgrq_sz,avgqu_sz,await,svctm,pct_util = data.split(';')
         metrics.update({
             '%s_io_req_sec' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(tps),
             },
             '%s_sectors_read_sec' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(rd_sec_s),
             },
             '%s_sectors_written_sec' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(wr_sec_s),
             },
             '%s_avg_request_size' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(avgrq_sz),
             },
             '%s_avg_queue_length' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(avgqu_sz),
             },
             '%s_avg_time' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(await),
             },
             '%s_avg_service_time' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(svctm),
             },
             '%s_pct_cpu_during_io' % device: {
-                'ts': timestamp,
+                'ts': int(timestamp),
                 'type': 'GAUGE',
                 'value': float(await),
             },
