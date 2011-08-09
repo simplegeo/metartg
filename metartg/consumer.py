@@ -46,7 +46,7 @@ class RRDCached(object):
         status, line = line.split(' ', 1)
         status = int(status)
         if status < 0:
-            logging.warning(line)
+            logging.warning('Updating %s: %s' % (filename, line))
             return
         for i in range(status):
             logging.debug(self.readline())
