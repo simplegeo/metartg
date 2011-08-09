@@ -403,8 +403,16 @@ RRD_GRAPH_DEFS['penelope-metadata-remote-commands-serviced'] = [
     'DEF:total=%(rrdpath)s/penelope/metadata_remote_commands_serviced\:count.rrd:sum:AVERAGE',
     'AREA:total#6600FF:remote reads serviced/min\\l',
 ]
-RRD_GRAPH_TITLE['penelope-metadata-remote-commands-serviced'] = '%%(host)s | metadata remote reads serviced'
+RRD_GRAPH_TITLE['penelope-metadata-remote-commands-serviced'] = '%(host)s | metadata remote reads serviced'
 RRD_GRAPH_TYPES.append(('penelope-metadata-remote-commands-serviced', 'Penelope metadata remote reads serviced'))
+
+# cassandra connection stats
+RRD_GRAPH_DEFS['cassandra-connections-open'] = [
+    'DEF:conns=%(rrdpath)s/cassandra_connection/connections.open.rrd:sum:AVERAGE',
+    'AREA:conns#0066FF:connections open\\l',
+]
+RRD_GRAPH_TITLE['cassandra-connections-open'] = '%(host)s | open cassandra connections'
+RRD_GRAPH_TYPES.append(('cassandra-connections-open', 'Cassandra open connections'))
 
 
 queues_list = {}
