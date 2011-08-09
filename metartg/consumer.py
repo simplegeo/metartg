@@ -83,7 +83,7 @@ RRA:AVERAGE:0.5:1:1500 \
 RRA:AVERAGE:0.5:5:2304 \
 RRA:AVERAGE:0.5:30:4320' % {
     'filename': filename,
-    'start': (data['ts'] - 1),
+    'start': (int(data['ts']) - 1),
     'dstype': data['type'],
 })
 
