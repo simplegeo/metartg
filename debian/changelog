@@ -1,3 +1,12 @@
+metartg (0.3-1sg99) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Show the filename for rrdupdate warnings
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 09 Aug 2011 21:01:53 +0000
+
 metartg (0.3-1sg98) maverick; urgency=low
 
   [ Mike Newton ]
