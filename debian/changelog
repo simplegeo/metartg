@@ -1,3 +1,12 @@
+metartg (0.3-1sg96) maverick; urgency=low
+
+  [ Mike Newton ]
+  * add check using sysstat (sar) data.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 09 Aug 2011 17:22:06 +0000
+
 metartg (0.3-1sg95) maverick; urgency=low
 
   [ mihasya ]
