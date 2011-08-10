@@ -82,6 +82,18 @@ RRD_GRAPH_DEFS = {
         'AREA:cpu_nice#FFCC00:CPU nice\\l:STACK',
         'AREA:cpu_user#FFFF66:CPU user\\l:STACK',
     ],
+    'sar-io': [
+        'DEF:iowait=%(rrdpath)s/sar-cpu/iowait.rrd:sum:AVERAGE',
+        'VDEF:iowait_x=iowait,AVERAGE',
+        'DEF:bread_s=%(rrdpath)s/sar-io/bytes_read_sec.rrd:sum:AVERAGE',
+        'CDEF:cdef_bread_s=bread_s,512,*,1048576,/',
+        'DEF:bwrit_s=%(rrdpath)s/sar-io/bytes_written_sec.rrd:sum:AVERAGE',
+        'CDEF:cdef_bwrit_s=bwrit_s,512,*,1048576,/',
+        'AREA:iowait#D8ACE0FF:CPU i/o wait\\l',
+        'LINE1:iowait_x#623465FF:',
+        'LINE1:cdef_bread_s#EA8F00FF:MB read\\l',
+        'LINE1:cdef_bwrit_s#157419FF:MB written\\l',
+    ],
     #'io': [
     #    'DEF:cpu_wio=%(rrdpath)s/cpu/iowait.rrd:sum:AVERAGE',
     #    'LINE:cpu_wio#EA8F00:CPU iowait\\l',
@@ -120,6 +132,7 @@ RRD_GRAPH_DEFS = {
 
 RRD_GRAPH_OPTIONS = {
     'system-cpu': ['--upper-limit', '100.0'],
+    'sar-io': ['--base', '1000', '--slope-mode'],
     #'io': ['--upper-limit', '100.0']
 }
 
@@ -128,6 +141,7 @@ RRD_GRAPH_TITLE = {
     'network-packets': '%(host)s | packets in/out',
     'system-cpu': '%(host)s | cpu %%',
     'system-memory': '%(host)s | memory utilization',
+    'sar-io': '%(host)s | sar i/o',
     #'io': '%(host)s | disk i/o',
     'redis-memory': '%(host)s | redis memory',
     'redis-connections': '%(host)s | redis connections',
@@ -140,6 +154,7 @@ RRD_GRAPH_TITLE = {
 RRD_GRAPH_TYPES = [
     ('system-cpu', 'CPU'),
     ('system-memory', 'Memory'),
+    ('sar-io', 'SAR'),
     ('redis-memory', 'Memory'),
     ('redis-connections', 'Connections'),
     ('cassandra-scores', 'Scores'),
