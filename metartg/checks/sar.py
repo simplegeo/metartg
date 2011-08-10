@@ -402,6 +402,9 @@ def run_check(callback):
     callback('sar-cpu', cpu_metrics(start_time))
     callback('sar-io', io_metrics(start_time))
     callback('sar-load', load_metrics(start_time))
+    callback('sar-mem', mem_metrics(start_time))
+    callback('sar-paging', paging_metrics(start_time))
+    callback('sar-swapping', swapping_metrics(start_time))
 
 
 if __name__ ==  '__main__':
