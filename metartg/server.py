@@ -140,8 +140,8 @@ RRD_GRAPH_DEFS = {
 
 RRD_GRAPH_OPTIONS = {
     'system-cpu': ['--upper-limit', '100.0'],
-    'sar-io': ['--base', '1000', '--slope-mode', '--upper-limit', '100', '--alt-autoscale-max'],
-    'sar-load': ['--base', '1000', '--slope-mode', '--upper-limit', '300', '--alt-autoscale-max'],
+    'sar-io': ['--base', '1000', '--slope-mode', '--upper-limit', '80', '--alt-autoscale-max'],
+    'sar-load': ['--base', '1000', '--slope-mode', '--upper-limit', '100', '--alt-autoscale-max'],
     #'io': ['--upper-limit', '100.0']
 }
 
