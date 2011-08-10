@@ -1,3 +1,12 @@
+metartg (0.3-1sg103) maverick; urgency=low
+
+  [ Mike Newton ]
+  * autoscale my sar graphs
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 10 Aug 2011 19:00:57 +0000
+
 metartg (0.3-1sg102) maverick; urgency=low
 
   [ Mike Newton ]
