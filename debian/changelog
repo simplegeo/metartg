@@ -1,3 +1,14 @@
+metartg (0.3-1sg101) maverick; urgency=low
+
+  [ Mike Newton ]
+  * add one sar graph just to make sure i know what i'm doing
+  * forgot graph_title and graph_type
+  * moved graph options to RRD_GRAPH_OPTIONS
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 10 Aug 2011 17:49:56 +0000
+
 metartg (0.3-1sg100) maverick; urgency=low
 
   [ Mike Newton ]
