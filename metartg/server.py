@@ -83,8 +83,6 @@ RRD_GRAPH_DEFS = {
         'AREA:cpu_user#FFFF66:CPU user\\l:STACK',
     ],
     'sar-io': [
-        '--base=1000',
-        '--slope-mode',
         'DEF:iowait=%(rrdpath)s/sar-cpu/iowait.rrd:sum:AVERAGE',
         'VDEF:iowait_x=iowait,AVERAGE',
         'DEF:bread_s=%(rrdpath)s/sar-io/bytes_read_sec.rrd:sum:AVERAGE',
@@ -134,6 +132,7 @@ RRD_GRAPH_DEFS = {
 
 RRD_GRAPH_OPTIONS = {
     'system-cpu': ['--upper-limit', '100.0'],
+    'sar-io': ['--base', '1000', '--slope-mode'],
     #'io': ['--upper-limit', '100.0']
 }
 
