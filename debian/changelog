@@ -1,3 +1,12 @@
+metartg (0.3-1sg102) maverick; urgency=low
+
+  [ Mike Newton ]
+  * add another graph, fix up old one a bit
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 10 Aug 2011 18:41:56 +0000
+
 metartg (0.3-1sg101) maverick; urgency=low
 
   [ Mike Newton ]
