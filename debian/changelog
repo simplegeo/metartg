@@ -1,3 +1,13 @@
+metartg (0.3-1sg104) maverick; urgency=low
+
+  [ Mike Newton ]
+  * change a couple graph params and add some more collecting in the
+    check
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 10 Aug 2011 19:24:55 +0000
+
 metartg (0.3-1sg103) maverick; urgency=low
 
   [ Mike Newton ]
