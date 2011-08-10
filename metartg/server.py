@@ -84,7 +84,7 @@ RRD_GRAPH_DEFS = {
     ],
     'sar-io': [
         'DEF:iowait=%(rrdpath)s/sar-cpu/iowait.rrd:sum:AVERAGE',
-        'VDEF:iowait_x=iowait,AVERAGE',
+        'DEF:iowait_x=%(rrdpath)s/sar-cpu/iowait.rrd:sum:AVERAGE',
         'DEF:bread_s=%(rrdpath)s/sar-io/bytes_read_sec.rrd:sum:AVERAGE',
         'CDEF:cdef_bread_s=bread_s,512,*,1048576,/',
         'DEF:bwrit_s=%(rrdpath)s/sar-io/bytes_written_sec.rrd:sum:AVERAGE',
@@ -93,6 +93,14 @@ RRD_GRAPH_DEFS = {
         'LINE1:iowait_x#623465FF:',
         'LINE1:cdef_bread_s#EA8F00FF:MB read\\l',
         'LINE1:cdef_bwrit_s#157419FF:MB written\\l',
+    ],
+    'sar-load': [
+        'DEF:ldavg1=%(rrdpath)s/sar-load/load_avg_1m.rrd:sum:AVERAGE',
+        'DEF:ldavg5=%(rrdpath)s/sar-load/load_avg_5m.rrd:sum:AVERAGE',
+        'DEF:ldavg15=%(rrdpath)s/sar-load/load_avg_15m.rrd:sum:AVERAGE',
+        'AREA:ldavg1#EAAF00FF:1 min load\\l',
+        'AREA:ldavg5#FF7D00FF:5 min load\\l',
+        'AREA:ldavg15#942D0CFF:15 min load \\l',
     ],
     #'io': [
     #    'DEF:cpu_wio=%(rrdpath)s/cpu/iowait.rrd:sum:AVERAGE',
@@ -132,7 +140,8 @@ RRD_GRAPH_DEFS = {
 
 RRD_GRAPH_OPTIONS = {
     'system-cpu': ['--upper-limit', '100.0'],
-    'sar-io': ['--base', '1000', '--slope-mode'],
+    'sar-io': ['--base', '1000', '--slope-mode', '--upper-limit', '100'],
+    'sar-load': ['--base', '1000', '--slope-mode', '--upper-limit', '300'],
     #'io': ['--upper-limit', '100.0']
 }
 
@@ -142,6 +151,7 @@ RRD_GRAPH_TITLE = {
     'system-cpu': '%(host)s | cpu %%',
     'system-memory': '%(host)s | memory utilization',
     'sar-io': '%(host)s | sar i/o',
+    'sar-load': '%(host)s | sar load average',
     #'io': '%(host)s | disk i/o',
     'redis-memory': '%(host)s | redis memory',
     'redis-connections': '%(host)s | redis connections',
@@ -154,7 +164,8 @@ RRD_GRAPH_TITLE = {
 RRD_GRAPH_TYPES = [
     ('system-cpu', 'CPU'),
     ('system-memory', 'Memory'),
-    ('sar-io', 'SAR'),
+    ('sar-io', 'I/O'),
+    ('sar-load', 'Load Average'),
     ('redis-memory', 'Memory'),
     ('redis-connections', 'Connections'),
     ('cassandra-scores', 'Scores'),
