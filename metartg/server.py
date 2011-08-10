@@ -142,6 +142,7 @@ RRD_GRAPH_TITLE = {
     'network-packets': '%(host)s | packets in/out',
     'system-cpu': '%(host)s | cpu %%',
     'system-memory': '%(host)s | memory utilization',
+    'sar-io': '%(host)s | sar i/o',
     #'io': '%(host)s | disk i/o',
     'redis-memory': '%(host)s | redis memory',
     'redis-connections': '%(host)s | redis connections',
@@ -154,6 +155,7 @@ RRD_GRAPH_TITLE = {
 RRD_GRAPH_TYPES = [
     ('system-cpu', 'CPU'),
     ('system-memory', 'Memory'),
+    ('sar-io', 'SAR'),
     ('redis-memory', 'Memory'),
     ('redis-connections', 'Connections'),
     ('cassandra-scores', 'Scores'),
