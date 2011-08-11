@@ -473,13 +473,17 @@ for index_type in ['bplus', 'kdmulti']:
 
 # database tombstone info
 RRD_GRAPH_DEFS['penelope-database-columns-fetched'] = [
-    'DEF:cols=%(rrdpath)s/penelope/database_columns_fetched\:count.rrd:sum:AVERAGE',
-    'DEF:tombstones=%(rrdpath)s/penelope/database_tombstones_fetched\:count.rrd:sum:AVERAGE',
-    'AREA:cols#00FFAA:columns fetched total/min\\l',
-    'AREA:tombstones#FF5555:tombstones fetched/min\\l',
+    'DEF:colsmean=%(rrdpath)s/penelope/database_columns\:mean.rrd:sum:AVERAGE',
+    'DEF:colsmax=%(rrdpath)s/penelope/database_columns\:max.rrd:sum:AVERAGE',
+    'DEF:tombstonesmean=%(rrdpath)s/penelope/database_tombstones\:mean.rrd:sum:AVERAGE',
+    'DEF:tombstonesmax=%(rrdpath)s/penelope/database_tombstones\:max.rrd:sum:AVERAGE',
+    'AREA:colsmean#00FFAA:mean columns fetched\\l',
+    'AREA:tombstonesmean#FF5555:mean tombstones fetched\\l',
+    'LINE:tombstonesmax#FF0000:max tombstones fetched\\l',
 ]
 RRD_GRAPH_TITLE['penelope-database-columns-fetched'] = '%(host)s | columns fetched'
 RRD_GRAPH_TYPES.append(('penelope-database-columns-fetched', 'Penelope columns fetched'))
+
 
 # metadata invalidation info
 RRD_GRAPH_DEFS['penelope-metadata-remote-commands-serviced'] = [
