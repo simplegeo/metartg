@@ -451,6 +451,36 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TITLE['penelope-%s-metadata-invalidation' % index_type] = '%%(host)s | %s metadata invalidation' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-metadata-invalidation' % index_type, 'Penelope %s metadata invalidation' % index_type))
 
+    # information about the frequency and duration about maybeSplit decisions
+    RRD_GRAPH_DEFS['penelope-%s-maybe-split' % index_type] = [
+        'DEF:total=%%(rrdpath)s/penelope/%s_maybe_split\:count.rrd:sum:AVERAGE' % index_type,
+        'DEF:expensive=%%(rrdpath)s/penelope/%s_maybe_split_expensive\:count.rrd:sum:AVERAGE' % index_type,
+        'AREA:total#66FF00:maybeSplit total/min\\l',
+        'AREA:expensive#6600FF:maybeSplit expensive/min\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-maybe-split' % index_type] = '%%(host)s | %s maybeSplit' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-maybe-split' % index_type, 'Penelope %s maybeSplit' % index_type))
+
+    RRD_GRAPH_DEFS['penelope-%s-maybe-split-fetch-duration' % index_type] = [
+        'DEF:min=%%(rrdpath)s/penelope/%s_maybe_split_fetch_duration\:min.rrd:sum:AVERAGE' % index_type,
+        'DEF:mean=%%(rrdpath)s/penelope/%s_maybe_split_fetch_duration\:mean.rrd:sum:AVERAGE' % index_type,
+        'DEF:max=%%(rrdpath)s/penelope/%s_maybe_split_fetch_duration\:max.rrd:sum:AVERAGE' % index_type,
+        'LINE:mean#66FF00:maybeSplit fetch mean ms\\l',
+        'LINE:max#FF0000:maybeSplit fetch max ms\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-maybe-split-fetch-duration' % index_type] = '%%(host)s | %s feature count fetch duration' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-maybe-split-fetch-duration' % index_type, 'Penelope %s feature count fetch duration' % index_type))
+
+# database tombstone info
+RRD_GRAPH_DEFS['penelope-database-columns-fetched'] = [
+    'DEF:cols=%(rrdpath)s/penelope/database_columns_fetched\:count.rrd:sum:AVERAGE',
+    'DEF:tombstones=%(rrdpath)s/penelope/database_tombstones_fetched\:count.rrd:sum:AVERAGE',
+    'AREA:cols#00FFAA:columns fetched total/min\\l',
+    'AREA:tombstones#FF5555:tombstones fetched/min\\l',
+]
+RRD_GRAPH_TITLE['penelope-database-columns-fetched'] = '%(host)s | columns fetched'
+RRD_GRAPH_TYPES.append(('penelope-database-columns-fetched', 'Penelope columns fetched'))
+
 # metadata invalidation info
 RRD_GRAPH_DEFS['penelope-metadata-remote-commands-serviced'] = [
     'DEF:total=%(rrdpath)s/penelope/metadata_remote_commands_serviced\:count.rrd:sum:AVERAGE',
