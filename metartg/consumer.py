@@ -102,7 +102,7 @@ def update_redis(host, service, metricname, metric):
 
     count = db.lpush('trends/%s/%s/%s' % (host, service, metricname), json.dumps((metric['ts'], metric['value'])))
     db.sadd('trends', '%s/%s/%s' % (host, service, metricname))
-    if count > 10:
+    if count > 60:
         db.rpop('trends/%s/%s/%s' % (host, service, metricname))
 
 def process_rrd_update(host, service, body):
