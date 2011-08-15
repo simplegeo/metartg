@@ -99,6 +99,12 @@ def update_rrd(filename, metric, data):
 def update_redis(host, service, metricname, metric):
     db.sadd('hosts', host)
     db.hset('metrics/%s' % host, '%s/%s' % (service, metricname), json.dumps((metric['ts'], metric['value'])))
+
+    count = db.lpush('trends/%s/%s/%s' % (host, service, metricname), json.dumps((metric['ts'], metric['value'])))
+    db.sadd('trends', '%s/%s/%s' % (host, service, metricname))
+    if count > 10:
+        db.rpop('trends/%s/%s/%s' % (host, service, metricname))
+
     db.incr('processed')
 
 def process_rrd_update(host, service, body):
