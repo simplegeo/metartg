@@ -105,8 +105,6 @@ def update_redis(host, service, metricname, metric):
     if count > 10:
         db.rpop('trends/%s/%s/%s' % (host, service, metricname))
 
-    db.incr('processed')
-
 def process_rrd_update(host, service, body):
     metrics = json.loads(body)
     for metric in metrics:
@@ -123,6 +121,7 @@ def process_rrd_update(host, service, body):
             create_rrd(rrdfilepath, metric, metrics[metric])
         update_rrd(rrdfile, metric, metrics[metric])
         update_redis(host, service, metric, metrics[metric])
+    db.incr('processed', len(metrics))
     return
 
 
