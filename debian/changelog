@@ -1,3 +1,12 @@
+metartg (0.3-1sg108) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add trending data to metartg consumer
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 15 Aug 2011 18:26:16 +0000
+
 metartg (0.3-1sg107) maverick; urgency=low
 
   [ mihasya ]
