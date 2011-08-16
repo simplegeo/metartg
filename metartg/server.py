@@ -869,7 +869,7 @@ def get_rrd_graph(host, graphtype):
         else:
             DEFS = RRD_GRAPH_DEFS.get(graphtype, [])
 
-    for gdef in DEFS:
+    for gdef in RRD_GRAPH_DEFS.get(graphtype, []):
         cmd.append(gdef % {
             'rrdpath': '%s' % host,
         })
