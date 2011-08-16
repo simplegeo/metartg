@@ -181,31 +181,31 @@ RRD_LGRAPH_DEFS = {
         'VDEF:pswpout_s_max=pswpout_s,MAXIMUM',
         'VDEF:pswpout_s_95th=pswpout_s,95,PERCENT',
         'AREA:iowait#D8ACE0FF:CPU i/o wait',
-        'GPRINT:iowait:LAST:Cur\\:  %8.2lf %%',
-        'GPRINT:iowait:AVERAGE:Avg\\:  %8.2lf %%',
-        'GPRINT:iowait_max:Max\\:  %8.2lf %%',
-        'GPRINT:iowait_95th:95th\\: %8.2lf %%\\c',
+        'GPRINT:iowait:LAST:Cur\\:  %%8.2lf %%%%',
+        'GPRINT:iowait:AVERAGE:Avg\\:  %%8.2lf %%%%',
+        'GPRINT:iowait_max:Max\\:  %%8.2lf %%%%',
+        'GPRINT:iowait_95th:95th\\: %%8.2lf %%%%\\c',
         'LINE1:iowait_x#623465FF:',
-        'LINE1:cdef_bread_s#EA8F00FF:MB read/s',
-        'GPRINT:cdef_bread_s:LAST:Cur\\:  %8.2lf %s',
-        'GPRINT:cdef_bread_s:AVERAGE:Avg\\:  %8.2lf %s',
-        'GPRINT:cdef_bread_s_max:Max\\:  %8.2lf %s',
-        'GPRINT:cdef_bread_s_95th:95th\\: %8.2lf %s\\c',
+        'LINE1:cdef_bread_s#EA8F00FF:MB read/s   ',
+        'GPRINT:cdef_bread_s:LAST:Cur\\:  %%8.2lf %%s',
+        'GPRINT:cdef_bread_s:AVERAGE:Avg\\:  %%8.2lf %%s',
+        'GPRINT:cdef_bread_s_max:Max\\:  %%8.2lf %%s',
+        'GPRINT:cdef_bread_s_95th:95th\\: %%8.2lf %%s\\c',
         'LINE1:cdef_bwrit_s#157419FF:MB written/s',
-        'GPRINT:cdef_bwrit_s:LAST:Cur\\:  %8.2lf %s',
-        'GPRINT:cdef_bwrit_s:AVERAGE:Avg\\:  %8.2lf %s',
-        'GPRINT:cdef_bwrit_s_max:Max\\:  %8.2lf %s',
-        'GPRINT:cdef_bwrit_s_95th:95th\\: %8.2lf %s\\c',
-        'LINE1:pswpin_s#4444FFFF:Swap in/s',
-        'GPRINT:pswpin_s:LAST:Cur\\:  %8.2lf %s',
-        'GPRINT:pswpin_s:AVERAGE:Avg\\:  %8.2lf %s',
-        'GPRINT:pswpin_s_max:Max\\:  %8.2lf %s',
-        'GPRINT:pswpin_s_95th:95th\\: %8.2lf %s\\c',
-        'LINE1:pswpout_s#7EE600FF:Swap out/s',
-        'GPRINT:pswpout_s:LAST:Cur\\:  %8.2lf %s',
-        'GPRINT:pswpout_s:AVERAGE:Avg\\:  %8.2lf %s',
-        'GPRINT:pswpout_s_max:Max\\:  %8.2lf %s',
-        'GPRINT:pswpout_s_95th:95th\\: %8.2lf %s\\c',
+        'GPRINT:cdef_bwrit_s:LAST:Cur\\:  %%8.2lf %%s',
+        'GPRINT:cdef_bwrit_s:AVERAGE:Avg\\:  %%8.2lf %%s',
+        'GPRINT:cdef_bwrit_s_max:Max\\:  %%8.2lf %%s',
+        'GPRINT:cdef_bwrit_s_95th:95th\\: %%8.2lf %%s\\c',
+        'LINE1:pswpin_s#4444FFFF:Swap in/s   ',
+        'GPRINT:pswpin_s:LAST:Cur\\:  %%8.2lf %%s',
+        'GPRINT:pswpin_s:AVERAGE:Avg\\:  %%8.2lf %%s',
+        'GPRINT:pswpin_s_max:Max\\:  %%8.2lf %%s',
+        'GPRINT:pswpin_s_95th:95th\\: %%8.2lf %%s\\c',
+        'LINE1:pswpout_s#7EE600FF:Swap out/s  ',
+        'GPRINT:pswpout_s:LAST:Cur\\:  %%8.2lf %%s',
+        'GPRINT:pswpout_s:AVERAGE:Avg\\:  %%8.2lf %%s',
+        'GPRINT:pswpout_s_max:Max\\:  %%8.2lf %%s',
+        'GPRINT:pswpout_s_95th:95th\\: %%8.2lf %%s\\c',
     ],
 }
 
@@ -868,8 +868,10 @@ def get_rrd_graph(host, graphtype):
             DEFS = RRD_LGRAPH_DEFS.get(graphtype, [])
         else:
             DEFS = RRD_GRAPH_DEFS.get(graphtype, [])
+    else:
+        DEFS = RRD_GRAPH_DEFS.get(graphtype, [])
 
-    for gdef in RRD_GRAPH_DEFS.get(graphtype, []):
+    for gdef in DEFS:
         cmd.append(gdef % {
             'rrdpath': '%s' % host,
         })
