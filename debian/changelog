@@ -1,3 +1,12 @@
+metartg (0.3-1sg113) maverick; urgency=low
+
+  [ Mike Newton ]
+  * buh...really need a better way to test this in a staging env
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 16 Aug 2011 18:28:53 +0000
+
 metartg (0.3-1sg112) maverick; urgency=low
 
   [ Mike Newton ]
