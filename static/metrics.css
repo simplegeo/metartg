@@ -80,7 +80,7 @@ img {
 	/*margin-bottom: 20px;*/
 }
 
-.timerange li, .graphtype, .size {
+.timerange li, .graphtype, .size li {
 	margin-top: 5px;
 	background-color: #555;
 	color: #DDD;
