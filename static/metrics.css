@@ -80,7 +80,7 @@ img {
 	/*margin-bottom: 20px;*/
 }
 
-.timerange li, .graphtype {
+.timerange li, .graphtype, .size {
 	margin-top: 5px;
 	background-color: #555;
 	color: #DDD;
@@ -118,6 +118,10 @@ img {
 }
 
 .timerange .selected {
+	background-color: #157419;
+}
+
+.size .selected {
 	background-color: #157419;
 }
 
