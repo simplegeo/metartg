@@ -1,3 +1,12 @@
+metartg (0.3-1sg114) maverick; urgency=low
+
+  [ Mike Newton ]
+  * ok...got it finally. % escape issues and one missing else block
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 16 Aug 2011 20:24:52 +0000
+
 metartg (0.3-1sg113) maverick; urgency=low
 
   [ Mike Newton ]
