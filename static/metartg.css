@@ -27,6 +27,10 @@ img {
 	margin-bottom: 10px;
 }
 
+.server.large {
+	width: 100%;
+}
+
 li .label {
 	float: left;
 	width: 100px;

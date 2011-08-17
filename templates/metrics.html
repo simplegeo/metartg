@@ -64,7 +64,7 @@ function update_graphs() {
 		success: function(data) {
 			for(var i = 0; i < data.length; i++) {
 				var server = data[i];
-				var html = '<li class="server">' +
+				var html = '<li class="server ' + size + '">' +
 					'<div class="info">' +
 						'<div class="label">Name:</div>' +
 						'<div class="value">' + server.name + '</div>' +
