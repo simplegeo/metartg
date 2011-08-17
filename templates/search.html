@@ -25,6 +25,11 @@ function toggle_graphtype(evt) {
 	update_graphs();
 }
 
+function toggle_update(evt) {
+	$(evt.target).toggleClass('selected');
+	update_graphs();
+}
+
 function update_graphs() {
 	var query = $('[name=pools]').val();
 	query = query.replace(/ $/g, '');
@@ -32,6 +37,8 @@ function update_graphs() {
 	query = query.replace(/ /g, '+');
 
 	var timerange = $('.timerange .selected').attr('name');
+
+	var size = $('.size .selected').attr('name') ? $('.size .selected').attr('name') : 'small';
 
 	var ts_end = parseInt(new Date().getTime() / 1000);
 	var ts_start = ts_end - (timerange * 3600);
@@ -73,7 +80,7 @@ function update_graphs() {
 					html += '<ul class="graphs">';
 					for(var x = 0; x < graphtypes.length; x++) {
 						var graphtype = graphtypes[x];
-						html += '<li><a href="/graph/' + instance + '/' + graphtype + '?start=' + ts_start + '&end=' + ts_end + '"><img src="/graph/' + instance + '/' + graphtype + '?size=small&start=' + ts_start + '&end=' + ts_end + '" alt="' + server.name + ' ' + graphtype + '" /></a></li>';
+						html += '<li><a href="/graph/' + instance + '/' + graphtype + '?start=' + ts_start + '&end=' + ts_end + '"><img src="/graph/' + instance + '/' + graphtype + '?size=' + size + '&start=' + ts_start + '&end=' + ts_end + '" alt="' + server.name + ' ' + graphtype + '" /></a></li>';
 					}
 					html += '</ul>';
 				}
@@ -113,6 +120,7 @@ $(document).ready(function() {
 	$('[name=pools]').keypress(query_keypress);
 	$('.timerange li').click(select_timerange);
 	$('.graphtypes li').click(toggle_graphtype);
+	$('.size').click(toggle_update);
 });
 </script>
 
@@ -121,6 +129,10 @@ $(document).ready(function() {
 <fieldset class="search">
 	<label for="pools">Pools:</label>
 	<input type="text" name="pools" value="{{ query }}" class="pools" />
+
+	<ul class="size">
+		<li name=="large">large graphs</li>
+	</ul>
 
 	<ul class="timerange">
 		<li class="selected" name="1">1 hour</li>
