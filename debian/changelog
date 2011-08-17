@@ -1,3 +1,13 @@
+metartg (0.3-1sg117) maverick; urgency=low
+
+  [ Mike Newton ]
+  * stupid typo
+  * change server div width to 100% when it has large class
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 17 Aug 2011 15:59:53 +0000
+
 metartg (0.3-1sg116) maverick; urgency=low
 
   [ Mike Newton ]
