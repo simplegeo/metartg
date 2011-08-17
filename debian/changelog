@@ -1,3 +1,13 @@
+metartg (0.3-1sg115) maverick; urgency=low
+
+  [ Mike Newton ]
+  * add large graph button
+  * css oops
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 17 Aug 2011 14:04:52 +0000
+
 metartg (0.3-1sg114) maverick; urgency=low
 
   [ Mike Newton ]
