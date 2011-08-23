@@ -522,6 +522,23 @@ for index_type in ['bplus', 'kdmulti']:
     RRD_GRAPH_TITLE['penelope-%s-maybe-split-fetch-duration' % index_type] = '%%(host)s | %s feature count fetch duration' % index_type
     RRD_GRAPH_TYPES.append(('penelope-%s-maybe-split-fetch-duration' % index_type, 'Penelope %s feature count fetch duration' % index_type))
 
+    # guava caches
+    RRD_GRAPH_DEFS['penelope-%s-metadata-cache-rates' % index_type] = [
+        'DEF:hitrate=%%(rrdpath)s/penelope/%s_metadatacache_hit_rate\:mean.rrd:sum:AVERAGE' % index_type,
+        'DEF:missrate=%%(rrdpath)s/penelope/%s_metadatacache_miss_rate\:mean.rrd:sum:AVERAGE' % index_type,
+        'AREA:hitrate#66FF00:hits\\l',
+        'AREA:missrate#FF0000:misses\\l:STACK',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-metadata-cache-rates' % index_type] = '%%(host)s | %s metadata cache performance' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-metadata-cache-rates' % index_type, 'Penelope %s metadata cache performance' % index_type))
+
+    RRD_GRAPH_DEFS['penelope-%s-metadata-cache-evictions' % index_type] = [
+        'DEF:evictions=%%(rrdpath)s/penelope/%s_metadatacache_evictions\:mean.rrd:sum:AVERAGE' % index_type,
+        'LINE:evictions#FF5555:evictions\\l',
+    ]
+    RRD_GRAPH_TITLE['penelope-%s-metadata-cache-evictions' % index_type] = '%%(host)s | %s metadata cache evictions' % index_type
+    RRD_GRAPH_TYPES.append(('penelope-%s-metadata-cache-evictions' % index_type, 'Penelope %s metadata cache evictions' % index_type))
+
 # database tombstone info
 RRD_GRAPH_DEFS['penelope-database-columns-fetched'] = [
     'DEF:colsmean=%(rrdpath)s/penelope/database_columns\:mean.rrd:sum:AVERAGE',
