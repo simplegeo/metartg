@@ -79,10 +79,12 @@ RRD_GRAPH_DEFS = {
         'DEF:cpu_system=%(rrdpath)s/cpu/sys.rrd:sum:AVERAGE',
         'DEF:cpu_nice=%(rrdpath)s/cpu/nice.rrd:sum:AVERAGE',
         'DEF:cpu_iowait=%(rrdpath)s/cpu/iowait.rrd:sum:AVERAGE',
+        'DEF:cpu_steal=%(rrdpath)s/cpu/steal.rrd:sum:AVERAGE',
         'AREA:cpu_system#FF6600:CPU system\\l:STACK',
         'AREA:cpu_nice#FFCC00:CPU nice\\l:STACK',
         'AREA:cpu_user#FFFF66:CPU user\\l:STACK',
         'AREA:cpu_iowait#FF5555:CPU iowait\\l:STACK',
+        'AREA:cpu_steal#EA8F00FF:CPU steal\\l:STACK',
     ],
     'sar-io': [
         'DEF:iowait=%(rrdpath)s/sar-cpu/iowait.rrd:sum:AVERAGE',
