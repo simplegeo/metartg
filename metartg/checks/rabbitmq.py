@@ -36,18 +36,31 @@ def rabbitmq_rate_metrics():
     now = int(time())
     metrics = {}
     for queue in queues:
-        # rate at which msgs are being acknowledged, I think...
-        metrics['%s_ack_rate' % queue['name']] = {
-            'ts': now,
-            'type': 'GAUGE',
-            'value': long(queue['backing_queue_status']['avg_ack_ingress_rate']),
-        }
-        # rate at which messages are coming in
-        metrics['%s_incoming_rate' % queue['name']] = {
-            'ts': now,
-            'type': 'GAUGE',
-            'value': long(queue['backing_queue_status']['avg_ingress_rate']),
-        }
+        if 'message_stats' in queue:
+            # rate at which msgs are being delivered to consumers
+            metrics['%s_deliver_rate' % queue['name']] = {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': long(queue['message_stats']['deliver_details']['rate']),
+            }
+            # not exactly sure what the difference is between deliver and deliver_get, but graphing it anyway in the event we want it at some point
+            metrics['%s_deliver_get_rate' % queue['name']] = {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': long(queue['message_stats']['deliver_get_details']['rate']),
+            }
+            # rate at which msgs are being acknowledged
+            metrics['%s_ack_rate' % queue['name']] = {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': long(queue['message_stats']['ack_details']['rate']),
+            }
+            # rate at which messages are coming in
+            metrics['%s_pub_rate' % queue['name']] = {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': long(queue['message_stats']['publish_details']['rate']),
+            }
     return metrics
 
 
