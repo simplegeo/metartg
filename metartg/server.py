@@ -917,6 +917,12 @@ def search():
     if result:
         return dumps(json.loads(result))
 
+    if len(pools) == 1:
+        obj = clusto.get(pools[0])
+        if obj:
+            cache.set(cachekey, json.dumps(obj), 300)
+            return dumps(obj)
+
     def get_contents(name):
         obj = clusto.get_by_name(name)
         return set(obj.contents())
