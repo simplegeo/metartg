@@ -1,3 +1,13 @@
+metartg (0.3-1sg121) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Revert "Allow searching by instance id" This reverts commit
+    45b181c520abdcda7ccac230646e57fb274d179a.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 25 Aug 2011 17:17:26 +0000
+
 metartg (0.3-1sg120) maverick; urgency=low
 
   [ Jeremy Grosser ]
