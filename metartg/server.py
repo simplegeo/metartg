@@ -596,10 +596,12 @@ for queue in queues_list:
 
     rabbitmq_rate_graph = 'rabbitmq-rates-%s' % queue
     RRD_GRAPH_DEFS[rabbitmq_rate_graph] = [
-        'DEF:in=%%(rrdpath)s/rabbitmq/%s_incoming_rate.rrd:sum:AVERAGE' % queue,
+        'DEF:deliver=%%(rrdpath)s/rabbitmq/%s_deliver_rate.rrd:sum:AVERAGE' % queue,
         'DEF:ack=%%(rrdpath)s/rabbitmq/%s_ack_rate.rrd:sum:AVERAGE' % queue,
+        'DEF:publish=%%(rrdpath)s/rabbitmq/%s_pub_rate.rrd:sum:AVERAGE' % queue,
+        'LINE2:deliver#fcff00:%s delivered/s\\l:dashes=5,10' % queue,
         'LINE:ack#4EFF4D:%s acknowledged/s\\l' % queue,
-        'LINE:in#FF3484:%s incoming/s\\l:dashes=10,5' % queue,
+        'LINE:publish#FF3484:%s published/s\\l:dashes=10,5' % queue,
     ]
     RRD_GRAPH_TITLE[rabbitmq_rate_graph] = '%%(host)s | %s queue rates' % queue
     RRD_GRAPH_TYPES.append((rabbitmq_rate_graph, '%s rates' % queue))
