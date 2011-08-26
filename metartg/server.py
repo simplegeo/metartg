@@ -162,6 +162,27 @@ RRD_GRAPH_DEFS = {
         'LINE:processed#00FF00:Processed metrics\\l',
         'LINE:queued#FF0000:Queued metrics\\l',
     ],
+    'elasticsearch-memory': [
+        'DEF:heap_committed=%(rrdpath)s/elasticsearch_memory/jvm.heap.committed.rrd:sum:AVERAGE',
+        'DEF:heap_used=%(rrdpath)s/elasticsearch_memory/jvm.heap.used.rrd:sum:AVERAGE',
+        'DEF:nonheap_committed=%(rrdpath)s/elasticsearch_memory/jvm.nonheap.committed.rrd:sum:AVERAGE',
+        'DEF:nonheap_used=%(rrdpath)s/elasticsearch_memory/jvm.nonheap.used.rrd:sum:AVERAGE',
+        'CDEF:nonheap_committed_stack=heap_committed,nonheap_committed,+',
+        'AREA:heap_used#006699:heap used\\l',
+        'LINE:heap_committed#FFFFFF:heap committed\\l',
+        'AREA:nonheap_used#009966:nonheap used\\l:STACK',
+        'LINE:nonheap_committed_stack#FFFFFF:nonheap committed\\l',
+    ],
+    'elasticsearch-shards': [
+        'DEF:active_shards=%(rrdpath)s/elasticsearch_shards/active_shards.rrd:sum:AVERAGE',
+        'DEF:active_primary_shards=%(rrdpath)s/elasticsearch_shards/active_primary_shards.rrd:sum:AVERAGE',
+        'DEF:unassigned_shards=%(rrdpath)s/elasticsearch_shards/unassigned_shards.rrd:sum:AVERAGE',
+        'DEF:initializing_shards=%(rrdpath)s/elasticsearch_shards/initializing_shards.rrd:sum:AVERAGE',
+        'LINE:active_shards#FFAB00FF:active shards\\l',
+        'LINE:active_primary_shards#837C04FF:active primary shards\\l',
+        'LINE:unassigned_shards#F51D30FF:unassigned shards\\l',
+        'LINE:initializing_shards#157419FF:initializing shards\\l',
+    ],
 }
 
 RRD_LGRAPH_DEFS = {
@@ -279,6 +300,8 @@ RRD_GRAPH_TITLE = {
     'elb-requests': '%(host)s | ELB requests/min',
     'elb-latency': '%(host)s | ELB latency (seconds)',
     'metartg-processed': '%(host)s | metrics processed per minute',
+    'elasticsearch-memory': '%(host)s | Elasticsearch Memory',
+    'elasticsearch-shards': '%(host)s | Elasticsearch Shards',
 }
 
 RRD_GRAPH_TYPES = [
@@ -296,6 +319,8 @@ RRD_GRAPH_TYPES = [
     ('metartg-processed', 'Processed'),
     ('network-bytes', 'Bytes tx/rx'),
     ('network-packets', 'Packets tx/rx'),
+    ('elasticsearch-memory', 'Elasticsearch Memory'),
+    ('elasticsearch-shards', 'Elasticsearch Shards'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
 ]
