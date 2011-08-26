@@ -783,7 +783,6 @@ def rrdtool(args):
     p = subprocess.Popen(['rrdtool'] + args.split(' '))
     p.wait()
 
-
 def create_rrd(filename, metric, data):
     print 'Creating rrd', filename, metric, data
     try:
@@ -791,16 +790,21 @@ def create_rrd(filename, metric, data):
     except:
         pass
 
+    rrdtool_args = {
+        'filename': filename,
+        'start': (data['ts'] - 61),
+        'dstype': data['type'],
+    }
+    if data['type'] == 'DERIVE':
+        rrdtool_args['min'] = '0'
+    else:
+        rrdtool_args['min'] = 'U'
+
     rrdtool('create %(filename)s --start %(start)s --step 60 \
-DS:sum:%(dstype)s:600:U:U \
+DS:sum:%(dstype)s:600:%(min)s:U \
 RRA:AVERAGE:0.5:1:1500 \
 RRA:AVERAGE:0.5:5:2304 \
-RRA:AVERAGE:0.5:30:4320' % {
-    'filename': filename,
-    'start': (data['ts'] - 1),
-    'dstype': data['type'],
-})
-
+RRA:AVERAGE:0.5:30:4320' % rrdtool_args)
 
 def update_rrd(filename, metric, data):
     #filename = filename.split('/var/lib/metartg/rrds/', 1)[1]
