@@ -1,3 +1,12 @@
+metartg (0.3-1sg127) maverick; urgency=low
+
+  [ Mike Newton ]
+  * add some elasticsearch graphs
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 26 Aug 2011 22:16:02 +0000
+
 metartg (0.3-1sg126) maverick; urgency=low
 
   [ Mike Newton ]
