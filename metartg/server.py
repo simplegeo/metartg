@@ -178,7 +178,7 @@ RRD_GRAPH_DEFS = {
         'DEF:active_primary_shards=%(rrdpath)s/elasticsearch-shards/active_primary_shards.rrd:sum:AVERAGE',
         'DEF:unassigned_shards=%(rrdpath)s/elasticsearch-shards/unassigned_shards.rrd:sum:AVERAGE',
         'DEF:initializing_shards=%(rrdpath)s/elasticsearch-shards/initializing_shards.rrd:sum:AVERAGE',
-        'LINE:active_shards#FFAB00FF:active shards\\l',
+        'LINE:active_shards#006699FF:active shards\\l',
         'LINE:active_primary_shards#837C04FF:active primary shards\\l',
         'LINE:unassigned_shards#F51D30FF:unassigned shards\\l',
         'LINE:initializing_shards#157419FF:initializing shards\\l',
