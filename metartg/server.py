@@ -167,11 +167,10 @@ RRD_GRAPH_DEFS = {
         'DEF:heap_used=%(rrdpath)s/elasticsearch-memory/jvm.heap.used.rrd:sum:AVERAGE',
         'DEF:nonheap_committed=%(rrdpath)s/elasticsearch-memory/jvm.nonheap.committed.rrd:sum:AVERAGE',
         'DEF:nonheap_used=%(rrdpath)s/elasticsearch-memory/jvm.nonheap.used.rrd:sum:AVERAGE',
-        'CDEF:nonheap_committed_stack=heap_committed,nonheap_committed,+',
         'AREA:heap_used#006699:heap used\\l',
         'LINE:heap_committed#FFFFFF:heap committed\\l',
-        'AREA:nonheap_used#009966:nonheap used\\l:STACK',
-        'LINE:nonheap_committed_stack#FFFFFF:nonheap committed\\l',
+        'AREA:nonheap_used#009966:nonheap used\\l',
+        'LINE:nonheap_committed#F8FF47:nonheap committed\\l',
     ],
     'elasticsearch-shards': [
         'DEF:active_shards=%(rrdpath)s/elasticsearch-shards/active_shards.rrd:sum:AVERAGE',
@@ -311,6 +310,16 @@ RRD_LGRAPH_DEFS = {
         'GPRINT:nonheap_committed:AVERAGE:Avg\\:  %%8.2lf %%sB',
         'GPRINT:nonheap_committed_max:Max\\:  %%8.2lf %%sB',
         'GPRINT:nonheap_committed_95th:95th\\: %%8.2lf %%sB\\c',
+    ],
+    'elasticsearch-gc': [
+        'DEF:gc_time=%(rrdpath)s/elasticsearch-gc/gc.collection.time.rrd:sum:AVERAGE',
+        'VDEF:gc_time_max=gc_time,MAXIMUM',
+        'VDEF:gc_time_95th=gc_time,95,PERCENT',
+        'AREA:gc_time#4668E4FF:gc time (ms)',
+        'GPRINT:gc_time:LAST:Cur\\:  %%8.2lf ms',
+        'GPRINT:gc_time:AVERAGE:Avg\\:  %%8.2lf ms',
+        'GPRINT:gc_time_max:Max\\:  %%8.2lf ms',
+        'GPRINT:gc_time_95th:95th\\: %%8.2lf ms\\c',
     ],
 }
 
