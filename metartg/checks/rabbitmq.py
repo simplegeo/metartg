@@ -3,6 +3,7 @@ from time import time
 import subprocess
 import json
 
+import logging
 
 def rabbitmq_metrics():
     p = subprocess.Popen(['/usr/sbin/rabbitmqctl', '-q', 'list_queues', '-p', 'simplegeo', 'name', 'messages', 'messages_unacknowledged'], stdout=subprocess.PIPE)
@@ -33,34 +34,22 @@ def rabbitmq_rate_metrics():
     except ValueError:
         return None
 
+    stats = ['deliver', 'deliver_get', 'ack', 'publish']
     now = int(time())
     metrics = {}
     for queue in queues:
         if 'message_stats' in queue:
-            # rate at which msgs are being delivered to consumers
-            metrics['%s_deliver_rate' % queue['name']] = {
-                'ts': now,
-                'type': 'GAUGE',
-                'value': long(queue['message_stats']['deliver_details']['rate']),
-            }
-            # not exactly sure what the difference is between deliver and deliver_get, but graphing it anyway in the event we want it at some point
-            metrics['%s_deliver_get_rate' % queue['name']] = {
-                'ts': now,
-                'type': 'GAUGE',
-                'value': long(queue['message_stats']['deliver_get_details']['rate']),
-            }
-            # rate at which msgs are being acknowledged
-            metrics['%s_ack_rate' % queue['name']] = {
-                'ts': now,
-                'type': 'GAUGE',
-                'value': long(queue['message_stats']['ack_details']['rate']),
-            }
-            # rate at which messages are coming in
-            metrics['%s_pub_rate' % queue['name']] = {
-                'ts': now,
-                'type': 'GAUGE',
-                'value': long(queue['message_stats']['publish_details']['rate']),
-            }
+            for statname in stats:
+                try:
+                    statdetails = '%s_details' % statname
+                    if isinstance(queue['message_stats'], dict) and statdetails in  queue['message_stats'] and isinstance(queue['message_stats'][statdetails], dict):
+                        metrics['%s_%s_rate' % (queue['name'], statname)] = {
+                            'ts': now,
+                            'type': 'GAUGE',
+                            'value': long(queue['message_stats'][statdetails]['rate']),
+                        }
+                except Exception, e:
+                    logging.error('Failure getting metrics for queue %s:' % queue['name'], e)
     return metrics
 
 

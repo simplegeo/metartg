@@ -707,7 +707,7 @@ for queue in queues_list:
     RRD_GRAPH_DEFS[rabbitmq_rate_graph] = [
         'DEF:deliver=%%(rrdpath)s/rabbitmq/%s_deliver_rate.rrd:sum:AVERAGE' % queue,
         'DEF:ack=%%(rrdpath)s/rabbitmq/%s_ack_rate.rrd:sum:AVERAGE' % queue,
-        'DEF:publish=%%(rrdpath)s/rabbitmq/%s_pub_rate.rrd:sum:AVERAGE' % queue,
+        'DEF:publish=%%(rrdpath)s/rabbitmq/%s_publish_rate.rrd:sum:AVERAGE' % queue,
         'LINE2:deliver#fcff00:%s delivered/s\\l:dashes=5,10' % queue,
         'LINE:ack#4EFF4D:%s acknowledged/s\\l' % queue,
         'LINE:publish#FF3484:%s published/s\\l:dashes=10,5' % queue,
