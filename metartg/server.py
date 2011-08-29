@@ -183,6 +183,10 @@ RRD_GRAPH_DEFS = {
         'LINE:unassigned_shards#F51D30FF:unassigned shards\\l',
         'LINE:initializing_shards#157419FF:initializing shards\\l',
     ],
+    'elasticsearch-gc': [
+        'DEF:gc_time=%(rrdpath)s/elasticsearch-gc/gc.collection.time.rrd:sum:AVERAGE',
+        'AREA:gc_time#4668E4FF:gc time (ms)\\l',
+    ],
 }
 
 RRD_LGRAPH_DEFS = {
@@ -302,6 +306,7 @@ RRD_GRAPH_TITLE = {
     'metartg-processed': '%(host)s | metrics processed per minute',
     'elasticsearch-memory': '%(host)s | Elasticsearch Memory',
     'elasticsearch-shards': '%(host)s | Elasticsearch Shards',
+    'elasticsearch-gc': '%(host)s | Elasticsearch Garbage Collection',
 }
 
 RRD_GRAPH_TYPES = [
@@ -321,6 +326,7 @@ RRD_GRAPH_TYPES = [
     ('network-packets', 'Packets tx/rx'),
     ('elasticsearch-memory', 'Elasticsearch Memory'),
     ('elasticsearch-shards', 'Elasticsearch Shards'),
+    ('elasticsearch-gc', 'Elasticsearch Garbage Collection'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
 ]
