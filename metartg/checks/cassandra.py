@@ -121,11 +121,14 @@ def scores_metrics():
     metrics = {}
     for endpoint, score in scores.items():
         endpoint = endpoint.lstrip('/')
-        metrics[endpoint] = {
-            'ts': now,
-            'type': 'GAUGE',
-            'value': float(score),
-        }
+        try:
+            metrics[endpoint] = {
+                'ts': now,
+                'type': 'GAUGE',
+                'value': float(score),
+            }
+        except TypeError:
+            pass
     return metrics
 
 
