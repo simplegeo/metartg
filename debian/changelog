@@ -1,3 +1,12 @@
+metartg (0.3-1sg134) maverick; urgency=low
+
+  [ mihasya ]
+  * avoid exception caused by null value being returned for localhost
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 01 Sep 2011 17:41:59 +0000
+
 metartg (0.3-1sg133) maverick; urgency=low
 
   [ Mike Newton ]
