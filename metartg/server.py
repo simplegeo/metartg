@@ -808,7 +808,7 @@ for monitservice in services.keys():
 #RRD_GRAPH_TYPES.append(('haproxy-sessions', 'Sessions'))
 
 
-for disk in ('raid0', 'sda1'):
+for disk in ('raid0', 'sda1', 'md0'):
     RRD_GRAPH_DEFS['disk-%s-iops' % disk] = [
         'DEF:reads=%%(rrdpath)s/disk/%s.reads.rrd:sum:AVERAGE' % disk,
         'DEF:writes=%%(rrdpath)s/disk/%s.writes.rrd:sum:AVERAGE' % disk,
@@ -821,11 +821,19 @@ for disk in ('raid0', 'sda1'):
         'LINE:read#55FFFF:bytes read\\l',
         'LINE:written#FF5500:bytes written\\l',
     ]
+    RRD_GRAPH_DEFS['disk-%s-space' % disk] = [
+        'DEF:used=%%(rrdpath)s/disk/%s.used_space.rrd:sum:AVERAGE' % disk,
+        'DEF:used=%%(rrdpath)s/disk/%s.free_space.rrd:sum:AVERAGE' % disk,
+        'LINE:used#660099:GBs used\\l',
+        'LINE:free#4499ff:GBs free\\l',
+    ]
 
     RRD_GRAPH_TITLE['disk-%s-iops' % disk] = '%%(host)s | %s iops' % disk
     RRD_GRAPH_TITLE['disk-%s-bytes' % disk] = '%%(host)s | %s bytes/sec' % disk
+    RRD_GRAPH_TITLE['disk-%s-space' % disk] = '%%(host)s | %s GBs' % disk
     RRD_GRAPH_TYPES.append(('disk-%s-iops' % disk, '%s iops' % disk))
     RRD_GRAPH_TYPES.append(('disk-%s-bytes' % disk, '%s bytes' % disk))
+    RRD_GRAPH_TYPES.append(('disk-%s-space' % disk, '%s GBs' % disk))
 
 def get_clusto_name(instanceid):
     key = 'clusto/hostname/%s' % instanceid
