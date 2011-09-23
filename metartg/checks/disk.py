@@ -73,7 +73,8 @@ def disk_space_metrics():
             path = l[1]
             stats = os.statvfs(path)
             device_metrics = {
-                    'free_space' : int(stats.f_bfree * stats.f_frsize),
+                    'free_space' : int(stats.f_bfree * stats.f_frsize / 1000000000),
+                    'used_space' : int((stats.f_blocks - stats.f_bfree) * stats.f_bsize / 1000000000),
                     'used_nodes' : int(stats.f_files),
                     'free_nodes' : int(stats.f_ffree)
                     }
