@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>metartg :: graphs</title>
+	<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css" />
+	<style type="text/css">
+	body {
+		padding-top: 60px;
+	}
+	</style>
+</head>
+
+<body>
+
+<div class="topbar">
+	<div class="topbar-inner">
+		<div class="container-fluid">
+			<a class="brand" href="/">metartg</a>
+			<!--
+			<ul class="nav">
+				<li class="active"><a href="/">Home</a></li>
+			</ul>
+			-->
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+		<form class="sidebar form-stacked" action="" method="GET">
+			<fieldset>
+				<legend>Host selection</legend>
+				<input name="search" type="text" placeholder="Pools or a host" />
+				<span class="help-block">If a space-delimited list of pools is given, the intersection of the contents of these pools will be calculated and added to the host list. If an instance ID is given, that specific host will be added to the list.</span>
+			</fieldset>
+		</form>
+
+	<div class="content">
+		<div class="row">
+			<div class="span9">
+				<img src="/graph/i-12345678/system/memory.png" alt="i-12345678 system/memory" width="525" height="180" />
+				<img src="/graph/i-12345678/system/cpu.png" alt="i-12345678 system/cpu" width="525" height="180" />
+				<img src="/graph/i-12345678/network/bytes.png" alt="i-12345678 network/bytes" width="525" height="180" />
+			</div>
+			<div class="span5">
+				<h5>production-api-12345678</h5>
+				<dl>
+					<dt>Pools</dt>
+					<dd>production</dd>
+					<dd>api</dd>
+					<dd>us-east-1b</dd>
+
+					<dt>IPs</dt>
+					<dd>10.124.103.89</dd>
+					<dd>50.17.40.217</dd>
+
+					<dt>DNS</dt>
+					<dd>ip-10-124-103-89.ec2.internal</dd>
+					<dd>ec2-50-17-40-217.compute-1.amazonaws.com</dd>
+				</dl>
+			</div>
+	</div>
+</div>
+
+</body>
+</html>
