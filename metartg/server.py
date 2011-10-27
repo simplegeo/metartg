@@ -46,9 +46,6 @@ class RedisQueue(object):
 
 rrdqueue = RedisQueue('rrdqueue')
 
-def es_segment_graphs(index):
-    return ''
-
 RRDPATH = '%(host)s/%(service)s/%(metric)s.rrd'
 
 RRD_GRAPH_DEFS = {
