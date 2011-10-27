@@ -192,20 +192,24 @@ RRD_GRAPH_DEFS = {
         'DEF:gc_time=%(rrdpath)s/elasticsearch-gc/gc.collection.time.rrd:sum:AVERAGE',
         'AREA:gc_time#4668E4FF:gc time (ms)\\l',
     ],
-    'elasticsearch-segments': [
-        'DEF:places_segment_size=%(rrdpath)s/elasticsearch-segments/places.segment.size.rrd:sum:AVERAGE',
-        'AREA:places_segment_size#009966:places segment size\\l',
-        'DEF:places_segment_docs=%(rrdpath)s/elasticsearch-segments/places.segment.docs.rrd:sum:AVERAGE',
-        'AREA:places_segment_docs#009966:places segment size\\l',
+    'elasticsearch-segments-count': [
         'DEF:places_segment_count=%(rrdpath)s/elasticsearch-segments/places.segment.count.rrd:sum:AVERAGE'
-        'AREA:places_segment_count#009966:places segment size\\l',
-        'DEF:redirects_segment_size=%(rrdpath)s/elasticsearch-segments/redirects.segment.size.rrd:sum:AVERAGE',
-        'AREA:redirects_segment_size#009966:redirects segment total size\\l',
-        'DEF:redirects_segment_docs=%(rrdpath)s/elasticsearch-segments/redirects.segment.docs.rrd:sum:AVERAGE',
-        'AREA:redirects_segment_docs#009966:redirects document amount\\l',
+        'AREA:places_segment_count#009966:places count\\l',
         'DEF:redirects_segment_count=%(rrdpath)s/elasticsearch-segments/redirects.segment.count.rrd:sum:AVERAGE'
-        'AREA:redirects_segment_count#009966:redirects segment amount\\l'
-    ]
+        'AREA:redirects_segment_count#006699:redirects count\\l'
+    ],
+    'elasticsearch-segments-docs': [
+        'DEF:places_segment_docs=%(rrdpath)s/elasticsearch-segments/places.segment.docs.rrd:sum:AVERAGE',
+        'AREA:places_segment_docs#009966:places amount\\l',
+        'DEF:redirects_segment_docs=%(rrdpath)s/elasticsearch-segments/redirects.segment.docs.rrd:sum:AVERAGE',
+        'AREA:redirects_segment_docs#006699:redirects amount\\l',
+    ],
+    'elasticsearch-segments-size': [
+        'DEF:places_segment_size=%(rrdpath)s/elasticsearch-segments/places.segment.size.rrd:sum:AVERAGE',
+        'AREA:places_segment_size#009966:places total segment size in MBs\\l',
+        'DEF:redirects_segment_size=%(rrdpath)s/elasticsearch-segments/redirects.segment.size.rrd:sum:AVERAGE',
+        'AREA:redirects_segment_size#006699:redirects total segment size in MBs\\l',
+    ],
 }
 
 RRD_LGRAPH_DEFS = {
@@ -370,7 +374,9 @@ RRD_GRAPH_TITLE = {
     'elasticsearch-memory': '%(host)s | Elasticsearch Memory',
     'elasticsearch-shards': '%(host)s | Elasticsearch Shards',
     'elasticsearch-gc': '%(host)s | Elasticsearch Garbage Collection',
-    'elasticsearch-segments': '%(host)s | Elasticsearch Segments',
+    'elasticsearch-segments-size': '%(host)s | Elasticsearch Segment Sizes',
+    'elasticsearch-segments-count': '%(host)s | Elasticsearch Segment Amounts',
+    'elasticsearch-segments-docs': '%(host)s | Elasticsearch Segment Document Amounts',
 }
 
 RRD_GRAPH_TYPES = [
@@ -391,7 +397,9 @@ RRD_GRAPH_TYPES = [
     ('elasticsearch-memory', 'Elasticsearch Memory'),
     ('elasticsearch-shards', 'Elasticsearch Shards'),
     ('elasticsearch-gc', 'Elasticsearch Garbage Collection'),
-    ('elasticsearch-segments', 'Elasticsearch Segments'),
+    ('elasticsearch-segments-size', 'Elasticsearch Segment Sizes'),
+    ('elasticsearch-segments-count', 'Elasticsearch Segment Amounts'),
+    ('elasticsearch-segments-docs', 'Elasticsearch Segment Document Amounts'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
 ]
