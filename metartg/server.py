@@ -195,19 +195,14 @@ RRD_GRAPH_DEFS = {
     'elasticsearch-segments': [
         'DEF:places_segment_size=%(rrdpath)s/elasticsearch-segments/places.segment.size.rrd:sum:AVERAGE',
         'AREA:places_segment_size#009966:places segment size\\l',
-
         'DEF:places_segment_docs=%(rrdpath)s/elasticsearch-segments/places.segment.docs.rrd:sum:AVERAGE',
         'AREA:places_segment_docs#009966:places segment size\\l',
-
         'DEF:places_segment_count=%(rrdpath)s/elasticsearch-segments/places.segment.count.rrd:sum:AVERAGE'
         'AREA:places_segment_count#009966:places segment size\\l',
-
         'DEF:redirects_segment_size=%(rrdpath)s/elasticsearch-segments/redirects.segment.size.rrd:sum:AVERAGE',
         'AREA:redirects_segment_size#009966:redirects segment total size\\l',
-
         'DEF:redirects_segment_docs=%(rrdpath)s/elasticsearch-segments/redirects.segment.docs.rrd:sum:AVERAGE',
         'AREA:redirects_segment_docs#009966:redirects document amount\\l',
-
         'DEF:redirects_segment_count=%(rrdpath)s/elasticsearch-segments/redirects.segment.count.rrd:sum:AVERAGE'
         'AREA:redirects_segment_count#009966:redirects segment amount\\l'
     ]
