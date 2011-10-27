@@ -145,6 +145,14 @@ def segments():
 
             metrics[size_name] = metrics[size_name] / 1000000
 
+            now = int(time())
+            for name in [count_name, size_name, docs_name]:
+                metrics[name] = {
+                    'ts': now,
+                    'type': 'GAUGE',
+                    'value': metrics[name]
+                }
+
         return metrics
 
 
