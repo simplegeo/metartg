@@ -143,6 +143,8 @@ def segments():
                     metrics[docs_name] += segment['num_docs']
                     metrics[size_name] += segment['size_in_bytes']
 
+            metrics[size_name] = metrics[size_name] / 1000000
+
         return metrics
 
 
