@@ -1,3 +1,18 @@
+metartg (0.3-1sg137) maverick; urgency=low
+
+  [ dsmith ]
+  * Gather segment information from ES
+  * Conver to MBs
+  * Remove spacing to conform to the rest of the file style
+  * Separate the segment graph into three separate ones
+  * Remove my attempt at doing a little refactoring
+  * Setup the metric properly
+  * added in missing commas
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 27 Oct 2011 22:15:42 +0000
+
 metartg (0.3-1sg136) maverick; urgency=low
 
   [ Jeremy Grosser ]
