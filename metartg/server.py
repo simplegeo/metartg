@@ -190,10 +190,10 @@ RRD_GRAPH_DEFS = {
         'AREA:gc_time#4668E4FF:gc time (ms)\\l',
     ],
     'elasticsearch-segments-count': [
-        'DEF:places_segment_count=%(rrdpath)s/elasticsearch-segments/places.segment.count.rrd:sum:AVERAGE'
+        'DEF:places_segment_count=%(rrdpath)s/elasticsearch-segments/places.segment.count.rrd:sum:AVERAGE',
         'AREA:places_segment_count#009966:places count\\l',
-        'DEF:redirects_segment_count=%(rrdpath)s/elasticsearch-segments/redirects.segment.count.rrd:sum:AVERAGE'
-        'AREA:redirects_segment_count#006699:redirects count\\l'
+        'DEF:redirects_segment_count=%(rrdpath)s/elasticsearch-segments/redirects.segment.count.rrd:sum:AVERAGE',
+        'AREA:redirects_segment_count#006699:redirects count\\l',
     ],
     'elasticsearch-segments-docs': [
         'DEF:places_segment_docs=%(rrdpath)s/elasticsearch-segments/places.segment.docs.rrd:sum:AVERAGE',
