@@ -207,6 +207,31 @@ RRD_GRAPH_DEFS = {
         'DEF:redirects_segment_size=%(rrdpath)s/elasticsearch-segments/redirects.segment.size.rrd:sum:AVERAGE',
         'AREA:redirects_segment_size#006699:redirects total segment size in MBs\\l',
     ],
+    'flume-memory': [
+        'DEF:heap_committed=%(rrdpath)s/flume/jvm.mem.heap.committed.rrd:sum:AVERAGE',
+        'DEF:heap_used=%(rrdpath)s/flume/jvm.mem.heap.used.rrd:sum:AVERAGE',
+        'DEF:other_committed=%(rrdpath)s/flume/jvm.mem.other.committed.rrd:sum:AVERAGE',
+        'DEF:other_used=%(rrdpath)s/flume/jvm.mem.other.used.rrd:sum:AVERAGE',
+        'CDEF:other_committed_stack=heap_committed,other_committed,+',
+        'AREA:heap_used#006699:heap used\\l',
+        'LINE:heap_committed#FFFFFF:heap committed\\l',
+        'AREA:other_used#009966:nonheap used\\l:STACK',
+        'LINE:other_committed_stack#FFFFFF:nonheap committed\\l',
+    ],
+    'flume-tailer': [
+        'DEF:events=%(rrdpath)s/flume/sg_api_tailer_api.events.rrd:sum:AVERAGE',
+        'LINE:events#00FF00:tail events\\l',
+    ],
+    'flume-writer': [
+        'DEF:events=%(rrdpath)s/flume/sg_api_writer_api.events.rrd:sum:AVERAGE',
+        'DEF:appendSuccess=%(rrdpath)s/flume/sg_api_writer_api.appendSuccess.rrd:sum:AVERAGE',
+        'DEF:appendFails=%(rrdpath)s/flume/sg_api_writer_api.appendFails.rrd:sum:AVERAGE',
+        'DEF:appendRecovers=%(rrdpath)s/flume/sg_api_writer_api.appendRecovers:sum:AVERAGE',
+        'LINE:events#00FF00:writer events\\l',
+        'LINE:appendSuccess#FFFFFF:successful appends\\l',
+        'LINE:appendFails#FF0000:failed appends\\l',
+        'LINE:appendRecovers#FFFF00:recovered appends\\l',
+    ],
 }
 
 RRD_LGRAPH_DEFS = {
@@ -374,6 +399,9 @@ RRD_GRAPH_TITLE = {
     'elasticsearch-segments-size': '%(host)s | Elasticsearch Segment Sizes',
     'elasticsearch-segments-count': '%(host)s | Elasticsearch Segment Amounts',
     'elasticsearch-segments-docs': '%(host)s | Elasticsearch Segment Document Amounts',
+    'flume-memory': '%(host)s | Flume JVM memory',
+    'flume-tailer': '%(host)s | Flume tail source',
+    'flume-writer': '%(host)s | Flume HDFS writer',
 }
 
 RRD_GRAPH_TYPES = [
@@ -397,6 +425,9 @@ RRD_GRAPH_TYPES = [
     ('elasticsearch-segments-size', 'Elasticsearch Segment Sizes'),
     ('elasticsearch-segments-count', 'Elasticsearch Segment Amounts'),
     ('elasticsearch-segments-docs', 'Elasticsearch Segment Document Amounts'),
+    ('flume-memory', 'Flume JVM memory'),
+    ('flume-tailer', 'Flume tail source'),
+    ('flume-writer', 'Flume HDFS writer'),
 #    ('io', 'Disk I/O'),
 #    ('redis-memory', 'Redis memory'),
 ]
