@@ -226,7 +226,7 @@ RRD_GRAPH_DEFS = {
         'DEF:events=%(rrdpath)s/flume/sg_api_writer_api.events.rrd:sum:AVERAGE',
         'DEF:appendSuccess=%(rrdpath)s/flume/sg_api_writer_api.appendSuccess.rrd:sum:AVERAGE',
         'DEF:appendFails=%(rrdpath)s/flume/sg_api_writer_api.appendFails.rrd:sum:AVERAGE',
-        'DEF:appendRecovers=%(rrdpath)s/flume/sg_api_writer_api.appendRecovers:sum:AVERAGE',
+        'DEF:appendRecovers=%(rrdpath)s/flume/sg_api_writer_api.appendRecovers.rrd:sum:AVERAGE',
         'LINE:events#00FF00:writer events\\l',
         'LINE:appendSuccess#FFFFFF:successful appends\\l',
         'LINE:appendFails#FF0000:failed appends\\l',
