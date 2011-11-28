@@ -1,3 +1,12 @@
+metartg (0.3-1sg138) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Add flume metrics
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 28 Nov 2011 20:21:04 +0000
+
 metartg (0.3-1sg137) maverick; urgency=low
 
   [ dsmith ]
